@@ -243,11 +243,11 @@ body.theme-pink .input-dark{background:#1a0814!important;border:1px solid rgba(2
 </div>
 
 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4 mb-6">
-<div class="bg-black/30 p-3 sm:p-4 rounded-2xl border border-white/5"><label class="text-[10px] uppercase tracking-widest text-slate-400 block mb-1">CDI Atual (% a.a.)</label><input type="text" inputmode="decimal" id="inputTaxaCdi" onchange="salvarInvestimentos()" placeholder="Ex: 13.65" class="input-dark campo-interativo valor-mono w-full bg-[#0a0f1e] border border-white/10 rounded-full px-4 py-2 text-xs font-bold text-amber-300"></div>
-<div class="bg-black/30 p-3 sm:p-4 rounded-2xl border border-white/5"><label class="text-[10px] uppercase tracking-widest text-slate-400 block mb-1">% do CDI pago</label><input type="text" inputmode="numeric" id="inputPctCdi" onchange="salvarInvestimentos()" placeholder="Ex: 100" class="input-dark campo-interativo valor-mono w-full bg-[#0a0f1e] border border-white/10 rounded-full px-4 py-2 text-xs font-bold text-indigo-300"></div>
-<div class="bg-black/30 p-3 sm:p-4 rounded-2xl border border-white/5"><label class="text-[10px] uppercase tracking-widest text-slate-400 block mb-1">Valor Investido</label><div class="relative"><span class="absolute left-3 top-2 text-xs text-emerald-400 font-bold">R$</span><input type="text" inputmode="decimal" id="inputValorInvestido" onchange="salvarInvestimentos()" placeholder="0,00" class="input-dark campo-interativo valor-mono w-full bg-[#0a0f1e] border border-white/10 rounded-full pl-8 pr-4 py-2 text-xs font-bold text-emerald-300"></div></div>
-<div class="bg-black/30 p-3 sm:p-4 rounded-2xl border border-white/5"><label class="text-[10px] uppercase tracking-widest text-slate-400 block mb-1">Valor Lucrado (Diário)</label><div class="relative"><span class="absolute left-3 top-2 text-xs text-cyan-400 font-bold">R$</span><input type="text" inputmode="decimal" id="inputValorLucrado" onchange="salvarInvestimentosManual(this.value)" placeholder="0,00" class="input-dark campo-interativo valor-mono w-full bg-[#0a0f1e] border border-white/10 rounded-full pl-8 pr-4 py-2 text-xs font-bold text-cyan-300"></div></div>
-<div class="bg-black/30 p-3 sm:p-4 rounded-2xl border border-white/5"><label class="text-[10px] uppercase tracking-widest text-slate-400 block mb-1">Valor Retirado (Saques)</label><div class="relative"><span class="absolute left-3 top-2 text-xs text-rose-400 font-bold">R$</span><input type="text" inputmode="decimal" id="inputValorRetirado" onchange="salvarInvestimentosRetirado(this.value)" placeholder="0,00" class="input-dark campo-interativo valor-mono w-full bg-[#0a0f1e] border border-white/10 rounded-full pl-8 pr-4 py-2 text-xs font-bold text-rose-300"></div></div>
+<div class="bg-black/30 p-3 sm:p-4 rounded-2xl border border-white/5"><label class="text-[10px] uppercase tracking-widest text-slate-400 block mb-1">CDI Atual (% a.a.)</label><input type="text" inputmode="decimal" id="inputTaxaCdi" oninput="salvarInvestimentos()" placeholder="Ex: 13.65" class="input-dark campo-interativo valor-mono w-full bg-[#0a0f1e] border border-white/10 rounded-full px-4 py-2 text-xs font-bold text-amber-300"></div>
+<div class="bg-black/30 p-3 sm:p-4 rounded-2xl border border-white/5"><label class="text-[10px] uppercase tracking-widest text-slate-400 block mb-1">% do CDI pago</label><input type="text" inputmode="numeric" id="inputPctCdi" oninput="salvarInvestimentos()" placeholder="Ex: 100" class="input-dark campo-interativo valor-mono w-full bg-[#0a0f1e] border border-white/10 rounded-full px-4 py-2 text-xs font-bold text-indigo-300"></div>
+<div class="bg-black/30 p-3 sm:p-4 rounded-2xl border border-white/5"><label class="text-[10px] uppercase tracking-widest text-slate-400 block mb-1">Valor Investido</label><div class="relative"><span class="absolute left-3 top-2 text-xs text-emerald-400 font-bold">R$</span><input type="text" inputmode="decimal" id="inputValorInvestido" oninput="salvarInvestimentos()" placeholder="0,00" class="input-dark campo-interativo valor-mono w-full bg-[#0a0f1e] border border-white/10 rounded-full pl-8 pr-4 py-2 text-xs font-bold text-emerald-300"></div></div>
+<div class="bg-black/30 p-3 sm:p-4 rounded-2xl border border-white/5"><label class="text-[10px] uppercase tracking-widest text-slate-400 block mb-1">Valor Lucrado (Diário)</label><div class="relative"><span class="absolute left-3 top-2 text-xs text-cyan-400 font-bold">R$</span><input type="text" inputmode="decimal" id="inputValorLucrado" oninput="salvarInvestimentosManual(this.value)" placeholder="0,00" class="input-dark campo-interativo valor-mono w-full bg-[#0a0f1e] border border-white/10 rounded-full pl-8 pr-4 py-2 text-xs font-bold text-cyan-300"></div></div>
+<div class="bg-black/30 p-3 sm:p-4 rounded-2xl border border-white/5"><label class="text-[10px] uppercase tracking-widest text-slate-400 block mb-1">Valor Retirado (Saques)</label><div class="relative"><span class="absolute left-3 top-2 text-xs text-rose-400 font-bold">R$</span><input type="text" inputmode="decimal" id="inputValorRetirado" oninput="salvarInvestimentosRetirado(this.value)" placeholder="0,00" class="input-dark campo-interativo valor-mono w-full bg-[#0a0f1e] border border-white/10 rounded-full pl-8 pr-4 py-2 text-xs font-bold text-rose-300"></div></div>
 </div>
 
 <div class="card-dark rounded-2xl p-4 sm:p-5 h-[380px] sm:h-[420px] flex flex-col">
@@ -274,7 +274,7 @@ body.theme-pink .input-dark{background:#1a0814!important;border:1px solid rgba(2
 <p class="text-xs text-slate-300 mb-4">Área restrita de controlo administrativo do Cash Flow.</p>
 <div id="conteudoAdmin" class="bg-black/30 p-4 rounded-xl border border-white/5 text-xs text-slate-300 space-y-2">
 <p>⚡ <b>Estado de Administrador:</b> Autenticado com sucesso.</p>
-<p>🔐 <b>Segurança RLS:</b> Ativa na base de dados.</p>
+<p>🔐 <b>Sincronização Supabase:</b> Ativa na base de dados.</p>
 </div>
 <div class="mt-5"><button type="button" onclick="fecharModalAdmin()" class="w-full py-2.5 rounded-xl bg-white/5 border border-white/10 text-xs hover:bg-white/10 font-bold">Fechar Painel</button></div>
 </div>
@@ -327,12 +327,12 @@ body.theme-pink .input-dark{background:#1a0814!important;border:1px solid rgba(2
 <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
 <div>
 <label class="text-[10px] uppercase tracking-wider text-slate-400 block mb-1">Valor Mensal (R$)</label>
-<div class="relative"><span class="absolute left-3 top-2 text-xs text-emerald-400 font-bold">R$</span><input type="text" inputmode="decimal" id="projValor" placeholder="0,00" onchange="calcularProjecao()" class="input-dark campo-interativo valor-interativo w-full bg-[#141d33] border border-white/10 rounded-full pl-8 pr-3 py-1.5 text-xs font-bold text-emerald-300"></div>
+<div class="relative"><span class="absolute left-3 top-2 text-xs text-emerald-400 font-bold">R$</span><input type="text" inputmode="decimal" id="projValor" placeholder="0,00" oninput="calcularProjecao()" class="input-dark campo-interativo valor-interativo w-full bg-[#141d33] border border-white/10 rounded-full pl-8 pr-3 py-1.5 text-xs font-bold text-emerald-300"></div>
 </div>
 <div>
 <label class="text-[10px] uppercase tracking-wider text-slate-400 block mb-1">Período de Tempo</label>
 <div class="flex gap-1.5">
-<input type="text" inputmode="numeric" id="projTempo" value="12" onchange="calcularProjecao()" class="input-dark campo-interativo valor-interativo w-full bg-[#141d33] border border-white/10 rounded-full px-3 py-1.5 text-xs font-bold text-indigo-300">
+<input type="text" inputmode="numeric" id="projTempo" value="12" oninput="calcularProjecao()" class="input-dark campo-interativo valor-interativo w-full bg-[#141d33] border border-white/10 rounded-full px-3 py-1.5 text-xs font-bold text-indigo-300">
 <select id="projUnidade" onchange="calcularProjecao()" class="input-dark campo-interativo bg-[#141d33] border border-white/10 rounded-full px-2.5 py-1.5 text-xs font-semibold text-slate-300">
 <option value="meses">Meses</option>
 <option value="anos">Anos</option>
@@ -414,8 +414,23 @@ let appData = JSON.parse(JSON.stringify(dadosPadrao));
 let usuarioAtual = null;
 let modoCadastro = false;
 let autenticadoEmAndamento = false;
+let carregandoInicial = false;
 let timerSalvarNuvem = null;
 let itemEditandoPrazo=null, chartPizza=null, chartBar=null, chartLinha=null, chartInvestimentosLinha=null, chartProjecaoAnual=null;
+
+// Converte valores digitados com vírgula ou ponto corretamente
+function lerNumero(val) {
+ if (typeof val === 'number') return val;
+ if (!val) return 0;
+ let s = String(val).trim();
+ if (s.includes(',') && s.includes('.')) {
+  s = s.replace(/\./g, '').replace(',', '.');
+ } else if (s.includes(',')) {
+  s = s.replace(',', '.');
+ }
+ const n = parseFloat(s);
+ return isNaN(n) ? 0 : n;
+}
 
 function criarRipple(e) {
  if(!e || !e.currentTarget) return;
@@ -461,15 +476,22 @@ document.addEventListener('DOMContentLoaded', async () => {
  const { data: { session } } = await dbSupabase.auth.getSession();
  if (session && session.user) {
   usuarioAtual = session.user;
-  entrarNoApp();
+  await entrarNoApp();
  } else {
   document.getElementById('telaAuth').classList.remove('hidden');
   document.getElementById('appPrincipal').classList.add('hidden');
  }
 });
 
+// Garante que qualquer edição pendente seja salva se o utilizador der F5 ou fechar a aba
+window.addEventListener('beforeunload', () => {
+ if (usuarioAtual && !carregandoInicial) {
+  localStorage.setItem('cashflow_' + usuarioAtual.id, JSON.stringify(appData));
+ }
+});
+
 // ==========================================
-// AUTENTICAÇÃO RÁPIDA (LOGIN E LOGOUT OTIMISTAS)
+// AUTENTICAÇÃO E SESSÃO
 // ==========================================
 function alternarModoAuth(){
  modoCadastro = !modoCadastro;
@@ -515,7 +537,7 @@ async function executarAutenticacao(){
     toast('Conta criada com sucesso!');
     if(data.user){
      usuarioAtual = data.user;
-     entrarNoApp();
+     await entrarNoApp();
     }
    }
   } else {
@@ -524,7 +546,7 @@ async function executarAutenticacao(){
     toast('Erro no login: Nome ou palavra-passe incorretos');
    } else {
     usuarioAtual = data.user;
-    entrarNoApp();
+    await entrarNoApp();
    }
   }
  } finally {
@@ -534,23 +556,24 @@ async function executarAutenticacao(){
  }
 }
 
-function fazerLogout(){
- // Cancela salvamentos pendentes e salva imediatamente se houver algo na fila
- if(timerSalvarNuvem && usuarioAtual){
+async function fazerLogout(){
+ // Se houver alterações pendentes, envia imediatamente para o Supabase antes de sair!
+ if(timerSalvarNuvem){
   clearTimeout(timerSalvarNuvem);
   timerSalvarNuvem = null;
  }
+ if(usuarioAtual && !carregandoInicial){
+  await salvarNaNuvemAgora(usuarioAtual.id, JSON.parse(JSON.stringify(appData)));
+ }
 
- // Logout Otimista Instantâneo (0ms de espera visual)
  usuarioAtual = null;
  appData = JSON.parse(JSON.stringify(dadosPadrao));
  document.getElementById('authPassword').value = '';
  document.getElementById('btnAdminPainel').classList.add('hidden');
  document.getElementById('appPrincipal').classList.add('hidden');
  document.getElementById('telaAuth').classList.remove('hidden');
- toast('Sessão terminada');
+ toast('Sessão terminada e dados guardados!');
 
- // Finaliza a sessão no servidor em segundo plano
  dbSupabase.auth.signOut().catch(() => {});
 }
 
@@ -569,36 +592,33 @@ function preencherCamposInterface(){
 }
 
 async function entrarNoApp(){
- // 1. Abre a interface imediatamente (0ms)
+ carregandoInicial = true;
  document.getElementById('telaAuth').classList.add('hidden');
  document.getElementById('appPrincipal').classList.remove('hidden');
 
  document.getElementById('buscaGlobal').value = '';
  document.getElementById('filtroPago').value = 'todos';
 
- // 2. Carrega do cache local instantaneamente para não exibir tela vazia
+ // 1. Carrega do cache local instantaneamente (sem disparar gravação por cima da nuvem)
  const cacheLocal = localStorage.getItem('cashflow_' + usuarioAtual.id);
  if (cacheLocal) {
   try {
    appData = JSON.parse(cacheLocal);
    preencherCamposInterface();
-   renderizarTudo();
+   renderizarTudo(true);
   } catch(e) {}
- } else {
-  appData = JSON.parse(JSON.stringify(dadosPadrao));
-  preencherCamposInterface();
-  renderizarTudo();
  }
 
- // 3. Sincroniza nuvem e permissões em paralelo em segundo plano
+ // 2. Busca os dados reais do usuário no Supabase
  await Promise.all([
   verificarAdmin(),
   carregarDoSupabase()
  ]);
 
+ carregandoInicial = false;
  verificarAtualizacaoDiariaCDI();
  preencherCamposInterface();
- renderizarTudo();
+ renderizarTudo(true);
 }
 
 async function verificarAdmin(){
@@ -624,55 +644,104 @@ function abrirModalAdmin(){ document.getElementById('modalAdmin').classList.remo
 function fecharModalAdmin(){ document.getElementById('modalAdmin').classList.add('hidden'); }
 
 // ==========================================
-// SINCRONIZAÇÃO OTIMIZADA COM RLS E DEBOUNCE
+// SINCRONIZAÇÃO CORRIGIDA COM SUPABASE + LOCALSTORAGE
 // ==========================================
 async function carregarDoSupabase() {
  if(!usuarioAtual) return;
+ const uid = usuarioAtual.id;
  try {
   const { data, error } = await dbSupabase
    .from('transacoes')
    .select('payload')
+   .eq('user_id', uid)
    .limit(1)
    .maybeSingle();
 
   if (error) {
-   console.error('Erro na resposta do Supabase:', error.message);
+   console.warn('Aviso ao consultar Supabase (usando backup local):', error.message);
    return;
   }
 
-  if (data && data.payload) {
-   appData = data.payload;
-   localStorage.setItem('cashflow_' + usuarioAtual.id, JSON.stringify(appData));
-  } else if (!localStorage.getItem('cashflow_' + usuarioAtual.id)) {
+  const cacheLocalStr = localStorage.getItem('cashflow_' + uid);
+  const cacheLocalObj = cacheLocalStr ? JSON.parse(cacheLocalStr) : null;
+
+  if (data && data.payload && Object.keys(data.payload).length > 0) {
+   // Se a nuvem tiver dados válidos, verifica se o cache local não é mais recente
+   const temDadosNuvem = (data.payload.rendas?.length > 0) || (data.payload.topicos?.length > 0) || (data.payload.investido > 0) || (data.payload.metaEconomia > 0);
+   const temDadosLocal = cacheLocalObj && ((cacheLocalObj.rendas?.length > 0) || (cacheLocalObj.topicos?.length > 0) || (cacheLocalObj.investido > 0) || (cacheLocalObj.metaEconomia > 0));
+
+   if (temDadosNuvem || !temDadosLocal) {
+    appData = Object.assign(JSON.parse(JSON.stringify(dadosPadrao)), data.payload);
+    localStorage.setItem('cashflow_' + uid, JSON.stringify(appData));
+   } else if (temDadosLocal) {
+    // O dispositivo local tinha dados que ainda não estavam na nuvem: preserva e envia para a nuvem
+    appData = Object.assign(JSON.parse(JSON.stringify(dadosPadrao)), cacheLocalObj);
+    await salvarNaNuvemAgora(uid, appData);
+   }
+  } else if (cacheLocalObj) {
+   // Nuvem ainda sem registro para este usuário, mas existe dado salvo no navegador: restaura e sincroniza
+   appData = Object.assign(JSON.parse(JSON.stringify(dadosPadrao)), cacheLocalObj);
+   await salvarNaNuvemAgora(uid, appData);
+  } else {
    appData = JSON.parse(JSON.stringify(dadosPadrao));
-   salvar();
+   localStorage.setItem('cashflow_' + uid, JSON.stringify(appData));
+   await salvarNaNuvemAgora(uid, appData);
   }
  } catch (err) {
   console.log('Erro ao carregar dados da nuvem:', err);
  }
 }
 
-function salvar() {
- if(!usuarioAtual) return;
- const uid = usuarioAtual.id;
- // Gravação instantânea no dispositivo
- localStorage.setItem('cashflow_' + uid, JSON.stringify(appData));
+async function salvarNaNuvemAgora(uid, dadosParaSalvar) {
+ if (!uid) return;
+ try {
+  // Tenta fazer upsert direto pelo user_id
+  const { error } = await dbSupabase
+   .from('transacoes')
+   .upsert({ 
+     user_id: uid, 
+     payload: dadosParaSalvar,
+     Titulo: 'Painel Principal'
+   }, { onConflict: 'user_id' });
 
- // Agrupa requisições repetidas (debounce de 350ms) para não sobrecarregar a rede
- if(timerSalvarNuvem) clearTimeout(timerSalvarNuvem);
- timerSalvarNuvem = setTimeout(async () => {
-  try {
-   await dbSupabase
+  // Fallback automático caso a tabela no Supabase ainda não tenha a constraint UNIQUE no user_id
+  if (error) {
+   const { data: existente } = await dbSupabase
     .from('transacoes')
-    .upsert({ 
-      user_id: uid, 
-      payload: appData,
-      Titulo: 'Painel Principal'
-    }, { onConflict: 'user_id' });
-  } catch (err) {
-   console.error('Erro ao salvar no Supabase:', err);
+    .select('user_id')
+    .eq('user_id', uid)
+    .limit(1)
+    .maybeSingle();
+
+   if (existente) {
+    await dbSupabase
+     .from('transacoes')
+     .update({ payload: dadosParaSalvar, Titulo: 'Painel Principal' })
+     .eq('user_id', uid);
+   } else {
+    await dbSupabase
+     .from('transacoes')
+     .insert({ user_id: uid, payload: dadosParaSalvar, Titulo: 'Painel Principal' });
+   }
   }
- }, 350);
+ } catch (err) {
+  console.error('Erro ao salvar no Supabase:', err);
+ }
+}
+
+function salvar() {
+ if(!usuarioAtual || carregandoInicial) return;
+ const uid = usuarioAtual.id;
+ const copiaDados = JSON.parse(JSON.stringify(appData));
+
+ // 1. Gravação instantânea no navegador (garante que o F5 nunca perca nada)
+ localStorage.setItem('cashflow_' + uid, JSON.stringify(copiaDados));
+
+ // 2. Gravação sincronizada no Supabase
+ if(timerSalvarNuvem) clearTimeout(timerSalvarNuvem);
+ timerSalvarNuvem = setTimeout(() => {
+  salvarNaNuvemAgora(uid, copiaDados);
+ }, 250);
 }
 
 function resetarPadrao(){
@@ -687,7 +756,7 @@ function resetarPadrao(){
   document.getElementById('inputTaxaCdi').value = '';
   document.getElementById('inputPctCdi').value = '';
   salvar();
-  renderizarTudo();
+  renderizarTudo(true);
   toast('Painel restaurado em branco!');
  }
 }
@@ -706,7 +775,7 @@ function mudarAba(abaId) {
  if(abaId === 'investimentos') {
   setTimeout(() => atualizarGraficoInvestimentosLinha(), 50);
  } else {
-  renderizarTudo();
+  renderizarTudo(true);
  }
 }
 
@@ -775,8 +844,8 @@ function verificarSeFinalizado(tipo,dataFim){if(tipo!=='data'||!dataFim) return 
 function formatarPrazoLabel(tipo,dataFim){if(tipo==='fixo'||!dataFim) return `<span class="text-[10px] px-2 py-1 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 cursor-pointer">∞ Fixo</span>`;const fin=verificarSeFinalizado(tipo,dataFim);if(fin) return `<span class="text-[10px] px-2 py-1 rounded-full bg-amber-500/15 text-amber-300 border border-amber-500/30">✓ ${dataFim.split('-').reverse().join('/')}</span>`;let [a1,m1]=appData.globalDate.split('-').map(Number);let [a2,m2]=dataFim.split('-').map(Number);let diff=(a2-a1)*12+(m2-m1);return `<span class="text-[10px] px-2 py-1 rounded-full bg-indigo-500/15 text-indigo-300 border border-indigo-500/30 hover:bg-indigo-500/25 cursor-pointer">${diff}m</span>`;}
 function mudarMesGlobal(d){let [a,m]=appData.globalDate.split('-').map(Number);m+=d;if(m>12){m=1;a++;}if(m<1){m=12;a--;}appData.globalDate=`${a}-${String(m).padStart(2,'0')}`;document.getElementById('globalDate').value=appData.globalDate;salvar();renderizarTudo();}
 function atualizarDataGlobal(){appData.globalDate=document.getElementById('globalDate').value;salvar();renderizarTudo();}
-function salvarMeta(){appData.metaEconomia=parseFloat(document.getElementById('metaEconomia').value)||0;salvar();renderizarTudo();}
-function renderizarTudo(){renderizarResumo();renderizarRenda();renderizarTopicos();renderizarVencimentos();atualizarMedalhas();atualizarGrafico();atualizarProjecaoAnualGrafico();salvarHistorico();atualizarGraficoInvestimentosLinha();}
+function salvarMeta(){appData.metaEconomia=lerNumero(document.getElementById('metaEconomia').value);salvar();renderizarResumo();atualizarMedalhas();}
+function renderizarTudo(apenasVisual = false){renderizarResumo();renderizarRenda();renderizarTopicos();renderizarVencimentos();atualizarMedalhas();salvarHistorico(apenasVisual);atualizarGrafico();atualizarProjecaoAnualGrafico();atualizarGraficoInvestimentosLinha();}
 
 function atualizarMedalhas(){
  let totalR=0, totalD=0;
@@ -849,7 +918,7 @@ function renderizarRenda(){
   const div=document.createElement('div'); div.className=`card-dark group bg-[#0a0f1e] border ${fin?'border-amber-500/25 opacity-60':'border-white/[0.08] hover:border-emerald-500/30'} rounded-[14px] p-3 card-anim transition-all`;
   div.innerHTML=`
   <div class="flex justify-between items-center"><div class="flex items-center gap-2 flex-1"><input type="checkbox" ${r.recebido?'checked':''} onchange="toggleRecebidoRenda(${r.id})" class="w-4 h-4 rounded cursor-pointer accent-emerald-500"><input value="${r.nome||''}" oninput="editarNomeRenda(${r.id},this.value)" placeholder="Nome da renda..." class="input-dark campo-interativo bg-transparent text-[13px] font-semibold w-full outline-none border border-transparent hover:border-white/10 rounded-full px-2 py-1"></div><button type="button" onclick="removerRenda(${r.id}); criarRipple(event)" class="opacity-0 group-hover:opacity-100 w-6 h-6 rounded-full bg-white/5 hover:bg-rose-500/20 hover:text-rose-300 transition-all flex items-center justify-center"><i class="fa-solid fa-trash text-[10px]"></i></button></div>
-  <div class="flex gap-2 mt-2"><div class="relative flex-1"><span class="absolute left-2.5 top-2 text-[10px] text-emerald-400 font-bold">R$</span><input type="text" inputmode="decimal" value="${r.valor || ''}" placeholder="0,00" onchange="editarValorRenda(${r.id},this.value)" class="input-dark campo-interativo valor-mono w-full bg-white/[0.03] border border-white/10 rounded-full pl-7 pr-2 py-2 text-xs font-bold text-emerald-300"></div><button type="button" onclick="abrirModalPrazo('renda',null,${r.id}); criarRipple(event)" class="hover:scale-105 transition-transform">${formatarPrazoLabel(r.tipoPrazo,r.dataFim)}</button></div>
+  <div class="flex gap-2 mt-2"><div class="relative flex-1"><span class="absolute left-2.5 top-2 text-[10px] text-emerald-400 font-bold">R$</span><input type="text" inputmode="decimal" value="${r.valor || ''}" placeholder="0,00" oninput="editarValorRenda(${r.id},this.value)" class="input-dark campo-interativo valor-mono w-full bg-white/[0.03] border border-white/10 rounded-full pl-7 pr-2 py-2 text-xs font-bold text-emerald-300"></div><button type="button" onclick="abrirModalPrazo('renda',null,${r.id}); criarRipple(event)" class="hover:scale-105 transition-transform">${formatarPrazoLabel(r.tipoPrazo,r.dataFim)}</button></div>
   `;
   c.appendChild(div);
  });
@@ -865,7 +934,7 @@ function adicionarRenda(){
 }
 function removerRenda(id){if(!confirm('Excluir esta renda?')) return; appData.rendas=appData.rendas.filter(r=>r.id!==id);salvar();renderizarTudo(); toast('Renda excluída');}
 function editarNomeRenda(id,v){const r=appData.rendas.find(x=>x.id===id);if(r){r.nome=v;salvar(); atualizarGrafico(); renderizarResumo();}}
-function editarValorRenda(id,v){const r=appData.rendas.find(x=>x.id===id);if(r){r.valor=Math.max(0,parseFloat(v)||0);salvar();renderizarResumo(); atualizarGrafico(); salvarHistorico();}}
+function editarValorRenda(id,v){const r=appData.rendas.find(x=>x.id===id);if(r){r.valor=Math.max(0,lerNumero(v));salvarHistorico(false);renderizarResumo(); atualizarMedalhas(); atualizarGrafico(); atualizarProjecaoAnualGrafico();}}
 function toggleRecebidoRenda(id){const r=appData.rendas.find(x=>x.id===id);if(r){r.recebido=!r.recebido;salvar(); toast(r.recebido?'Renda marcada como recebida':'Renda marcada como não recebida');}}
 
 function renderizarTopicos(){
@@ -895,15 +964,15 @@ function renderizarTopicos(){
 
   const div=document.createElement('div'); div.className="card-dark rounded-[22px] p-5 flex flex-col card-anim transition-all shadow-xl shadow-black/30 relative overflow-hidden";
   div.innerHTML=`
-  <div class="absolute top-4 right-4 flex items-center gap-1.5"><span class="w-2 h-2 rounded-full ${corPulse} status-pulse"></span><span class="text-[9px] uppercase tracking-wider text-slate-400 font-bold">${pctRenda}% renda</span></div>
+  <div class="absolute top-4 right-4 flex items-center gap-1.5"><span id="pulseTop_${top.id}" class="w-2 h-2 rounded-full ${corPulse} status-pulse"></span><span id="pctTop_${top.id}" class="text-[9px] uppercase tracking-wider text-slate-400 font-bold">${pctRenda}% renda</span></div>
   <div class="flex justify-between items-start mb-3 pr-16">
    <div class="flex-1"><div class="flex items-center gap-2"><input value="${top.titulo}" oninput="atualizarTituloTopico('${top.id}',this.value)" class="font-bold text-[14px] bg-transparent border border-transparent hover:border-white/10 focus:border-emerald-500/50 rounded-full px-2 py-1 outline-none campo-interativo w-full" placeholder="Nome do tópico"></div><input value="${top.descricao||''}" oninput="atualizarDescTopico('${top.id}',this.value)" class="text-[11px] text-slate-400 bg-transparent border border-transparent hover:border-white/10 focus:border-emerald-500/50 rounded-full px-2 py-1 outline-none campo-interativo w-full mt-1" placeholder="Descrição do tópico..."></div>
    <div class="flex gap-1 absolute top-4 right-4 opacity-0 hover:opacity-100 transition-opacity bg-[#0a0f1e]/80 p-1 rounded-full"><button type="button" onclick="toggleColapso('${top.id}'); criarRipple(event)" class="w-6 h-6 rounded-full btn-press bg-white/5 hover:bg-white/10 transition-colors flex items-center justify-center"><i class="fa-solid ${top.colapsado?'fa-chevron-down':'fa-chevron-up'} text-[10px]"></i></button><button type="button" onclick="removerTopico('${top.id}'); criarRipple(event)" class="w-6 h-6 rounded-full btn-press bg-white/5 hover:bg-rose-500/20 hover:text-rose-300 transition-colors flex items-center justify-center"><i class="fa-solid fa-trash text-[10px]"></i></button></div>
   </div>
-  <div class="flex justify-between items-center bg-black/25 rounded-full px-4 py-2 mb-3 border border-white/5"><span class="text-[11px] text-slate-400">Total do Tópico</span><span class="text-sm font-black valor-mono">${moeda(soma)}</span></div>
+  <div class="flex justify-between items-center bg-black/25 rounded-full px-4 py-2 mb-3 border border-white/5"><span class="text-[11px] text-slate-400">Total do Tópico</span><span id="somaTop_${top.id}" class="text-sm font-black valor-mono">${moeda(soma)}</span></div>
   <div class="${top.colapsado?'hidden':''} space-y-2 mb-3">${top.itens.map(item=>{
    const fin=verificarSeFinalizado(item.tipoPrazo,item.dataFim);
-   return `<div class="card-dark bg-[#0a0f1e] border ${fin?'border-amber-500/25 opacity-60':item.pago?'border-emerald-500/25':'border-white/[0.05] hover:border-white/15'} rounded-[14px] p-3 transition-all"><div class="flex justify-between items-center gap-2"><div class="flex items-center gap-2 flex-1"><input type="checkbox" ${item.pago?'checked':''} onchange="togglePagoItem('${top.id}','${item.id}')" class="w-4 h-4 rounded cursor-pointer accent-emerald-500"><input value="${item.nome}" oninput="editarNomeItem('${top.id}','${item.id}',this.value)" placeholder="Nome do gasto..." class="input-dark campo-interativo bg-transparent text-[12px] font-medium w-full outline-none border border-transparent hover:border-white/10 rounded-full px-2 py-1 ${item.pago?'line-through text-slate-500':''}"></div><button type="button" onclick="removerItem('${top.id}','${item.id}'); criarRipple(event)" class="text-slate-500 hover:text-rose-400 hover:bg-rose-500/10 w-6 h-6 rounded-full transition-all flex items-center justify-center"><i class="fa-solid fa-xmark text-[11px]"></i></button></div><div class="flex gap-2 mt-2"><div class="relative flex-1"><span class="absolute left-2.5 top-2 text-[10px] text-slate-500 font-bold">R$</span><input type="text" inputmode="decimal" value="${item.valor||''}" placeholder="0,00" onchange="editarValorItem('${top.id}','${item.id}',this.value)" class="input-dark campo-interativo valor-mono w-full bg-white/[0.03] border border-white/10 rounded-full pl-7 pr-2 py-2 text-xs font-bold"></div><button type="button" onclick="abrirModalPrazo('despesa','${top.id}','${item.id}'); criarRipple(event)" class="hover:scale-105 transition-transform">${formatarPrazoLabel(item.tipoPrazo,item.dataFim)}</button></div></div>`
+   return `<div class="card-dark bg-[#0a0f1e] border ${fin?'border-amber-500/25 opacity-60':item.pago?'border-emerald-500/25':'border-white/[0.05] hover:border-white/15'} rounded-[14px] p-3 transition-all"><div class="flex justify-between items-center gap-2"><div class="flex items-center gap-2 flex-1"><input type="checkbox" ${item.pago?'checked':''} onchange="togglePagoItem('${top.id}','${item.id}')" class="w-4 h-4 rounded cursor-pointer accent-emerald-500"><input value="${item.nome}" oninput="editarNomeItem('${top.id}','${item.id}',this.value)" placeholder="Nome do gasto..." class="input-dark campo-interativo bg-transparent text-[12px] font-medium w-full outline-none border border-transparent hover:border-white/10 rounded-full px-2 py-1 ${item.pago?'line-through text-slate-500':''}"></div><button type="button" onclick="removerItem('${top.id}','${item.id}'); criarRipple(event)" class="text-slate-500 hover:text-rose-400 hover:bg-rose-500/10 w-6 h-6 rounded-full transition-all flex items-center justify-center"><i class="fa-solid fa-xmark text-[11px]"></i></button></div><div class="flex gap-2 mt-2"><div class="relative flex-1"><span class="absolute left-2.5 top-2 text-[10px] text-slate-500 font-bold">R$</span><input type="text" inputmode="decimal" value="${item.valor||''}" placeholder="0,00" oninput="editarValorItem('${top.id}','${item.id}',this.value)" class="input-dark campo-interativo valor-mono w-full bg-white/[0.03] border border-white/10 rounded-full pl-7 pr-2 py-2 text-xs font-bold"></div><button type="button" onclick="abrirModalPrazo('despesa','${top.id}','${item.id}'); criarRipple(event)" class="hover:scale-105 transition-transform">${formatarPrazoLabel(item.tipoPrazo,item.dataFim)}</button></div></div>`
   }).join('') || '<p class="text-xs text-slate-500 text-center py-2">Nenhum gasto neste tópico</p>'}</div>
   <button type="button" onclick="adicionarItem('${top.id}'); criarRipple(event)" class="${top.colapsado?'hidden':''} mt-3 w-full py-2.5 btn-press rounded-full bg-white/5 border border-white/10 text-xs hover:bg-emerald-500 hover:text-black hover:border-emerald-500 font-bold transition-all cursor-pointer shadow-lg">+ Adicionar Gasto</button>`;
   c.appendChild(div);
@@ -945,7 +1014,26 @@ function adicionarItem(tid){
 }
 function removerItem(tid,iid){if(!confirm('Excluir este gasto?')) return; const t=appData.topicos.find(x=>String(x.id)===String(tid));if(t){t.itens=t.itens.filter(i=>String(i.id)!==String(iid));salvar();renderizarTudo(); toast('Gasto excluído');}}
 function editarNomeItem(tid,iid,v){const t=appData.topicos.find(x=>String(x.id)===String(tid));const i=t?.itens.find(x=>String(x.id)===String(iid));if(i){i.nome=v;salvar(); atualizarGrafico();}}
-function editarValorItem(tid,iid,v){const t=appData.topicos.find(x=>String(x.id)===String(tid));const i=t?.itens.find(x=>String(x.id)===String(iid));if(i){i.valor=Math.max(0,parseFloat(v)||0);salvar();renderizarResumo(); renderizarTopicos(); atualizarGrafico(); salvarHistorico();}}
+function editarValorItem(tid,iid,v){
+ const t=appData.topicos.find(x=>String(x.id)===String(tid));
+ const i=t?.itens.find(x=>String(x.id)===String(iid));
+ if(i){
+  i.valor=Math.max(0,lerNumero(v));
+  let soma=0;
+  t.itens.forEach(it=>{if(!verificarSeFinalizado(it.tipoPrazo,it.dataFim)) soma+=Number(it.valor)||0;});
+  const elSoma = document.getElementById('somaTop_'+t.id);
+  if(elSoma) elSoma.textContent = moeda(soma);
+  let tr=0;(appData.rendas||[]).forEach(r=>{if(!verificarSeFinalizado(r.tipoPrazo,r.dataFim)) tr+=Number(r.valor)||0;});
+  const pctRenda = tr>0?Math.round((soma/tr)*100):0;
+  const elPct = document.getElementById('pctTop_'+t.id);
+  if(elPct) elPct.textContent = pctRenda + '% renda';
+  salvarHistorico(false);
+  renderizarResumo();
+  atualizarMedalhas();
+  atualizarGrafico();
+  atualizarProjecaoAnualGrafico();
+ }
+}
 function togglePagoItem(tid,iid){const t=appData.topicos.find(x=>String(x.id)===String(tid));const i=t?.itens.find(x=>String(x.id)===String(iid));if(i){i.pago=!i.pago;salvar();renderizarTopicos(); toast(i.pago?'Marcado como pago':'Marcado como não pago');}}
 
 function abrirModalQuickExpense(){
@@ -966,7 +1054,7 @@ function abrirModalQuickExpense(){
 function fecharModalQuickExpense(){ document.getElementById('modalQuickExpense').classList.add('hidden'); }
 function salvarQuickExpense(){
  const nome = document.getElementById('qeNome').value.trim() || 'Gasto Rápido';
- const valor = Math.max(0, parseFloat(document.getElementById('qeValor').value) || 0);
+ const valor = Math.max(0, lerNumero(document.getElementById('qeValor').value));
  const tid = document.getElementById('qeTopico').value;
  
  if(valor <= 0){
@@ -1008,7 +1096,7 @@ function usarSaldoNaProjecao(){
 }
 
 function calcularProjecao(){
- const aporteMensal = Math.max(0, parseFloat(document.getElementById('projValor')?.value) || 0);
+ const aporteMensal = Math.max(0, lerNumero(document.getElementById('projValor')?.value));
  const tempoInput = Math.max(1, parseInt(document.getElementById('projTempo')?.value) || 1);
  const unidade = document.getElementById('projUnidade')?.value || 'meses';
  const incluirPatrimonio = document.getElementById('projIncluirPatrimonio')?.value === 'sim';
@@ -1042,28 +1130,31 @@ function calcularProjecao(){
 }
 
 function salvarInvestimentos(){
- appData.investido = parseFloat(document.getElementById('inputValorInvestido').value) || 0;
- appData.taxaCdi = parseFloat(document.getElementById('inputTaxaCdi').value) || 0;
- appData.pctCdi = parseFloat(document.getElementById('inputPctCdi').value) || 100;
+ appData.investido = lerNumero(document.getElementById('inputValorInvestido').value);
+ appData.taxaCdi = lerNumero(document.getElementById('inputTaxaCdi').value);
+ appData.pctCdi = lerNumero(document.getElementById('inputPctCdi').value) || 100;
  atualizarHistoricoInvestimentosAtual();
  salvar();
  atualizarGraficoInvestimentosLinha();
  atualizarGrafico();
+ atualizarMedalhas();
 }
 
 function salvarInvestimentosManual(val){
- appData.lucrado = parseFloat(val) || 0;
+ appData.lucrado = lerNumero(val);
  atualizarHistoricoInvestimentosAtual();
  salvar();
  atualizarGraficoInvestimentosLinha();
  atualizarGrafico();
+ atualizarMedalhas();
 }
 
 function salvarInvestimentosRetirado(val){
- appData.retirado = parseFloat(val) || 0;
+ appData.retirado = lerNumero(val);
  atualizarHistoricoInvestimentosAtual();
  salvar();
  atualizarGraficoInvestimentosLinha();
+ atualizarMedalhas();
 }
 
 function atualizarGraficoInvestimentosLinha(){
@@ -1072,7 +1163,6 @@ function atualizarGraficoInvestimentosLinha(){
  const ret = appData.retirado || 0;
  const totalLiquido = Math.max(0, (inv + luc) - ret);
  document.getElementById('lblPatrimonioTotal').textContent = moeda(totalLiquido);
- document.getElementById('inputValorLucrado').value = luc > 0 ? luc.toFixed(2) : '';
 
  const historico = appData.historicoInvestimentos || [];
  const labels = historico.map(h => h.mes);
@@ -1158,7 +1248,7 @@ function criarGradienteNeon(ctx, area, corInicio, corFim) {
 }
 
 function initCharts(){
- if(chartPizza) return; // Evita recriar gráficos se já estiverem inicializados
+ if(chartPizza) return;
  Chart.defaults.color='#94a3b8'; Chart.defaults.borderColor='rgba(255,255,255,0.06)';
  
  chartPizza=new Chart(document.getElementById('chartPizza'),{
@@ -1265,7 +1355,7 @@ function atualizarGrafico(){
  chartLinha.update();
 }
 
-function salvarHistorico(){
+function salvarHistorico(apenasVisual = false){
  const mes=appData.globalDate; let tr=0, td=0;
  (appData.rendas||[]).forEach(r=>{if(!verificarSeFinalizado(r.tipoPrazo,r.dataFim)) tr+=Number(r.valor)||0;});
  (appData.topicos||[]).forEach(t=>(t.itens||[]).forEach(i=>{if(!verificarSeFinalizado(i.tipoPrazo,i.dataFim)) td+=Number(i.valor)||0;}));
@@ -1274,7 +1364,7 @@ function salvarHistorico(){
  const existente=appData.historicoSaldo.find(h=>h.mes===mes);
  if(existente) existente.saldo=saldo; else appData.historicoSaldo.push({mes,saldo});
  if(appData.historicoSaldo.length>12) appData.historicoSaldo=appData.historicoSaldo.slice(-12);
- salvar();
+ if(!apenasVisual) salvar();
 }
 
 function exportarBackup(){
@@ -1299,7 +1389,7 @@ function importarExtrato(){
  linhas.forEach(l=>{
   const match=l.match(/([0-9]+[.,][0-9]{2})/);
   if(match){
-   const valor=parseFloat(match[1].replace('.','').replace(',','.'));
+   const valor=lerNumero(match[1]);
    const nome=l.replace(match[1],'').trim()||'Gasto importado';
    if(valor>0){topDestino.itens.push({id:'imp_'+Date.now()+criados,nome:nome.slice(0,30),valor:valor,tipoPrazo:'fixo',dataFim:'',pago:false}); criados++;}
   }
