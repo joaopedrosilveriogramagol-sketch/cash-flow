@@ -2,7 +2,20 @@ const SUPABASE_URL='https://hcelkzenncuqaqqsbqbs.supabase.co';
 const SUPABASE_KEY='sb_publishable_p53AbjGl-Kb26rubzpCU8g_xqMUWMcz';
 const {createClient}=supabase;
 const dbSupabase=createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false}});
-const dadosPadrao={globalDate:new Date().toISOString().slice(0,7),tema:"dark",metaEconomia:0,metaInvestimento:0,historicoSaldo:[],retirado:0,taxaCdi:13.65,pctCdi:100,ultimaAtualizacaoCd:new Date().toISOString().slice(0,10),historicoInvestimentos:[],projecaoMeses:{},rendas:[],topicos:[],conquistasManuais:[],caixinhaAtiva:"nubank",caixinhasBancos:{bb:{aportado:0,divBruto:0,divDiario:0,pctCdi:100,taxaCdi:13.65},mp:{aportado:0,divBruto:0,divDiario:0,pctCdi:100,taxaCdi:13.65},inter:{aportado:0,divBruto:0,divDiario:0,pctCdi:100,taxaCdi:13.65},nubank:{aportado:0,divBruto:0,divDiario:0,pctCdi:100,taxaCdi:13.65}},fundoConfig:{modalidade:"fiis",ticker:"",precoCota:10,ultimoDiv:0.10,dataAtualizacao:new Date().toISOString().slice(0,10),aporteMensal:500,cotasAtuais:0},fundosPorModalidade:{acoes:{ticker:"",precoCota:25,ultimoDiv:0.25,dataAtualizacao:new Date().toISOString().slice(0,10),aporteMensal:500,cotasAtuais:0},fiis:{ticker:"",precoCota:10,ultimoDiv:0.10,dataAtualizacao:new Date().toISOString().slice(0,10),aporteMensal:500,cotasAtuais:0},imobiliarios:{ticker:"",precoCota:100,ultimoDiv:0.95,dataAtualizacao:new Date().toISOString().slice(0,10),aporteMensal:500,cotasAtuais:0}}};
+
+const CATALOGO_ATIVOS_FAMOSOS={
+acoes_br:[
+{ticker:'PETR4',nome:'Petrobras PN',preco:36.50,div:0.45},{ticker:'VALE3',nome:'Vale ON',preco:58.20,div:0.42},{ticker:'ITUB4',nome:'Itaú Unibanco PN',preco:34.80,div:0.25},{ticker:'BBAS3',nome:'Banco do Brasil ON',preco:27.90,div:0.26},{ticker:'WEGE3',nome:'WEG ON',preco:52.40,div:0.12},{ticker:'BBDC4',nome:'Bradesco PN',preco:14.60,div:0.14},{ticker:'TAEE11',nome:'Taesa Unit',preco:34.90,div:0.33},{ticker:'EGIE3',nome:'Engie Brasil ON',preco:42.10,div:0.35},{ticker:'VIVT3',nome:'Telefônica Vivo ON',preco:51.30,div:0.38},{ticker:'SANB11',nome:'Santander Unit',preco:28.70,div:0.22},{ticker:'CPLE6',nome:'Copel PNB',preco:9.85,div:0.08},{ticker:'CMIG4',nome:'Cemig PN',preco:11.20,div:0.10},{ticker:'ISAE4',nome:'ISA Energia PN',preco:25.40,div:0.24},{ticker:'BBSE3',nome:'BB Seguridade ON',preco:35.60,div:0.32},{ticker:'CXSE3',nome:'Caixa Seguridade ON',preco:14.90,div:0.13},{ticker:'KLBN11',nome:'Klabin Unit',preco:21.50,div:0.16},{ticker:'SUZB3',nome:'Suzano ON',preco:56.80,div:0.25},{ticker:'PRIO3',nome:'PRIO ON',preco:41.90,div:0.10},{ticker:'GGBR4',nome:'Gerdau PN',preco:18.40,div:0.15},{ticker:'B3SA3',nome:'B3 ON',preco:10.90,div:0.09}
+],
+fiis:[
+{ticker:'MXRF11',nome:'Maxi Renda FII',preco:9.95,div:0.10},{ticker:'HGLG11',nome:'CSHG Logística',preco:156.50,div:1.10},{ticker:'KNRI11',nome:'Kinea Renda Imob.',preco:142.00,div:1.00},{ticker:'XPML11',nome:'XP Malls',preco:104.20,div:0.92},{ticker:'BTLG11',nome:'BTG Logística',preco:98.50,div:0.78},{ticker:'VISC11',nome:'Vinci Shopping Centers',preco:106.80,div:0.85},{ticker:'KNCR11',nome:'Kinea Rendimentos',preco:103.90,div:1.05},{ticker:'KNIP11',nome:'Kinea Índices de Preços',preco:91.40,div:0.90},{ticker:'XPLG11',nome:'XP Log',preco:96.30,div:0.78},{ticker:'HGRU11',nome:'CSHG Renda Urbana',preco:121.50,div:0.85},{ticker:'IRDM11',nome:'Iridium Recebíveis',preco:68.90,div:0.75},{ticker:'CPTS11',nome:'Capitânia Securities',preco:7.35,div:0.08},{ticker:'VGHF11',nome:'Valora Hedge Fund',preco:7.80,div:0.09},{ticker:'BCFF11',nome:'BTG Fundo de Fundos',preco:7.90,div:0.07},{ticker:'TGAR11',nome:'TG Ativo Real',preco:98.20,div:1.15},{ticker:'RECR11',nome:'REC Recebíveis Imob.',preco:79.40,div:0.88},{ticker:'BRCO11',nome:'Bresco Logística',preco:112.00,div:0.87},{ticker:'HGBS11',nome:'Hedge Brasil Shopping',preco:19.60,div:0.17},{ticker:'ALZR11',nome:'Alianza Trust Renda',preco:10.45,div:0.08},{ticker:'PVBI11',nome:'VBI Prime Properties',preco:84.50,div:0.65}
+],
+acoes_ext:[
+{ticker:'AAPL',nome:'Apple Inc.',preco:1280.00,div:1.25},{ticker:'NVDA',nome:'NVIDIA Corp.',preco:790.00,div:0.15},{ticker:'MSFT',nome:'Microsoft Corp.',preco:2420.00,div:3.60},{ticker:'AMZN',nome:'Amazon.com Inc.',preco:1180.00,div:0.50},{ticker:'GOOGL',nome:'Alphabet (Google)',preco:1020.00,div:0.95},{ticker:'META',nome:'Meta Platforms',preco:3350.00,div:2.40},{ticker:'TSLA',nome:'Tesla Inc.',preco:1450.00,div:0.50},{ticker:'BRK.B',nome:'Berkshire Hathaway',preco:2610.00,div:1.50},{ticker:'KO',nome:'Coca-Cola Company',preco:365.00,div:0.95},{ticker:'JNJ',nome:'Johnson & Johnson',preco:890.00,div:2.10},{ticker:'PG',nome:'Procter & Gamble',preco:960.00,div:1.95},{ticker:'JPM',nome:'JPMorgan Chase',preco:1340.00,div:2.30},{ticker:'V',nome:'Visa Inc.',preco:1710.00,div:1.10},{ticker:'MA',nome:'Mastercard Inc.',preco:2890.00,div:1.30},{ticker:'O',nome:'Realty Income REIT',preco:320.00,div:1.48},{ticker:'PEP',nome:'PepsiCo Inc.',preco:920.00,div:2.20},{ticker:'WMT',nome:'Walmart Inc.',preco:490.00,div:0.42},{ticker:'DIS',nome:'Walt Disney Co.',preco:580.00,div:0.45},{ticker:'MCD',nome:'McDonald’s Corp.',preco:1680.00,div:2.85},{ticker:'NFLX',nome:'Netflix Inc.',preco:4350.00,div:1.00}
+]
+};
+
+const dadosPadrao={globalDate:new Date().toISOString().slice(0,7),tema:"dark",metaEconomia:0,metaInvestimento:0,historicoSaldo:[],retirado:0,taxaCdi:13.65,pctCdi:100,ultimaAtualizacaoCd:new Date().toISOString().slice(0,10),historicoInvestimentos:[],projecaoMeses:{},rendas:[],topicos:[],conquistasManuais:[],caixinhaAtiva:"nubank",caixinhasBancos:{bb:{aportado:0,divBruto:0,divDiario:0,pctCdi:100,taxaCdi:13.65},mp:{aportado:0,divBruto:0,divDiario:0,pctCdi:100,taxaCdi:13.65},inter:{aportado:0,divBruto:0,divDiario:0,pctCdi:100,taxaCdi:13.65},nubank:{aportado:0,divBruto:0,divDiario:0,pctCdi:100,taxaCdi:13.65}},fundoConfig:{modalidade:"fiis",ticker:"MXRF11",precoCota:9.95,ultimoDiv:0.10,dataAtualizacao:new Date().toISOString().slice(0,10),aporteMensal:500,cotasAtuais:0},fundosPorModalidade:{acoes_br:{ticker:"PETR4",precoCota:36.50,ultimoDiv:0.45,dataAtualizacao:new Date().toISOString().slice(0,10),aporteMensal:500,cotasAtuais:0},fiis:{ticker:"MXRF11",precoCota:9.95,ultimoDiv:0.10,dataAtualizacao:new Date().toISOString().slice(0,10),aporteMensal:500,cotasAtuais:0},acoes_ext:{ticker:"AAPL",precoCota:1280.00,ultimoDiv:1.25,dataAtualizacao:new Date().toISOString().slice(0,10),aporteMensal:500,cotasAtuais:0}}};
 let appData=JSON.parse(JSON.stringify(dadosPadrao)),usuarioAtual=null,modoCadastro=false,autenticadoEmAndamento=false,carregandoInicial=false,timerSalvarNuvem=null,timerRenderizacao=null;
 let itemEditandoPrazo=null,chartPizza=null,chartBar=null,chartLinha=null,chartCaixinhaComparativo=null,chartProjecaoAportes=null,lucrosPassivosSimulador=[0,0,0,0,0,0,0,0,0,0,0,0];
 
@@ -11,7 +24,12 @@ function criarRipple(e){if(!e||!e.currentTarget)return;const btn=e.currentTarget
 
 const pluginLucroVerdeSimulador={id:'lucroVerdeSimulador',afterDatasetsDraw(chart){const{ctx}=chart,meta=chart.getDatasetMeta(0);if(!meta||meta.hidden)return;meta.data.forEach((bar,index)=>{const lucroMes=lucrosPassivosSimulador[index]||0,aporteMes=chart.data.datasets[0].data[index]||0;if(lucroMes>0||aporteMes>0){ctx.save();ctx.fillStyle='#10b981';ctx.font='extrabold 10px "JetBrains Mono", monospace';ctx.textAlign='center';ctx.fillText('+R$ '+lucroMes.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2}),bar.x,bar.y-8);ctx.restore();}});}};
 
-document.addEventListener('DOMContentLoaded',async()=>{initCharts();const{data:{session}}=await dbSupabase.auth.getSession();if(session&&session.user){usuarioAtual=session.user;await entrarNoApp();}else{document.getElementById('telaAuth').classList.remove('hidden');document.getElementById('appPrincipal').classList.add('hidden');}});
+document.addEventListener('DOMContentLoaded',async()=>{
+initCharts();
+document.addEventListener('click',e=>{const dd=document.getElementById('dropdownAtivosFamosos'),inp=document.getElementById('buscaAtivoFamoso');if(dd&&!dd.contains(e.target)&&e.target!==inp)dd.classList.add('hidden');});
+const{data:{session}}=await dbSupabase.auth.getSession();
+if(session&&session.user){usuarioAtual=session.user;await entrarNoApp();}else{document.getElementById('telaAuth').classList.remove('hidden');document.getElementById('appPrincipal').classList.add('hidden');}
+});
 window.addEventListener('beforeunload',()=>{if(usuarioAtual&&!carregandoInicial)localStorage.setItem('cashflow_'+usuarioAtual.id,JSON.stringify(appData));});
 
 function alternarModoAuth(){modoCadastro=!modoCadastro;const sub=document.getElementById('authSubtitulo'),btn=document.getElementById('btnAuthAcao'),alt=document.getElementById('btnAuthAlternar');if(modoCadastro){sub.textContent="Crie a sua conta informando um nome e palavra-passe";btn.textContent="Cadastrar Conta";alt.innerHTML="Já tem uma conta? <b>Fazer Login</b>";}else{sub.textContent="Digite o seu nome de login e palavra-passe";btn.textContent="Entrar na Conta";alt.innerHTML="Não tem conta? <b>Criar Conta com Nome</b>";}}
@@ -25,11 +43,12 @@ if(!appData.caixinhasBancos)appData.caixinhasBancos=JSON.parse(JSON.stringify(da
 ['bb','mp','inter','nubank'].forEach(b=>{if(!appData.caixinhasBancos[b])appData.caixinhasBancos[b]={aportado:0,divBruto:0,divDiario:0,pctCdi:100,taxaCdi:appData.taxaCdi||13.65};});
 if(!appData.caixinhaAtiva)appData.caixinhaAtiva='nubank';
 if(!appData.fundoConfig)appData.fundoConfig=JSON.parse(JSON.stringify(dadosPadrao.fundoConfig));
-if(!appData.fundosPorModalidade){
-appData.fundosPorModalidade=JSON.parse(JSON.stringify(dadosPadrao.fundosPorModalidade));
-const modAtual=appData.fundoConfig.modalidade||'fiis';
-appData.fundosPorModalidade[modAtual]=Object.assign({},appData.fundosPorModalidade[modAtual],appData.fundoConfig);
-}
+if(appData.fundoConfig.modalidade==='acoes')appData.fundoConfig.modalidade='acoes_br';
+if(appData.fundoConfig.modalidade==='imobiliarios')appData.fundoConfig.modalidade='acoes_ext';
+if(!appData.fundosPorModalidade)appData.fundosPorModalidade=JSON.parse(JSON.stringify(dadosPadrao.fundosPorModalidade));
+if(appData.fundosPorModalidade.acoes&&!appData.fundosPorModalidade.acoes_br)appData.fundosPorModalidade.acoes_br=appData.fundosPorModalidade.acoes;
+if(appData.fundosPorModalidade.imobiliarios&&!appData.fundosPorModalidade.acoes_ext)appData.fundosPorModalidade.acoes_ext=appData.fundosPorModalidade.imobiliarios;
+['acoes_br','fiis','acoes_ext'].forEach(m=>{if(!appData.fundosPorModalidade[m])appData.fundosPorModalidade[m]=JSON.parse(JSON.stringify(dadosPadrao.fundosPorModalidade[m]));});
 }
 
 function preencherCamposInterface(){
@@ -67,11 +86,13 @@ setTimeout(()=>{atualizarGraficoCaixinha();if(chartCaixinhaComparativo)chartCaix
 }else if(abaId==='analise'){gerarAnaliseInteligente();}else{renderizarTudo(true);}
 }
 
-function toggleAccordionInv(idWrapper,idIcone,isCaixinha){
-const wrap=document.getElementById(idWrapper),ic=document.getElementById(idIcone);if(!wrap)return;
-const abriu=wrap.classList.toggle('aberto');
-if(ic)ic.classList.toggle('rotacionado-180',abriu);
-if(abriu&&isCaixinha){setTimeout(()=>{atualizarGraficoCaixinha();if(chartCaixinhaComparativo)chartCaixinhaComparativo.resize();},120);}
+function toggleAccordionInv(idWrapper,idIcone,idTxt,isCaixinha){
+const wrap=document.getElementById(idWrapper),ic=document.getElementById(idIcone),txt=document.getElementById(idTxt);
+if(!wrap)return;
+const estaRetraido=wrap.classList.toggle('retraido');
+if(ic)ic.classList.toggle('rotacionado-180',!estaRetraido);
+if(txt)txt.textContent=estaRetraido?'Expandir':'Retrair';
+if(!estaRetraido&&isCaixinha){setTimeout(()=>{atualizarGraficoCaixinha();if(chartCaixinhaComparativo)chartCaixinhaComparativo.resize();},80);}
 }
 
 const nomesBancos={bb:'Banco do Brasil',mp:'Mercado Pago',inter:'Inter',nubank:'Nubank'};
@@ -140,20 +161,73 @@ chartCaixinhaComparativo.update();
 }
 }
 
-const nomesModalidadesFundo={acoes:'Ações',fiis:'FIIs',imobiliarios:'Fundos Imobiliários'};
+const nomesModalidadesFundo={acoes_br:'Ações Brasileiras',fiis:'Fundos Imobiliários',acoes_ext:'Ações Estrangeiras'};
 function selecionarModalidadeFundo(mod,ev){
 if(ev){ev.stopPropagation();criarRipple(ev);}
 garantirEstruturaInvestimentos();
+if(!CATALOGO_ATIVOS_FAMOSOS[mod])mod='fiis';
 appData.fundoConfig.modalidade=mod;
-const dadosMod=appData.fundosPorModalidade[mod]||{ticker:"",precoCota:10,ultimoDiv:0.10,dataAtualizacao:new Date().toISOString().slice(0,10),aporteMensal:500,cotasAtuais:0};
+const dadosMod=appData.fundosPorModalidade[mod]||dadosPadrao.fundosPorModalidade[mod];
 appData.fundoConfig=Object.assign({modalidade:mod},dadosMod);
 document.querySelectorAll('.btn-mod-fundo').forEach(b=>{b.classList.remove('border-indigo-500/50','bg-indigo-500/20','text-indigo-300');b.classList.add('border-white/10','bg-white/5','text-slate-300');});
 const btn=document.getElementById('btnModFundo-'+mod);if(btn){btn.classList.remove('border-white/10','bg-white/5','text-slate-300');btn.classList.add('border-indigo-500/50','bg-indigo-500/20','text-indigo-300');}
-const badge=document.getElementById('badgeTipoFundo'),lblCat=document.getElementById('lblCategoriaFundoDados');
+const badge=document.getElementById('badgeTipoFundo'),lblCat=document.getElementById('lblCategoriaFundoDados'),lblBusca=document.getElementById('lblBuscaModalidade');
 if(badge)badge.textContent=nomesModalidadesFundo[mod]||mod;
 if(lblCat)lblCat.textContent=nomesModalidadesFundo[mod]||mod;
+if(lblBusca)lblBusca.textContent=nomesModalidadesFundo[mod]||mod;
+const inpBusca=document.getElementById('buscaAtivoFamoso');if(inpBusca)inpBusca.value='';
 preencherInputsFundo(appData.fundoConfig);
+renderizarAtalhosAtivosFamosos(mod);
+filtrarAtivosFamosos('');
 calcularTotaisInvestimento();renderizarMetaInvestimento();renderizarSimulacaoFundo();salvar();
+}
+
+function renderizarAtalhosAtivosFamosos(mod){
+const container=document.getElementById('atalhosAtivosFamosos');if(!container)return;
+const lista=CATALOGO_ATIVOS_FAMOSOS[mod]||[];
+const tickerAtual=(appData.fundoConfig.ticker||'').toUpperCase();
+container.innerHTML=lista.map(item=>{
+const ativo=item.ticker===tickerAtual;
+return `<button type="button" onclick="escolherAtivoFamoso('${mod}','${item.ticker}',event)" class="px-2.5 py-1 rounded-full text-[11px] font-bold shrink-0 border transition-all cursor-pointer ${ativo?'bg-emerald-500 text-black border-emerald-400 shadow-md':'bg-[#0a0f1e] text-slate-300 border-white/10 hover:border-emerald-500/50 hover:text-emerald-300'}">${item.ticker} <span class="opacity-70 font-normal">R$${item.preco.toFixed(2)}</span></button>`;
+}).join('');
+}
+
+function abrirListaAtivosFamosos(){filtrarAtivosFamosos(document.getElementById('buscaAtivoFamoso')?.value||'');const dd=document.getElementById('dropdownAtivosFamosos');if(dd)dd.classList.remove('hidden');}
+function toggleListaAtivosFamosos(ev){if(ev)ev.stopPropagation();const dd=document.getElementById('dropdownAtivosFamosos');if(!dd)return;if(dd.classList.contains('hidden'))abrirListaAtivosFamosos();else dd.classList.add('hidden');}
+
+function filtrarAtivosFamosos(termo){
+const dd=document.getElementById('dropdownAtivosFamosos');if(!dd)return;
+const q=(termo||'').trim().toLowerCase();
+const modAtual=appData.fundoConfig.modalidade||'fiis';
+let resultados=[];
+const grupos=q?['acoes_br','fiis','acoes_ext']:[modAtual];
+grupos.forEach(g=>{
+(CATALOGO_ATIVOS_FAMOSOS[g]||[]).forEach(a=>{
+if(!q||a.ticker.toLowerCase().includes(q)||a.nome.toLowerCase().includes(q)){
+resultados.push(Object.assign({grupo:g,grupoNome:nomesModalidadesFundo[g]},a));
+}
+});
+});
+if(resultados.length===0){dd.innerHTML=`<div class="p-3 text-xs text-slate-400 text-center">Nenhum ativo encontrado para "${termo}"</div>`;return;}
+dd.innerHTML=resultados.map(r=>`<div onclick="escolherAtivoFamoso('${r.grupo}','${r.ticker}',event)" class="px-3.5 py-2.5 hover:bg-indigo-500/20 cursor-pointer flex justify-between items-center gap-2 transition-colors"><div><span class="font-extrabold text-xs text-emerald-300 valor-mono">${r.ticker}</span> <span class="text-xs text-slate-200 font-semibold ml-1">${r.nome}</span> <span class="text-[10px] px-2 py-0.5 rounded-full bg-white/5 text-slate-400 ml-1">${r.grupoNome}</span></div><div class="text-right text-[11px] valor-mono"><span class="text-cyan-300 font-bold">Cota: ${moeda(r.preco)}</span> <span class="text-emerald-400 ml-2">Div: ${moeda(r.div)}</span></div></div>`).join('');
+}
+
+function escolherAtivoFamoso(grupo,ticker,ev){
+if(ev)ev.stopPropagation();
+garantirEstruturaInvestimentos();
+const item=(CATALOGO_ATIVOS_FAMOSOS[grupo]||[]).find(x=>x.ticker===ticker);if(!item)return;
+if(appData.fundoConfig.modalidade!==grupo){
+appData.fundoConfig.modalidade=grupo;
+}
+const cotasExistentes=Number(appData.fundosPorModalidade[grupo]?.cotasAtuais)||0;
+const aporteExistente=Number(appData.fundosPorModalidade[grupo]?.aporteMensal)||500;
+const novoObj={modalidade:grupo,ticker:item.ticker,precoCota:item.preco,ultimoDiv:item.div,dataAtualizacao:new Date().toISOString().slice(0,10),aporteMensal:aporteExistente,cotasAtuais:cotasExistentes};
+appData.fundosPorModalidade[grupo]=Object.assign({},novoObj);
+appData.fundoConfig=Object.assign({},novoObj);
+selecionarModalidadeFundo(grupo);
+const inpBusca=document.getElementById('buscaAtivoFamoso');if(inpBusca)inpBusca.value=`${item.ticker} - ${item.nome}`;
+const dd=document.getElementById('dropdownAtivosFamosos');if(dd)dd.classList.add('hidden');
+toast(`${item.ticker} carregado!`);
 }
 
 function preencherInputsFundo(f){
@@ -177,13 +251,14 @@ function sincronizarDivFundo(val){document.getElementById('fnUltimoDivDados').va
 
 function salvarDadosFundo(){
 garantirEstruturaInvestimentos();const f=appData.fundoConfig,mod=f.modalidade||'fiis';
-f.ticker=document.getElementById('fnTickerAtivo').value.trim();
+f.ticker=document.getElementById('fnTickerAtivo').value.trim().toUpperCase();
 f.precoCota=lerNumero(document.getElementById('fnSimPrecoCota').value);
 f.ultimoDiv=lerNumero(document.getElementById('fnSimDivCota').value);
 f.dataAtualizacao=document.getElementById('fnDataAtualizacao').value;
 f.aporteMensal=lerNumero(document.getElementById('fnSimAporteMensal').value);
 f.cotasAtuais=lerNumero(document.getElementById('fnSimCotasAtuais').value);
 appData.fundosPorModalidade[mod]=Object.assign({},f);
+renderizarAtalhosAtivosFamosos(mod);
 calcularTotaisInvestimento();renderizarMetaInvestimento();renderizarSimulacaoFundo();gerarAnaliseInteligente();salvar();
 }
 
@@ -248,7 +323,7 @@ const mini=document.getElementById('miniSaldo-'+k);if(mini)mini.textContent=moed
 }
 });
 let patrimonioFundos=0,lucroFundos=0;
-['acoes','fiis','imobiliarios'].forEach(m=>{
+['acoes_br','fiis','acoes_ext'].forEach(m=>{
 const item=appData.fundosPorModalidade[m];
 if(item){
 patrimonioFundos+=(Number(item.cotasAtuais)||0)*(Number(item.precoCota)||0);
