@@ -37,3 +37,4 @@ body.theme-pink .input-dark{background:#1a0814!important;border:1px solid rgba(2
 @keyframes rippleEffect{to{transform:scale(3.5);opacity:0}}
 .no-scrollbar::-webkit-scrollbar{display:none}
 .no-scrollbar{-ms-overflow-style:none;scrollbar-width:none}
+.rotacionado-180{transform:rotate(180deg)}
