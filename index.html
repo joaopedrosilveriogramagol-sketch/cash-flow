@@ -35,9 +35,9 @@
 </div>
 </div>
 <div class="flex items-center gap-2 overflow-x-auto w-full md:w-auto pb-1 md:pb-0 no-scrollbar">
-<button type="button" onclick="mudarAba('principal');criarRipple(event)" id="btnTab-principal" class="tab-btn btn-press px-3 py-1.5 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 bg-emerald-500 text-black shadow-lg shadow-emerald-500/25 shrink-0"><i class="fa-solid fa-house"></i> Geral</button>
-<button type="button" onclick="mudarAba('investimentos');criarRipple(event)" id="btnTab-investimentos" class="tab-btn btn-press px-3 py-1.5 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 bg-white/5 text-slate-300 hover:bg-white/10 border border-white/5 shrink-0"><i class="fa-solid fa-chart-line"></i> Investimentos</button>
-<button type="button" onclick="mudarAba('analise');criarRipple(event)" id="btnTab-analise" class="tab-btn btn-press px-3 py-1.5 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 bg-white/5 text-slate-300 hover:bg-white/10 border border-white/5 shrink-0"><i class="fa-solid fa-brain"></i> Análise</button>
+<button type="button" onclick="mudarAba('principal');criarRipple(event)" id="btnTab-principal" class="tab-btn btn-press px-3 py-1.5 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 bg-emerald-500 text-black shadow-lg shadow-emerald-500/25 shrink-0 cursor-pointer"><i class="fa-solid fa-house"></i> Geral</button>
+<button type="button" onclick="mudarAba('investimentos');criarRipple(event)" id="btnTab-investimentos" class="tab-btn btn-press px-3 py-1.5 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 bg-white/5 text-slate-300 hover:bg-white/10 border border-white/5 shrink-0 cursor-pointer"><i class="fa-solid fa-chart-line"></i> Investimentos</button>
+<button type="button" onclick="mudarAba('analise');criarRipple(event)" id="btnTab-analise" class="tab-btn btn-press px-3 py-1.5 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 bg-white/5 text-slate-300 hover:bg-white/10 border border-white/5 shrink-0 cursor-pointer"><i class="fa-solid fa-brain"></i> Análise</button>
 <button type="button" id="btnAdminPainel" onclick="abrirModalAdmin();criarRipple(event)" class="hidden px-3 py-1.5 btn-press rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 text-xs font-bold hover:bg-amber-500/30 flex items-center gap-1.5 shrink-0"><i class="fa-solid fa-shield-halved"></i> Painel Admin</button>
 <input type="search" id="buscaGlobal" autocomplete="off" value="" oninput="agendarRenderizacao()" placeholder="🔍 Buscar..." class="input-dark campo-interativo bg-[#0a0f1e] border border-white/10 rounded-full px-3 py-1.5 text-xs w-32 sm:w-36 outline-none shrink-0">
 <select id="filtroPago" autocomplete="off" onchange="renderizarTudo()" class="input-dark campo-interativo bg-[#0a0f1e] border border-white/10 rounded-full px-2.5 py-1.5 text-xs shrink-0"><option value="todos">Todos</option><option value="naopago">Pendentes</option><option value="pago">Pagos</option></select>
@@ -125,16 +125,19 @@
 <div class="flex flex-wrap justify-between items-center gap-4 mb-6 pb-4 border-b border-white/10">
 <div>
 <h2 class="text-sm sm:text-base font-extrabold uppercase tracking-widest text-emerald-300 flex items-center gap-2"><i class="fa-solid fa-chart-line"></i> Gestão de Investimentos & CDI</h2>
-<p class="text-xs text-slate-400 mt-1">Acompanhe seu patrimônio líquido, metas, rendimentos e detalhamento mensal de aportes.</p>
+<p class="text-xs text-slate-400 mt-1">Acompanhe seu patrimônio líquido, metas, rendimentos de bancos e carteira de fundos/ações.</p>
 </div>
 <div class="flex gap-3 flex-wrap">
-<div class="bg-emerald-500/10 px-4 py-2 rounded-xl border border-emerald-500/30"><span class="text-[10px] uppercase text-emerald-300 block">Patrimônio Líquido</span><span id="lblPatrimonioTotal" class="font-black valor-mono text-emerald-400 text-sm sm:text-base">R$ 0,00</span></div>
+<div class="bg-amber-500/10 px-3.5 py-2 rounded-xl border border-amber-500/30"><span class="text-[9px] uppercase text-amber-300 block">Total Caixinhas CDI</span><span id="lblSubtotalCaixinhas" class="font-bold valor-mono text-amber-300 text-xs sm:text-sm">R$ 0,00</span></div>
+<div class="bg-indigo-500/10 px-3.5 py-2 rounded-xl border border-indigo-500/30"><span class="text-[9px] uppercase text-indigo-300 block">Total Fundos/Ações</span><span id="lblSubtotalFundos" class="font-bold valor-mono text-indigo-300 text-xs sm:text-sm">R$ 0,00</span></div>
+<div class="bg-emerald-500/10 px-4 py-2 rounded-xl border border-emerald-500/30"><span class="text-[10px] uppercase text-emerald-300 block">Patrimônio Líquido Total</span><span id="lblPatrimonioTotal" class="font-black valor-mono text-emerald-400 text-sm sm:text-base">R$ 0,00</span></div>
 </div>
 </div>
+
 <div class="card-dark rounded-[20px] p-4 sm:p-5 mb-6 border-emerald-500/30 bg-[#0d1b2a]">
 <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
 <div class="md:col-span-5">
-<div class="flex justify-between items-center mb-1.5"><p class="text-[10px] tracking-widest uppercase text-emerald-300 font-bold"><i class="fa-solid fa-bullseye mr-1"></i> Meta Investida</p><span id="lblPctMetaInvestida" class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-mono font-bold">0%</span></div>
+<div class="flex justify-between items-center mb-1.5"><p class="text-[10px] tracking-widest uppercase text-emerald-300 font-bold"><i class="fa-solid fa-bullseye mr-1"></i> Meta Investida (Soma Bancos + Fundos)</p><span id="lblPctMetaInvestida" class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-mono font-bold">0%</span></div>
 <div class="flex gap-2 items-center"><span class="text-xs text-emerald-400 font-bold">R$</span><input id="metaInvestimento" type="text" inputmode="decimal" oninput="salvarMetaInvestimento()" placeholder="Ex: 10000,00" class="input-dark campo-interativo valor-mono w-full bg-[#0a0f1e] border border-white/10 rounded-full px-4 py-2 text-sm font-bold text-emerald-300"></div>
 </div>
 <div class="md:col-span-7 flex flex-col justify-center">
@@ -144,74 +147,92 @@
 </div>
 </div>
 
-<!-- BLOCO 1 INTERATIVO: CAIXINHA BANCOS CDI -->
-<div class="card-dark rounded-2xl p-4 sm:p-5 mb-6 border-amber-500/30 bg-[#12141c] transition-all">
-<div onclick="toggleBlocoInv('conteudoBlocoCaixinha','iconeBlocoCaixinha')" class="flex justify-between items-center cursor-pointer select-none">
-<div class="flex items-center gap-2.5">
-<div class="w-8 h-8 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-300"><i class="fa-solid fa-piggy-bank text-xs"></i></div>
+<!-- ACCORDION 1: CAIXINHA & RENDA DE BANCOS (REVELAÇÃO PROGRESSIVA) -->
+<div class="card-dark rounded-2xl mb-6 border-amber-500/30 bg-[#12141c] overflow-hidden">
+<div onclick="toggleAccordionInv('accCaixinha','iconeAccCaixinha',true)" class="p-4 sm:p-5 flex flex-wrap justify-between items-center gap-3 cursor-pointer select-none hover:bg-white/[0.02] transition-colors">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-300 shrink-0"><i class="fa-solid fa-piggy-bank text-sm"></i></div>
 <div>
-<h3 class="text-xs sm:text-sm font-extrabold uppercase tracking-widest text-amber-300">Caixinha & Renda de Bancos (CDI)</h3>
-<p class="text-[10px] text-slate-400">Clique para expandir/recolher e selecionar seu banco (Banco do Brasil, Mercado Pago, Inter, Nubank)</p>
+<h3 class="text-xs sm:text-sm font-extrabold uppercase tracking-widest text-amber-300 flex items-center gap-2">Caixinha & Renda de Bancos (CDI) <span id="badgeBancoAtivo" class="text-[10px] px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-200 border border-amber-500/40 font-bold">Nubank</span></h3>
+<p class="text-[11px] text-slate-400 mt-0.5">Clique para revelar ou recolher os bancos, taxas CDI, dividendos e gráfico comparativo</p>
 </div>
 </div>
 <div class="flex items-center gap-3">
-<span id="badgeBancoAtivo" class="text-[10px] px-2.5 py-1 rounded-full bg-amber-500/15 text-amber-300 border border-amber-500/30 font-bold">Nubank</span>
-<i id="iconeBlocoCaixinha" class="fa-solid fa-chevron-down text-slate-400 transition-transform duration-300"></i>
+<div class="text-right hidden sm:block"><span class="text-[9px] uppercase text-slate-400 block">Acumulado Bancos</span><span id="lblHeaderTotalCaixinha" class="text-xs font-bold valor-mono text-emerald-400">R$ 0,00</span></div>
+<div class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center"><i id="iconeAccCaixinha" class="fa-solid fa-chevron-down text-amber-300 transition-transform duration-300 rotacionado-180"></i></div>
 </div>
 </div>
-<div id="conteudoBlocoCaixinha" class="mt-5 pt-4 border-t border-white/10 space-y-5">
-<div class="flex flex-wrap gap-2">
-<button type="button" onclick="selecionarBancoCaixinha('bb');criarRipple(event)" id="btnBanco-bb" class="btn-banco btn-press px-3.5 py-2 rounded-xl text-xs font-bold border border-white/10 bg-white/5 text-slate-300 flex items-center gap-2"><i class="fa-solid fa-building-columns text-yellow-400"></i> Banco do Brasil</button>
-<button type="button" onclick="selecionarBancoCaixinha('mp');criarRipple(event)" id="btnBanco-mp" class="btn-banco btn-press px-3.5 py-2 rounded-xl text-xs font-bold border border-white/10 bg-white/5 text-slate-300 flex items-center gap-2"><i class="fa-solid fa-handshake text-sky-400"></i> Mercado Pago</button>
-<button type="button" onclick="selecionarBancoCaixinha('inter');criarRipple(event)" id="btnBanco-inter" class="btn-banco btn-press px-3.5 py-2 rounded-xl text-xs font-bold border border-white/10 bg-white/5 text-slate-300 flex items-center gap-2"><i class="fa-solid fa-shield-heart text-orange-400"></i> Inter</button>
-<button type="button" onclick="selecionarBancoCaixinha('nubank');criarRipple(event)" id="btnBanco-nubank" class="btn-banco btn-press px-3.5 py-2 rounded-xl text-xs font-bold border border-amber-500/40 bg-amber-500/20 text-amber-300 flex items-center gap-2"><i class="fa-solid fa-cube text-purple-400"></i> Nubank</button>
+<div id="accCaixinha" class="accordion-wrapper aberto">
+<div class="accordion-inner px-4 sm:px-5 pb-5 pt-2 border-t border-white/10 space-y-5" onclick="event.stopPropagation()">
+<div>
+<label class="text-[10px] uppercase tracking-widest text-slate-400 block mb-2 font-bold">1. Escolha a Instituição Bancária para Visualizar ou Editar:</label>
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+<button type="button" onclick="selecionarBancoCaixinha('bb',event)" id="btnBanco-bb" class="btn-banco btn-press px-3.5 py-2.5 rounded-xl text-xs font-bold border border-white/10 bg-white/5 text-slate-300 flex items-center justify-between gap-2 cursor-pointer"><span class="flex items-center gap-2"><i class="fa-solid fa-building-columns text-yellow-400"></i> Banco do Brasil</span><span id="miniSaldo-bb" class="text-[10px] valor-mono opacity-80">R$ 0</span></button>
+<button type="button" onclick="selecionarBancoCaixinha('mp',event)" id="btnBanco-mp" class="btn-banco btn-press px-3.5 py-2.5 rounded-xl text-xs font-bold border border-white/10 bg-white/5 text-slate-300 flex items-center justify-between gap-2 cursor-pointer"><span class="flex items-center gap-2"><i class="fa-solid fa-handshake text-sky-400"></i> Mercado Pago</span><span id="miniSaldo-mp" class="text-[10px] valor-mono opacity-80">R$ 0</span></button>
+<button type="button" onclick="selecionarBancoCaixinha('inter',event)" id="btnBanco-inter" class="btn-banco btn-press px-3.5 py-2.5 rounded-xl text-xs font-bold border border-white/10 bg-white/5 text-slate-300 flex items-center justify-between gap-2 cursor-pointer"><span class="flex items-center gap-2"><i class="fa-solid fa-shield-heart text-orange-400"></i> Inter</span><span id="miniSaldo-inter" class="text-[10px] valor-mono opacity-80">R$ 0</span></button>
+<button type="button" onclick="selecionarBancoCaixinha('nubank',event)" id="btnBanco-nubank" class="btn-banco btn-press px-3.5 py-2.5 rounded-xl text-xs font-bold border border-amber-500/50 bg-amber-500/20 text-amber-300 flex items-center justify-between gap-2 cursor-pointer"><span class="flex items-center gap-2"><i class="fa-solid fa-cube text-purple-400"></i> Nubank</span><span id="miniSaldo-nubank" class="text-[10px] valor-mono opacity-80">R$ 0</span></button>
 </div>
+</div>
+<div>
+<label class="text-[10px] uppercase tracking-widest text-slate-400 block mb-2 font-bold">2. Parâmetros da Caixinha Selecionada (<span id="lblNomeBancoForm" class="text-amber-300">Nubank</span>):</label>
 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3">
-<div class="bg-black/30 p-3 rounded-2xl border border-white/5"><label class="text-[10px] uppercase tracking-widest text-slate-400 block mb-1">Valor Aportado</label><div class="relative"><span class="absolute left-3 top-2 text-xs text-emerald-400 font-bold">R$</span><input type="text" inputmode="decimal" id="cxValorAportado" oninput="salvarDadosCaixinha()" placeholder="0,00" class="input-dark campo-interativo valor-mono w-full bg-[#0a0f1e] border border-white/10 rounded-full pl-8 pr-3 py-1.5 text-xs font-bold text-emerald-300"></div></div>
-<div class="bg-black/30 p-3 rounded-2xl border border-white/5"><label class="text-[10px] uppercase tracking-widest text-slate-400 block mb-1">Taxa Anual CDI (%)</label><input type="text" inputmode="decimal" id="inputTaxaCdi" oninput="salvarDadosCaixinha()" placeholder="Ex: 13.65" class="input-dark campo-interativo valor-mono w-full bg-[#0a0f1e] border border-white/10 rounded-full px-3 py-1.5 text-xs font-bold text-amber-300"></div>
-<div class="bg-black/30 p-3 rounded-2xl border border-white/5"><label class="text-[10px] uppercase tracking-widest text-slate-400 block mb-1">Rendimento (% CDI)</label><input type="text" inputmode="decimal" id="inputPctCdi" oninput="salvarDadosCaixinha()" placeholder="Ex: 100" class="input-dark campo-interativo valor-mono w-full bg-[#0a0f1e] border border-white/10 rounded-full px-3 py-1.5 text-xs font-bold text-indigo-300"></div>
+<div class="bg-black/30 p-3 rounded-2xl border border-white/5"><label class="text-[10px] uppercase tracking-widest text-slate-400 block mb-1">Valor Aportado</label><div class="relative"><span class="absolute left-3 top-2 text-xs text-emerald-400 font-bold">R$</span><input type="text" inputmode="decimal" id="cxValorAportado" oninput="salvarDadosCaixinha(false)" placeholder="0,00" class="input-dark campo-interativo valor-mono w-full bg-[#0a0f1e] border border-white/10 rounded-full pl-8 pr-3 py-1.5 text-xs font-bold text-emerald-300"></div></div>
+<div class="bg-black/30 p-3 rounded-2xl border border-white/5"><label class="text-[10px] uppercase tracking-widest text-slate-400 block mb-1">Taxa Anual CDI (%)</label><input type="text" inputmode="decimal" id="inputTaxaCdi" oninput="salvarDadosCaixinha(false)" placeholder="Ex: 13.65" class="input-dark campo-interativo valor-mono w-full bg-[#0a0f1e] border border-white/10 rounded-full px-3 py-1.5 text-xs font-bold text-amber-300"></div>
+<div class="bg-black/30 p-3 rounded-2xl border border-white/5"><label class="text-[10px] uppercase tracking-widest text-slate-400 block mb-1">Rendimento (% CDI)</label><input type="text" inputmode="decimal" id="inputPctCdi" oninput="salvarDadosCaixinha(false)" placeholder="Ex: 100" class="input-dark campo-interativo valor-mono w-full bg-[#0a0f1e] border border-white/10 rounded-full px-3 py-1.5 text-xs font-bold text-indigo-300"></div>
 <div class="bg-black/30 p-3 rounded-2xl border border-white/5"><label class="text-[10px] uppercase tracking-widest text-slate-400 block mb-1">Dividendo Diário</label><div class="relative"><span class="absolute left-3 top-2 text-xs text-cyan-400 font-bold">R$</span><input type="text" inputmode="decimal" id="cxDividendoDiario" oninput="salvarDadosCaixinha(true)" placeholder="0,00" class="input-dark campo-interativo valor-mono w-full bg-[#0a0f1e] border border-white/10 rounded-full pl-8 pr-3 py-1.5 text-xs font-bold text-cyan-300"></div></div>
 <div class="bg-black/30 p-3 rounded-2xl border border-white/5"><label class="text-[10px] uppercase tracking-widest text-slate-400 block mb-1">Dividendo Bruto Lucrado</label><div class="relative"><span class="absolute left-3 top-2 text-xs text-emerald-400 font-bold">R$</span><input type="text" inputmode="decimal" id="cxDividendoBruto" oninput="salvarDadosCaixinha(true)" placeholder="0,00" class="input-dark campo-interativo valor-mono w-full bg-[#0a0f1e] border border-white/10 rounded-full pl-8 pr-3 py-1.5 text-xs font-bold text-emerald-300"></div></div>
-<div class="bg-black/30 p-3 rounded-2xl border border-white/5"><label class="text-[10px] uppercase tracking-widest text-slate-400 block mb-1">Valor Retirado</label><div class="relative"><span class="absolute left-3 top-2 text-xs text-rose-400 font-bold">R$</span><input type="text" inputmode="decimal" id="inputValorRetirado" oninput="salvarInvestimentosRetirado(this.value)" placeholder="0,00" class="input-dark campo-interativo valor-mono w-full bg-[#0a0f1e] border border-white/10 rounded-full pl-8 pr-3 py-1.5 text-xs font-bold text-rose-300"></div></div>
+<div class="bg-black/30 p-3 rounded-2xl border border-white/5"><label class="text-[10px] uppercase tracking-widest text-slate-400 block mb-1">Valor Retirado Geral</label><div class="relative"><span class="absolute left-3 top-2 text-xs text-rose-400 font-bold">R$</span><input type="text" inputmode="decimal" id="inputValorRetirado" oninput="salvarInvestimentosRetirado(this.value)" placeholder="0,00" class="input-dark campo-interativo valor-mono w-full bg-[#0a0f1e] border border-white/10 rounded-full pl-8 pr-3 py-1.5 text-xs font-bold text-rose-300"></div></div>
+</div>
 </div>
 <input type="hidden" id="inputValorInvestido" value="0"><input type="hidden" id="inputValorLucrado" value="0">
-<div class="card-dark rounded-xl p-4 h-[280px] sm:h-[320px] flex flex-col border border-white/5 bg-[#0a0f1e]">
-<div class="flex justify-between items-center mb-2">
-<h4 class="text-[11px] font-bold uppercase tracking-widest text-amber-300"><i class="fa-solid fa-chart-line mr-1"></i> Comparativo: Valor Aportado x Dividendo Diário Acumulado (30 dias)</h4>
-<span id="lblResumoCaixinha" class="text-[10px] px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 font-mono font-bold">R$ 0,00 / dia</span>
+<div class="card-dark rounded-2xl p-4 h-[300px] sm:h-[340px] flex flex-col border border-white/10 bg-[#0a0f1e]">
+<div class="flex flex-wrap justify-between items-center gap-2 mb-2">
+<h4 class="text-[11px] font-bold uppercase tracking-widest text-amber-300"><i class="fa-solid fa-chart-line mr-1"></i> Gráfico de Linha: Dividendo Diário x Valor Aportado (30 dias úteis)</h4>
+<div class="flex items-center gap-2">
+<span id="lblResumoCaixinha" class="text-[10px] px-2.5 py-0.5 rounded-full bg-cyan-500/15 text-cyan-300 border border-cyan-500/30 font-mono font-bold">+R$ 0,00 / dia</span>
+<span id="lblResumoCaixinhaMes" class="text-[10px] px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 font-mono font-bold">+R$ 0,00 / mês</span>
 </div>
-<div class="flex-1 relative"><canvas id="chartCaixinhaComparativo"></canvas></div>
+</div>
+<div class="flex-1 relative min-h-[220px]"><canvas id="chartCaixinhaComparativo"></canvas></div>
+</div>
 </div>
 </div>
 </div>
 
-<!-- BLOCO 2 INTERATIVO: FUNDOS, AÇÕES E FIIS -->
-<div class="card-dark rounded-2xl p-4 sm:p-5 mb-6 border-indigo-500/30 bg-[#12141c] transition-all">
-<div onclick="toggleBlocoInv('conteudoBlocoFundos','iconeBlocoFundos')" class="flex justify-between items-center cursor-pointer select-none">
-<div class="flex items-center gap-2.5">
-<div class="w-8 h-8 rounded-xl bg-indigo-500/20 border border-indigo-500/40 flex items-center justify-center text-indigo-300"><i class="fa-solid fa-chart-pie text-xs"></i></div>
+<!-- ACCORDION 2: FUNDOS & INVESTIMENTOS NÃO BANCÁRIOS (REVELAÇÃO PROGRESSIVA) -->
+<div class="card-dark rounded-2xl mb-6 border-indigo-500/30 bg-[#12141c] overflow-hidden">
+<div onclick="toggleAccordionInv('accFundos','iconeAccFundos',false)" class="p-4 sm:p-5 flex flex-wrap justify-between items-center gap-3 cursor-pointer select-none hover:bg-white/[0.02] transition-colors">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-xl bg-indigo-500/20 border border-indigo-500/40 flex items-center justify-center text-indigo-300 shrink-0"><i class="fa-solid fa-chart-pie text-sm"></i></div>
 <div>
-<h3 class="text-xs sm:text-sm font-extrabold uppercase tracking-widest text-indigo-300">Fundos & Investimentos Não Bancários (Ações / FIIs)</h3>
-<p class="text-[10px] text-slate-400">Clique para expandir/recolher dados do fundo, parâmetros de aportes e tabela de 360 meses</p>
+<h3 class="text-xs sm:text-sm font-extrabold uppercase tracking-widest text-indigo-300 flex items-center gap-2">Fundos & Investimentos Não Bancários <span id="badgeTipoFundo" class="text-[10px] px-2.5 py-0.5 rounded-full bg-indigo-500/20 text-indigo-200 border border-indigo-500/40 font-bold">FIIs</span></h3>
+<p class="text-[11px] text-slate-400 mt-0.5">Clique para revelar ou recolher Ações/FIIs, parâmetros de cota, cálculo de meta e tabela de 360 meses</p>
 </div>
 </div>
 <div class="flex items-center gap-3">
-<span id="badgeTipoFundo" class="text-[10px] px-2.5 py-1 rounded-full bg-indigo-500/15 text-indigo-300 border border-indigo-500/30 font-bold">FIIs</span>
-<i id="iconeBlocoFundos" class="fa-solid fa-chevron-down text-slate-400 transition-transform duration-300"></i>
+<div class="text-right hidden sm:block"><span class="text-[9px] uppercase text-slate-400 block">Acumulado Fundos</span><span id="lblHeaderTotalFundos" class="text-xs font-bold valor-mono text-indigo-300">R$ 0,00</span></div>
+<div class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center"><i id="iconeAccFundos" class="fa-solid fa-chevron-down text-indigo-300 transition-transform duration-300 rotacionado-180"></i></div>
 </div>
 </div>
-<div id="conteudoBlocoFundos" class="mt-5 pt-4 border-t border-white/10 space-y-5">
-<div class="flex flex-wrap items-center justify-between gap-2">
+<div id="accFundos" class="accordion-wrapper aberto">
+<div class="accordion-inner px-4 sm:px-5 pb-5 pt-2 border-t border-white/10 space-y-5" onclick="event.stopPropagation()">
+<div class="flex flex-wrap items-center justify-between gap-3">
+<div>
+<label class="text-[10px] uppercase tracking-widest text-slate-400 block mb-2 font-bold">1. Escolha a Categoria do Ativo:</label>
 <div class="flex flex-wrap gap-2">
-<button type="button" onclick="selecionarModalidadeFundo('acoes');criarRipple(event)" id="btnModFundo-acoes" class="btn-mod-fundo btn-press px-3.5 py-2 rounded-xl text-xs font-bold border border-white/10 bg-white/5 text-slate-300 flex items-center gap-2"><i class="fa-solid fa-arrow-trend-up text-emerald-400"></i> Ações</button>
-<button type="button" onclick="selecionarModalidadeFundo('fiis');criarRipple(event)" id="btnModFundo-fiis" class="btn-mod-fundo btn-press px-3.5 py-2 rounded-xl text-xs font-bold border border-indigo-500/40 bg-indigo-500/20 text-indigo-300 flex items-center gap-2"><i class="fa-solid fa-city text-indigo-400"></i> FIIs</button>
-<button type="button" onclick="selecionarModalidadeFundo('imobiliarios');criarRipple(event)" id="btnModFundo-imobiliarios" class="btn-mod-fundo btn-press px-3.5 py-2 rounded-xl text-xs font-bold border border-white/10 bg-white/5 text-slate-300 flex items-center gap-2"><i class="fa-solid fa-building text-cyan-400"></i> Fundos Imobiliários</button>
+<button type="button" onclick="selecionarModalidadeFundo('acoes',event)" id="btnModFundo-acoes" class="btn-mod-fundo btn-press px-3.5 py-2 rounded-xl text-xs font-bold border border-white/10 bg-white/5 text-slate-300 flex items-center gap-2 cursor-pointer"><i class="fa-solid fa-arrow-trend-up text-emerald-400"></i> Ações</button>
+<button type="button" onclick="selecionarModalidadeFundo('fiis',event)" id="btnModFundo-fiis" class="btn-mod-fundo btn-press px-3.5 py-2 rounded-xl text-xs font-bold border border-indigo-500/50 bg-indigo-500/20 text-indigo-300 flex items-center gap-2 cursor-pointer"><i class="fa-solid fa-city text-indigo-400"></i> FIIs</button>
+<button type="button" onclick="selecionarModalidadeFundo('imobiliarios',event)" id="btnModFundo-imobiliarios" class="btn-mod-fundo btn-press px-3.5 py-2 rounded-xl text-xs font-bold border border-white/10 bg-white/5 text-slate-300 flex items-center gap-2 cursor-pointer"><i class="fa-solid fa-building text-cyan-400"></i> Fundos Imobiliários</button>
 </div>
-<input type="text" id="fnTickerAtivo" oninput="salvarDadosFundo()" placeholder="Código/Nome (Ex: MXRF11, PETR4)" class="input-dark campo-interativo bg-[#0a0f1e] border border-white/10 rounded-full px-4 py-1.5 text-xs font-bold text-indigo-300 w-full sm:w-64">
+</div>
+<div class="w-full sm:w-64">
+<label class="text-[10px] uppercase tracking-widest text-slate-400 block mb-1 font-bold">Código / Nome do Ativo</label>
+<input type="text" id="fnTickerAtivo" oninput="salvarDadosFundo()" placeholder="Ex: MXRF11, PETR4, HGLG11" class="input-dark campo-interativo bg-[#0a0f1e] border border-white/10 rounded-full px-4 py-2 text-xs font-bold text-indigo-300 w-full">
+</div>
 </div>
 
 <div class="bg-black/25 p-4 rounded-2xl border border-white/5">
-<h4 class="text-[11px] font-bold uppercase tracking-widest text-cyan-300 mb-3"><i class="fa-solid fa-database mr-1"></i> Dados do Fundo / Ativo</h4>
+<h4 class="text-[11px] font-bold uppercase tracking-widest text-cyan-300 mb-3"><i class="fa-solid fa-database mr-1"></i> Dados do Fundo (<span id="lblCategoriaFundoDados">FIIs</span>)</h4>
 <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
 <div><label class="text-[10px] uppercase text-slate-400 block mb-1">Preço da Cota (R$)</label><div class="relative"><span class="absolute left-3 top-2 text-xs text-cyan-400 font-bold">R$</span><input type="text" inputmode="decimal" id="fnPrecoCotaDados" oninput="sincronizarCotaFundo(this.value)" placeholder="10,00" class="input-dark campo-interativo valor-mono w-full bg-[#0a0f1e] border border-white/10 rounded-full pl-8 pr-3 py-1.5 text-xs font-bold text-cyan-300"></div></div>
 <div><label class="text-[10px] uppercase text-slate-400 block mb-1">Último Dividendo (R$)</label><div class="relative"><span class="absolute left-3 top-2 text-xs text-emerald-400 font-bold">R$</span><input type="text" inputmode="decimal" id="fnUltimoDivDados" oninput="sincronizarDivFundo(this.value)" placeholder="0,10" class="input-dark campo-interativo valor-mono w-full bg-[#0a0f1e] border border-white/10 rounded-full pl-8 pr-3 py-1.5 text-xs font-bold text-emerald-300"></div></div>
@@ -225,9 +246,9 @@
 <div><label class="text-[10px] uppercase text-slate-400 block mb-1">Preço da Cota</label><div class="relative"><span class="absolute left-3 top-2 text-xs text-cyan-400 font-bold">R$</span><input type="text" inputmode="decimal" id="fnSimPrecoCota" oninput="sincronizarCotaFundo(this.value)" placeholder="10,00" class="input-dark campo-interativo valor-mono w-full bg-[#0a0f1e] border border-white/10 rounded-full pl-8 pr-3 py-1.5 text-xs font-bold text-cyan-300"></div></div>
 <div><label class="text-[10px] uppercase text-slate-400 block mb-1">Dividendo p/ Cota</label><div class="relative"><span class="absolute left-3 top-2 text-xs text-emerald-400 font-bold">R$</span><input type="text" inputmode="decimal" id="fnSimDivCota" oninput="sincronizarDivFundo(this.value)" placeholder="0,10" class="input-dark campo-interativo valor-mono w-full bg-[#0a0f1e] border border-white/10 rounded-full pl-8 pr-3 py-1.5 text-xs font-bold text-emerald-300"></div></div>
 <div><label class="text-[10px] uppercase text-slate-400 block mb-1">Aporte Mensal</label><div class="relative"><span class="absolute left-3 top-2 text-xs text-indigo-400 font-bold">R$</span><input type="text" inputmode="decimal" id="fnSimAporteMensal" oninput="salvarDadosFundo()" placeholder="500,00" class="input-dark campo-interativo valor-mono w-full bg-[#0a0f1e] border border-white/10 rounded-full pl-8 pr-3 py-1.5 text-xs font-bold text-indigo-300"></div></div>
-<div><label class="text-[10px] uppercase text-slate-400 block mb-1">Cotas Atuais</label><input type="text" inputmode="numeric" id="fnSimCotasAtuais" oninput="salvarDadosFundo()" placeholder="0" class="input-dark campo-interativo valor-mono w-full bg-[#0a0f1e] border border-white/10 rounded-full px-3 py-1.5 text-xs font-bold text-amber-300"></div>
-<div><label class="text-[10px] uppercase text-slate-400 block mb-1">Dividendo Total Atual</label><input type="text" id="fnSimDivTotal" readonly class="input-dark valor-mono w-full bg-[#0a0f1e]/60 border border-white/10 rounded-full px-3 py-1.5 text-xs font-bold text-emerald-400 cursor-not-allowed"></div>
-<div><label class="text-[10px] uppercase text-slate-400 block mb-1">Cotas p/ 1 Nova Cota</label><input type="text" id="fnSimCotasPorDiv" readonly class="input-dark valor-mono w-full bg-[#0a0f1e]/60 border border-white/10 rounded-full px-3 py-1.5 text-xs font-bold text-purple-300 cursor-not-allowed"></div>
+<div><label class="text-[10px] uppercase text-slate-400 block mb-1">Qtd. Cotas Atuais</label><input type="text" inputmode="numeric" id="fnSimCotasAtuais" oninput="salvarDadosFundo()" placeholder="0" class="input-dark campo-interativo valor-mono w-full bg-[#0a0f1e] border border-white/10 rounded-full px-3 py-1.5 text-xs font-bold text-amber-300"></div>
+<div><label class="text-[10px] uppercase text-slate-400 block mb-1">Dividendo Total</label><input type="text" id="fnSimDivTotal" readonly class="input-dark valor-mono w-full bg-[#0a0f1e]/60 border border-white/10 rounded-full px-3 py-1.5 text-xs font-bold text-emerald-400 cursor-not-allowed"></div>
+<div><label class="text-[10px] uppercase text-slate-400 block mb-1">Cotas p/ Dividendo</label><input type="text" id="fnSimCotasPorDiv" readonly class="input-dark valor-mono w-full bg-[#0a0f1e]/60 border border-white/10 rounded-full px-3 py-1.5 text-xs font-bold text-purple-300 cursor-not-allowed"></div>
 </div>
 </div>
 
@@ -235,28 +256,29 @@
 <div class="flex items-center gap-3">
 <div class="w-10 h-10 rounded-xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-300 shrink-0"><i class="fa-solid fa-hourglass-half"></i></div>
 <div>
-<span class="text-[10px] uppercase tracking-widest text-emerald-300 font-bold block">Estimativa para Atingir a Meta Investida</span>
+<span class="text-[10px] uppercase tracking-widest text-emerald-300 font-bold block">Tempo Estimado para Atingir a Meta Investida</span>
 <h4 id="lblTempoAtingirMetaFundo" class="text-sm sm:text-base font-black valor-mono text-white">Preencha a meta e os parâmetros acima</h4>
 </div>
 </div>
 <div class="text-right">
-<span class="text-[10px] uppercase text-slate-400 block">Patrimônio final em 360 meses</span>
+<span class="text-[10px] uppercase text-slate-400 block">Patrimônio acumulado em 360 meses</span>
 <span id="lblPatrimonio360Meses" class="text-sm font-black valor-mono text-cyan-300">R$ 0,00</span>
 </div>
 </div>
 
 <div class="bg-[#0a0f1e] rounded-2xl border border-white/10 overflow-hidden">
 <div class="px-4 py-3 bg-black/40 border-b border-white/10 flex justify-between items-center">
-<h5 class="text-[11px] font-bold uppercase tracking-widest text-indigo-300"><i class="fa-solid fa-table-list mr-1.5"></i> Projeção Mês a Mês (360 Meses / 30 Anos)</h5>
-<span class="text-[10px] text-slate-400">Efeito Bola de Neve (Reinvestimento de Dividendos)</span>
+<h5 class="text-[11px] font-bold uppercase tracking-widest text-indigo-300"><i class="fa-solid fa-table-list mr-1.5"></i> Simulação Mês a Mês (360 Meses)</h5>
+<span class="text-[10px] text-slate-400">Reinvestimento Automático de Dividendos</span>
 </div>
 <div class="max-h-[360px] overflow-y-auto">
 <table class="w-full text-left border-collapse text-xs">
 <thead class="bg-[#101828] sticky top-0 z-10 text-[10px] uppercase tracking-wider text-slate-400 border-b border-white/10">
-<tr><th class="py-2.5 px-3">Ano</th><th class="py-2.5 px-3">Mês</th><th class="py-2.5 px-3">Aporte Mensal</th><th class="py-2.5 px-3">Qtd. de Cotas</th><th class="py-2.5 px-3">Valor da Cota (Patrimônio)</th><th class="py-2.5 px-3 text-right">Rendimento / Mês</th></tr>
+<tr><th class="py-2.5 px-3">Ano</th><th class="py-2.5 px-3">Mês</th><th class="py-2.5 px-3">Aporte</th><th class="py-2.5 px-3">Qtd. de Cotas</th><th class="py-2.5 px-3">Valor em Cotas</th><th class="py-2.5 px-3 text-right">Rendimento / Mês</th></tr>
 </thead>
 <tbody id="tabela360MesesFundo" class="divide-y divide-white/5 valor-mono text-[11px]"></tbody>
 </table>
+</div>
 </div>
 </div>
 </div>
