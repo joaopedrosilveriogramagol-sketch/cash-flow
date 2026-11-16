@@ -1,151 +1,39 @@
-/* Estilos Gerais do Cash Flow */
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #0b0f19;
-    color: #e2e8f0;
-}
-
-.navbar {
-    display: flex;
-    background-color: #111827;
-    padding: 12px 20px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.navbar button {
-    background: transparent;
-    border: none;
-    color: #94a3b8;
-    padding: 8px 16px;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: bold;
-    border-radius: 8px;
-    transition: all 0.2s;
-}
-
-.navbar button:hover {
-    color: #fff;
-    background-color: rgba(255, 255, 255, 0.05);
-}
-
-.tab-content {
-    padding: 20px;
-    max-width: 900px;
-    margin: 0 auto;
-}
-
-/* Cartão de Meta */
-.meta-card {
-    display: flex;
-    justify-content: space-around;
-    background: rgba(18, 24, 38, 0.8);
-    border: 1px solid rgba(16, 185, 129, 0.2);
-    padding: 20px;
-    border-radius: 16px;
-    margin-bottom: 20px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-    text-align: center;
-}
-
-.meta-info h3 {
-    margin: 0 0 8px 0;
-    font-size: 12px;
-    text-transform: uppercase;
-    color: #94a3b8;
-    letter-spacing: 0.05em;
-}
-
-.meta-info p {
-    margin: 0;
-    font-size: 22px;
-    font-weight: bold;
-    color: #34d399;
-}
-
-/* Blocos de Investimento */
-.investment-block {
-    background: rgba(18, 24, 38, 0.8);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 16px;
-    padding: 16px;
-    margin-bottom: 16px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-.investment-block h3 {
-    margin: 0 0 12px 0;
-    font-size: 15px;
-    color: #f1f5f9;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    padding-bottom: 8px;
-}
-
-.cards-container {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-/* Cards Clicáveis */
-.card-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 12px 16px;
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 12px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.card-item:hover {
-    background: rgba(255, 255, 255, 0.07);
-    border-color: rgba(52, 211, 153, 0.4);
-}
-
-.card-header {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    font-size: 14px;
-    color: #f1f5f9;
-}
-
-.bank-logo {
-    width: 24px;
-    height: 24px;
-    object-fit: contain;
-    border-radius: 4px;
-}
-
-.card-value {
-    font-weight: bold;
-    color: #34d399;
-    font-size: 14px;
-}
-
-/* Detalhes Expansíveis */
-.card-details {
-    padding: 14px 16px;
-    background: rgba(10, 15, 30, 0.9);
-    border-left: 3px solid #34d399;
-    margin-top: -6px;
-    margin-bottom: 6px;
-    border-radius: 0 0 12px 12px;
-    font-size: 13px;
-    color: #cbd5e1;
-}
-
-.card-details p {
-    margin: 6px 0;
-}
-
-.api-assets-list {
-    margin-top: 8px;
-    border-top: 1px dashed rgba(255, 255, 255, 0.1);
-    padding-top: 8px;
-}
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@600;700;800&display=swap');
+body{font-family:'Plus Jakarta Sans',sans-serif;-webkit-tap-highlight-color:transparent;position:relative;overflow-x:hidden}
+.valor-mono{font-family:'JetBrains Mono',monospace!important}
+.card-anim{animation:slideIn .35s cubic-bezier(0.16,1,0.3,1);will-change:transform,opacity}
+@keyframes slideIn{from{opacity:0;transform:translateY(12px) scale(0.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+.pisca{animation:pisca 1s infinite}
+@keyframes pisca{0%,100%{border-color:rgba(244,63,94,0.3)}50%{border-color:rgba(244,63,94,0.9);box-shadow:0 0 0 4px rgba(244,63,94,0.25)}}
+@keyframes pulseGlow{0%,100%{transform:scale(1);opacity:.8}50%{transform:scale(1.3);opacity:1;box-shadow:0 0 10px currentColor}}
+.status-pulse{animation:pulseGlow 2s infinite ease-in-out}
+body.light{background:#f8fafc!important;color:#0f172a!important}
+body.light header{background:#fff!important;border-bottom:1px solid #cbd5e1!important;box-shadow:0 2px 10px rgba(0,0,0,0.04)!important}
+body.light .card-dark{background:#fff!important;border:1px solid #cbd5e1!important;box-shadow:0 4px 12px rgba(0,0,0,0.05)!important;color:#0f172a!important}
+body.light .input-dark{background:#f1f5f9!important;border:1px solid #cbd5e1!important;color:#0f172a!important}
+body.light .text-slate-400{color:#475569!important}
+body.light .text-slate-300{color:#334155!important}
+body.theme-nubank{background:#120a1f!important;color:#f3e8ff!important}
+body.theme-nubank header{background:#1e1033!important;border-color:rgba(168,85,247,0.15)!important}
+body.theme-nubank .card-dark{background:#1a0f2b!important;border-color:rgba(168,85,247,0.2)!important}
+body.theme-nubank .input-dark{background:#120a1f!important;border-color:rgba(168,85,247,0.2)!important;color:#f3e8ff!important}
+body.theme-apple{background:#000!important;color:#f5f5f7!important}
+body.theme-apple header{background:#1c1c1e!important;border-color:rgba(255,255,255,0.1)!important}
+body.theme-apple .card-dark{background:#1c1c1e!important;border-color:rgba(255,255,255,0.1)!important}
+body.theme-apple .input-dark{background:#2c2c2e!important;border-color:rgba(255,255,255,0.15)!important;color:#f5f5f7!important}
+body.theme-pink{background:#1a0814!important;color:#fce7f3!important}
+body.theme-pink header{background:#2c0c20!important;border-color:rgba(244,114,182,0.2)!important}
+body.theme-pink .card-dark{background:#280d20!important;border:1px solid rgba(244,114,182,0.25)!important;box-shadow:0 4px 12px rgba(0,0,0,0.2)!important}
+body.theme-pink .input-dark{background:#1a0814!important;border:1px solid rgba(244,114,182,0.25)!important;color:#fce7f3!important}
+@media(min-width:1280px){.sidebar{position:sticky;top:84px;height:calc(100vh - 100px);overflow-y:auto}}
+.campo-interativo{transition:all .15s ease}
+.campo-interativo:hover{border-color:rgba(16,185,129,0.6)!important;background:rgba(16,185,129,0.04)!important}
+.campo-interativo:focus{border-color:rgb(16,185,129)!important;box-shadow:0 0 0 2px rgba(16,185,129,0.15)!important;outline:none}
+.card-dark{background:#111a2e;border:1px solid rgba(255,255,255,0.08);box-shadow:0 4px 20px rgba(0,0,0,0.3);transition:border-color .15s ease;contain:layout paint style}
+.card-dark:hover{border-color:rgba(255,255,255,0.15)}
+.btn-press{position:relative;overflow:hidden;transition:transform .1s ease,background-color .15s ease;will-change:transform}
+.btn-press:active{transform:scale(0.96)}
+.ripple{position:absolute;border-radius:50%;background:rgba(255,255,255,0.25);transform:scale(0);animation:rippleEffect .4s linear;pointer-events:none}
+@keyframes rippleEffect{to{transform:scale(3.5);opacity:0}}
+.no-scrollbar::-webkit-scrollbar{display:none}
+.no-scrollbar{-ms-overflow-style:none;scrollbar-width:none}
