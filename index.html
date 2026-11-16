@@ -146,13 +146,33 @@
 </div>
 </div>
 </div>
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4 mb-6">
+
+<!-- BLOCO 1: RENDA DE BANCOS (CDI / RENDA FIXA) -->
+<div class="card-dark rounded-2xl p-4 sm:p-5 mb-6 border-amber-500/30 bg-[#12141c]">
+<h3 class="text-xs font-bold uppercase tracking-widest text-amber-300 mb-3 flex items-center gap-2"><i class="fa-solid fa-building-columns"></i> Bloco 1: Renda de Bancos (CDI & Renda Fixa)</h3>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4">
 <div class="bg-black/30 p-3 sm:p-4 rounded-2xl border border-white/5"><label class="text-[10px] uppercase tracking-widest text-slate-400 block mb-1">CDI Atual (% a.a.)</label><input type="text" inputmode="decimal" id="inputTaxaCdi" oninput="salvarInvestimentos()" placeholder="Ex: 13.65" class="input-dark campo-interativo valor-mono w-full bg-[#0a0f1e] border border-white/10 rounded-full px-4 py-2 text-xs font-bold text-amber-300"></div>
 <div class="bg-black/30 p-3 sm:p-4 rounded-2xl border border-white/5"><label class="text-[10px] uppercase tracking-widest text-slate-400 block mb-1">% do CDI pago</label><input type="text" inputmode="numeric" id="inputPctCdi" oninput="salvarInvestimentos()" placeholder="Ex: 100" class="input-dark campo-interativo valor-mono w-full bg-[#0a0f1e] border border-white/10 rounded-full px-4 py-2 text-xs font-bold text-indigo-300"></div>
 <div class="bg-black/30 p-3 sm:p-4 rounded-2xl border border-white/5"><label class="text-[10px] uppercase tracking-widest text-slate-400 block mb-1">Valor Investido</label><div class="relative"><span class="absolute left-3 top-2 text-xs text-emerald-400 font-bold">R$</span><input type="text" id="inputValorInvestido" readonly placeholder="0,00" class="input-dark valor-mono w-full bg-[#0a0f1e]/50 border border-white/10 rounded-full pl-8 pr-4 py-2 text-xs font-bold text-emerald-300 cursor-not-allowed"></div></div>
 <div class="bg-black/30 p-3 sm:p-4 rounded-2xl border border-white/5"><label class="text-[10px] uppercase tracking-widest text-slate-400 block mb-1">Valor Lucrado</label><div class="relative"><span class="absolute left-3 top-2 text-xs text-cyan-400 font-bold">R$</span><input type="text" id="inputValorLucrado" readonly placeholder="0,00" class="input-dark valor-mono w-full bg-[#0a0f1e]/50 border border-white/10 rounded-full pl-8 pr-4 py-2 text-xs font-bold text-cyan-300 cursor-not-allowed"></div></div>
 <div class="bg-black/30 p-3 sm:p-4 rounded-2xl border border-white/5"><label class="text-[10px] uppercase tracking-widest text-slate-400 block mb-1">Valor Retirado</label><div class="relative"><span class="absolute left-3 top-2 text-xs text-rose-400 font-bold">R$</span><input type="text" inputmode="decimal" id="inputValorRetirado" oninput="salvarInvestimentosRetirado(this.value)" placeholder="0,00" class="input-dark campo-interativo valor-mono w-full bg-[#0a0f1e] border border-white/10 rounded-full pl-8 pr-4 py-2 text-xs font-bold text-rose-300"></div></div>
 </div>
+</div>
+
+<!-- BLOCO 2: FUNDOS & INVESTIMENTOS NÃO BANCÁRIOS -->
+<div class="card-dark rounded-2xl p-4 sm:p-5 mb-6 border-indigo-500/30 bg-[#12141c]">
+<div class="flex justify-between items-center mb-3">
+<h3 class="text-xs font-bold uppercase tracking-widest text-indigo-300 flex items-center gap-2"><i class="fa-solid fa-chart-pie"></i> Bloco 2: Fundos & Investimentos Não Bancários (Ações / FIIs / Outros)</h3>
+<span class="text-[10px] px-2.5 py-1 rounded-full bg-indigo-500/15 text-indigo-300 border border-indigo-500/30 font-semibold">Externa / Variável</span>
+</div>
+<p class="text-[11px] text-slate-400 mb-3">Área destinada ao acompanhamento de ativos fora de instituições bancárias tradicionais (ações, fundos imobiliários, cripto, etc.).</p>
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+<div class="bg-black/30 p-3 sm:p-4 rounded-2xl border border-white/5"><span class="text-[10px] uppercase text-slate-400 block">Total em Ações / FIIs</span><h5 class="text-sm font-black valor-mono text-indigo-300 mt-1">R$ 0,00</h5></div>
+<div class="bg-black/30 p-3 sm:p-4 rounded-2xl border border-white/5"><span class="text-[10px] uppercase text-slate-400 block">Rendimento Estimado</span><h5 class="text-sm font-black valor-mono text-emerald-400 mt-1">R$ 0,00 / mês</h5></div>
+<div class="bg-black/30 p-3 sm:p-4 rounded-2xl border border-white/5"><span class="text-[10px] uppercase text-slate-400 block">Participação na Carteira</span><h5 class="text-sm font-black valor-mono text-cyan-300 mt-1">0%</h5></div>
+</div>
+</div>
+
 <div class="card-dark rounded-2xl p-4 sm:p-5 mb-6 border-indigo-500/20">
 <div class="flex justify-between items-center mb-4"><h3 class="text-xs font-bold uppercase tracking-widest text-indigo-300 flex items-center gap-2"><i class="fa-solid fa-calendar-days"></i> Detalhamento Mensal de Aportes</h3><span class="text-[10px] px-2.5 py-1 rounded-full bg-indigo-500/15 text-indigo-300 border border-indigo-500/30 font-semibold">Jan - Dez</span></div>
 <div id="containerAportesMensais" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3"></div>
