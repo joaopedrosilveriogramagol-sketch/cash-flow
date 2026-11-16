@@ -1,4 +1,4 @@
-const SUPABASE_URL='https://hcelkzenncuqaqqsbqbs.supabase.co';
+Const SUPABASE_URL='https://hcelkzenncuqaqqsbqbs.supabase.co';
 const SUPABASE_KEY='sb_publishable_p53AbjGl-Kb26rubzpCU8g_xqMUWMcz';
 const {createClient}=supabase;
 const dbSupabase=createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false}});
