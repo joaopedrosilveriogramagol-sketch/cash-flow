@@ -2,7 +2,7 @@ const SUPABASE_URL='https://hcelkzenncuqaqqsbqbs.supabase.co';
 const SUPABASE_KEY='sb_publishable_p53AbjGl-Kb26rubzpCU8g_xqMUWMcz';
 const {createClient}=supabase;
 const dbSupabase=createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false}});
-const dadosPadrao={globalDate:new Date().toISOString().slice(0,7),tema:"dark",metaEconomia:0,metaInvestimento:0,historicoSaldo:[],retirado:0,taxaCdi:13.65,pctCdi:100,ultimaAtualizacaoCd:new Date().toISOString().slice(0,10),historicoInvestimentos:[],projecaoMeses:{},rendas:[],topicos:[],conquistasManuais:[],caixinhaAtiva:"nubank",caixinhasBancos:{bb:{aportado:0,divBruto:0,divDiario:0,pctCdi:100,taxaCdi:13.65},mp:{aportado:0,divBruto:0,divDiario:0,pctCdi:100,taxaCdi:13.65},inter:{aportado:0,divBruto:0,divDiario:0,pctCdi:100,taxaCdi:13.65},nubank:{aportado:0,divBruto:0,divDiario:0,pctCdi:100,taxaCdi:13.65}},fundoConfig:{modalidade:"fiis",ticker:"",precoCota:10,ultimoDiv:0.10,dataAtualizacao:new Date().toISOString().slice(0,10),aporteMensal:500,cotasAtuais:0}};
+const dadosPadrao={globalDate:new Date().toISOString().slice(0,7),tema:"dark",metaEconomia:0,metaInvestimento:0,historicoSaldo:[],retirado:0,taxaCdi:13.65,pctCdi:100,ultimaAtualizacaoCd:new Date().toISOString().slice(0,10),historicoInvestimentos:[],projecaoMeses:{},rendas:[],topicos:[],conquistasManuais:[],caixinhaAtiva:"nubank",caixinhasBancos:{bb:{aportado:0,divBruto:0,divDiario:0,pctCdi:100,taxaCdi:13.65},mp:{aportado:0,divBruto:0,divDiario:0,pctCdi:100,taxaCdi:13.65},inter:{aportado:0,divBruto:0,divDiario:0,pctCdi:100,taxaCdi:13.65},nubank:{aportado:0,divBruto:0,divDiario:0,pctCdi:100,taxaCdi:13.65}},fundoConfig:{modalidade:"fiis",ticker:"",precoCota:10,ultimoDiv:0.10,dataAtualizacao:new Date().toISOString().slice(0,10),aporteMensal:500,cotasAtuais:0},fundosPorModalidade:{acoes:{ticker:"",precoCota:25,ultimoDiv:0.25,dataAtualizacao:new Date().toISOString().slice(0,10),aporteMensal:500,cotasAtuais:0},fiis:{ticker:"",precoCota:10,ultimoDiv:0.10,dataAtualizacao:new Date().toISOString().slice(0,10),aporteMensal:500,cotasAtuais:0},imobiliarios:{ticker:"",precoCota:100,ultimoDiv:0.95,dataAtualizacao:new Date().toISOString().slice(0,10),aporteMensal:500,cotasAtuais:0}}};
 let appData=JSON.parse(JSON.stringify(dadosPadrao)),usuarioAtual=null,modoCadastro=false,autenticadoEmAndamento=false,carregandoInicial=false,timerSalvarNuvem=null,timerRenderizacao=null;
 let itemEditandoPrazo=null,chartPizza=null,chartBar=null,chartLinha=null,chartCaixinhaComparativo=null,chartProjecaoAportes=null,lucrosPassivosSimulador=[0,0,0,0,0,0,0,0,0,0,0,0];
 
@@ -25,6 +25,11 @@ if(!appData.caixinhasBancos)appData.caixinhasBancos=JSON.parse(JSON.stringify(da
 ['bb','mp','inter','nubank'].forEach(b=>{if(!appData.caixinhasBancos[b])appData.caixinhasBancos[b]={aportado:0,divBruto:0,divDiario:0,pctCdi:100,taxaCdi:appData.taxaCdi||13.65};});
 if(!appData.caixinhaAtiva)appData.caixinhaAtiva='nubank';
 if(!appData.fundoConfig)appData.fundoConfig=JSON.parse(JSON.stringify(dadosPadrao.fundoConfig));
+if(!appData.fundosPorModalidade){
+appData.fundosPorModalidade=JSON.parse(JSON.stringify(dadosPadrao.fundosPorModalidade));
+const modAtual=appData.fundoConfig.modalidade||'fiis';
+appData.fundosPorModalidade[modAtual]=Object.assign({},appData.fundosPorModalidade[modAtual],appData.fundoConfig);
+}
 }
 
 function preencherCamposInterface(){
@@ -51,39 +56,52 @@ async function salvarNaNuvemAgora(uid,dados){if(!uid)return;try{await dbSupabase
 function salvar(){if(!usuarioAtual||carregandoInicial)return;const uid=usuarioAtual.id,copia=JSON.parse(JSON.stringify(appData));localStorage.setItem('cashflow_'+uid,JSON.stringify(copia));if(timerSalvarNuvem)clearTimeout(timerSalvarNuvem);timerSalvarNuvem=setTimeout(()=>salvarNaNuvemAgora(uid,copia),400);}
 function resetarPadrao(){if(confirm('Restaurar padrão?')){appData=JSON.parse(JSON.stringify(dadosPadrao));document.getElementById('buscaGlobal').value='';document.getElementById('filtroPago').value='todos';preencherCamposInterface();salvar();renderizarTudo(true);toast('Limpo!');}}
 
-function mudarAba(abaId){document.querySelectorAll('.tab-pane').forEach(el=>el.classList.add('hidden'));document.querySelectorAll('.tab-btn').forEach(btn=>{btn.classList.remove('bg-emerald-500','text-black','shadow-lg','shadow-emerald-500/25');btn.classList.add('bg-white/5','text-slate-300','border','border-white/5');});document.getElementById('aba-'+abaId).classList.remove('hidden');const activeBtn=document.getElementById('btnTab-'+abaId);if(activeBtn){activeBtn.classList.remove('bg-white/5','text-slate-300','border','border-white/5');activeBtn.classList.add('bg-emerald-500','text-black','shadow-lg','shadow-emerald-500/25');}if(abaId==='investimentos'){setTimeout(()=>{calcularTotaisInvestimento();renderizarMetaInvestimento();atualizarGraficoCaixinha();renderizarSimulacaoFundo();renderizarProjecaoMeses();calcularProjecaoMeses();},50);}else if(abaId==='analise'){gerarAnaliseInteligente();}else{renderizarTudo(true);}}
+function mudarAba(abaId){
+document.querySelectorAll('.tab-pane').forEach(el=>el.classList.add('hidden'));
+document.querySelectorAll('.tab-btn').forEach(btn=>{btn.classList.remove('bg-emerald-500','text-black','shadow-lg','shadow-emerald-500/25');btn.classList.add('bg-white/5','text-slate-300','border','border-white/5');});
+const targetPane=document.getElementById('aba-'+abaId);if(targetPane)targetPane.classList.remove('hidden');
+const activeBtn=document.getElementById('btnTab-'+abaId);if(activeBtn){activeBtn.classList.remove('bg-white/5','text-slate-300','border','border-white/5');activeBtn.classList.add('bg-emerald-500','text-black','shadow-lg','shadow-emerald-500/25');}
+if(abaId==='investimentos'){
+carregarCamposCaixinhaAtiva();carregarCamposFundo();calcularTotaisInvestimento();renderizarMetaInvestimento();renderizarSimulacaoFundo();renderizarProjecaoMeses();calcularProjecaoMeses();
+setTimeout(()=>{atualizarGraficoCaixinha();if(chartCaixinhaComparativo)chartCaixinhaComparativo.resize();if(chartProjecaoAportes)chartProjecaoAportes.resize();},60);
+}else if(abaId==='analise'){gerarAnaliseInteligente();}else{renderizarTudo(true);}
+}
 
-function toggleBlocoInv(idConteudo,idIcone){const el=document.getElementById(idConteudo),ic=document.getElementById(idIcone);if(!el)return;el.classList.toggle('hidden');if(ic)ic.classList.toggle('rotacionado-180');}
+function toggleAccordionInv(idWrapper,idIcone,isCaixinha){
+const wrap=document.getElementById(idWrapper),ic=document.getElementById(idIcone);if(!wrap)return;
+const abriu=wrap.classList.toggle('aberto');
+if(ic)ic.classList.toggle('rotacionado-180',abriu);
+if(abriu&&isCaixinha){setTimeout(()=>{atualizarGraficoCaixinha();if(chartCaixinhaComparativo)chartCaixinhaComparativo.resize();},120);}
+}
 
 const nomesBancos={bb:'Banco do Brasil',mp:'Mercado Pago',inter:'Inter',nubank:'Nubank'};
-function selecionarBancoCaixinha(banco){
+function selecionarBancoCaixinha(banco,ev){
+if(ev){ev.stopPropagation();criarRipple(ev);}
 garantirEstruturaInvestimentos();appData.caixinhaAtiva=banco;
-document.querySelectorAll('.btn-banco').forEach(b=>{b.classList.remove('border-amber-500/40','bg-amber-500/20','text-amber-300');b.classList.add('border-white/10','bg-white/5','text-slate-300');});
-const btn=document.getElementById('btnBanco-'+banco);if(btn){btn.classList.remove('border-white/10','bg-white/5','text-slate-300');btn.classList.add('border-amber-500/40','bg-amber-500/20','text-amber-300');}
-const badge=document.getElementById('badgeBancoAtivo');if(badge)badge.textContent=nomesBancos[banco]||banco;
-carregarCamposCaixinhaAtiva();salvar();atualizarGraficoCaixinha();
+carregarCamposCaixinhaAtiva();calcularTotaisInvestimento();renderizarMetaInvestimento();atualizarGraficoCaixinha();salvar();
 }
 
 function carregarCamposCaixinhaAtiva(){
-garantirEstruturaInvestimentos();const b=appData.caixinhasBancos[appData.caixinhaAtiva];if(!b)return;
+garantirEstruturaInvestimentos();const banco=appData.caixinhaAtiva||'nubank',b=appData.caixinhasBancos[banco];if(!b)return;
 document.getElementById('cxValorAportado').value=b.aportado>0?b.aportado:'';
 document.getElementById('inputTaxaCdi').value=b.taxaCdi>0?b.taxaCdi:(appData.taxaCdi||13.65);
 document.getElementById('inputPctCdi').value=b.pctCdi>0?b.pctCdi:(appData.pctCdi||100);
-document.getElementById('cxDividendoDiario').value=b.divDiario>0?b.divDiario.toFixed(2):'';
-document.getElementById('cxDividendoBruto').value=b.divBruto>0?b.divBruto.toFixed(2):'';
-selecionarVisualBotaoBanco(appData.caixinhaAtiva);
+document.getElementById('cxDividendoDiario').value=b.divDiario>0?Number(b.divDiario).toFixed(2):'';
+document.getElementById('cxDividendoBruto').value=b.divBruto>0?Number(b.divBruto).toFixed(2):'';
+const lblNome=document.getElementById('lblNomeBancoForm');if(lblNome)lblNome.textContent=nomesBancos[banco]||banco;
+selecionarVisualBotaoBanco(banco);
 }
 
 function selecionarVisualBotaoBanco(banco){
-document.querySelectorAll('.btn-banco').forEach(b=>{b.classList.remove('border-amber-500/40','bg-amber-500/20','text-amber-300');b.classList.add('border-white/10','bg-white/5','text-slate-300');});
-const btn=document.getElementById('btnBanco-'+banco);if(btn){btn.classList.remove('border-white/10','bg-white/5','text-slate-300');btn.classList.add('border-amber-500/40','bg-amber-500/20','text-amber-300');}
+document.querySelectorAll('.btn-banco').forEach(b=>{b.classList.remove('border-amber-500/50','bg-amber-500/20','text-amber-300');b.classList.add('border-white/10','bg-white/5','text-slate-300');});
+const btn=document.getElementById('btnBanco-'+banco);if(btn){btn.classList.remove('border-white/10','bg-white/5','text-slate-300');btn.classList.add('border-amber-500/50','bg-amber-500/20','text-amber-300');}
 const badge=document.getElementById('badgeBancoAtivo');if(badge)badge.textContent=nomesBancos[banco]||banco;
 }
 
 function salvarDadosCaixinha(manualDiv=false){
 garantirEstruturaInvestimentos();const b=appData.caixinhasBancos[appData.caixinhaAtiva];
 b.aportado=lerNumero(document.getElementById('cxValorAportado').value);
-b.taxaCdi=lerNumero(document.getElementById('inputTaxaCdi').value);
+b.taxaCdi=lerNumero(document.getElementById('inputTaxaCdi').value)||13.65;
 b.pctCdi=lerNumero(document.getElementById('inputPctCdi').value)||100;
 appData.taxaCdi=b.taxaCdi;appData.pctCdi=b.pctCdi;
 const taxaEfetivaAnual=(b.taxaCdi/100)*(b.pctCdi/100);
@@ -104,13 +122,17 @@ calcularTotaisInvestimento();renderizarMetaInvestimento();atualizarGraficoCaixin
 function atualizarGraficoCaixinha(){
 const canvas=document.getElementById('chartCaixinhaComparativo');if(!canvas)return;
 garantirEstruturaInvestimentos();const b=appData.caixinhasBancos[appData.caixinhaAtiva];
-const aportado=Number(b.aportado)||0,divDiario=Number(b.divDiario)||0;
-const lbl=document.getElementById('lblResumoCaixinha');if(lbl)lbl.textContent=`+${moeda(divDiario)} / dia`;
-const diasLabels=Array.from({length:15},(_,i)=>`Dia ${(i+1)*2}`);
-const serieAporte=diasLabels.map(()=>aportado);
+const aportado=Number(b.aportado)||0,taxaEfetiva=((Number(b.taxaCdi)||13.65)/100)*((Number(b.pctCdi)||100)/100);
+const divDiario=Number(b.divDiario)>0?Number(b.divDiario):(aportado*(taxaEfetiva>0?Math.pow(1+taxaEfetiva,1/252)-1:0));
+const divMensal=Number(b.divBruto)>0?Number(b.divBruto):(divDiario*21);
+const lbl=document.getElementById('lblResumoCaixinha'),lblMes=document.getElementById('lblResumoCaixinhaMes');
+if(lbl)lbl.textContent=`+${moeda(divDiario)} / dia`;
+if(lblMes)lblMes.textContent=`+${moeda(divMensal)} / mês`;
+const diasLabels=Array.from({length:15},(_,i)=>`${(i+1)*2}º Dia`);
+const serieAporte=diasLabels.map((_,i)=>Number((aportado+(divDiario*(i+1)*2)).toFixed(2)));
 const serieDividendoAcum=diasLabels.map((_,i)=>Number((divDiario*(i+1)*2).toFixed(2)));
 if(!chartCaixinhaComparativo){
-chartCaixinhaComparativo=new Chart(canvas,{type:'line',data:{labels:diasLabels,datasets:[{label:'Valor Aportado (R$)',data:serieAporte,borderColor:'#10b981',borderWidth:2.5,tension:0.2,fill:false},{label:'Dividendo Diário Acumulado (R$)',data:serieDividendoAcum,borderColor:'#06b6d4',backgroundColor:'rgba(6,182,212,0.12)',borderWidth:3,tension:0.3,fill:true}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top'}},scales:{y:{beginAtZero:true,grid:{color:'rgba(255,255,255,0.05)'}},x:{grid:{display:false}}}}});
+chartCaixinhaComparativo=new Chart(canvas,{type:'line',data:{labels:diasLabels,datasets:[{label:'Patrimônio c/ Aporte (R$)',data:serieAporte,borderColor:'#10b981',backgroundColor:'rgba(16,185,129,0.08)',borderWidth:2.5,tension:0.25,fill:false,yAxisID:'y'},{label:'Dividendo Diário Acumulado (R$)',data:serieDividendoAcum,borderColor:'#06b6d4',backgroundColor:'rgba(6,182,212,0.18)',borderWidth:3,tension:0.35,fill:true,yAxisID:'y1'}]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{position:'top'}},scales:{y:{type:'linear',display:true,position:'left',grid:{color:'rgba(255,255,255,0.05)'},ticks:{callback:v=>'R$ '+Number(v).toLocaleString('pt-BR',{maximumFractionDigits:0})}},y1:{type:'linear',display:true,position:'right',beginAtZero:true,grid:{drawOnChartArea:false},ticks:{color:'#22d3ee',callback:v=>'+R$ '+Number(v).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}},x:{grid:{display:false}}}}});
 }else{
 chartCaixinhaComparativo.data.datasets[0].data=serieAporte;
 chartCaixinhaComparativo.data.datasets[1].data=serieDividendoAcum;
@@ -119,16 +141,22 @@ chartCaixinhaComparativo.update();
 }
 
 const nomesModalidadesFundo={acoes:'Ações',fiis:'FIIs',imobiliarios:'Fundos Imobiliários'};
-function selecionarModalidadeFundo(mod){
-garantirEstruturaInvestimentos();appData.fundoConfig.modalidade=mod;
-document.querySelectorAll('.btn-mod-fundo').forEach(b=>{b.classList.remove('border-indigo-500/40','bg-indigo-500/20','text-indigo-300');b.classList.add('border-white/10','bg-white/5','text-slate-300');});
-const btn=document.getElementById('btnModFundo-'+mod);if(btn){btn.classList.remove('border-white/10','bg-white/5','text-slate-300');btn.classList.add('border-indigo-500/40','bg-indigo-500/20','text-indigo-300');}
-const badge=document.getElementById('badgeTipoFundo');if(badge)badge.textContent=nomesModalidadesFundo[mod]||mod;
-salvar();renderizarSimulacaoFundo();
+function selecionarModalidadeFundo(mod,ev){
+if(ev){ev.stopPropagation();criarRipple(ev);}
+garantirEstruturaInvestimentos();
+appData.fundoConfig.modalidade=mod;
+const dadosMod=appData.fundosPorModalidade[mod]||{ticker:"",precoCota:10,ultimoDiv:0.10,dataAtualizacao:new Date().toISOString().slice(0,10),aporteMensal:500,cotasAtuais:0};
+appData.fundoConfig=Object.assign({modalidade:mod},dadosMod);
+document.querySelectorAll('.btn-mod-fundo').forEach(b=>{b.classList.remove('border-indigo-500/50','bg-indigo-500/20','text-indigo-300');b.classList.add('border-white/10','bg-white/5','text-slate-300');});
+const btn=document.getElementById('btnModFundo-'+mod);if(btn){btn.classList.remove('border-white/10','bg-white/5','text-slate-300');btn.classList.add('border-indigo-500/50','bg-indigo-500/20','text-indigo-300');}
+const badge=document.getElementById('badgeTipoFundo'),lblCat=document.getElementById('lblCategoriaFundoDados');
+if(badge)badge.textContent=nomesModalidadesFundo[mod]||mod;
+if(lblCat)lblCat.textContent=nomesModalidadesFundo[mod]||mod;
+preencherInputsFundo(appData.fundoConfig);
+calcularTotaisInvestimento();renderizarMetaInvestimento();renderizarSimulacaoFundo();salvar();
 }
 
-function carregarCamposFundo(){
-garantirEstruturaInvestimentos();const f=appData.fundoConfig;
+function preencherInputsFundo(f){
 document.getElementById('fnTickerAtivo').value=f.ticker||'';
 document.getElementById('fnPrecoCotaDados').value=f.precoCota>0?f.precoCota:'';
 document.getElementById('fnSimPrecoCota').value=f.precoCota>0?f.precoCota:'';
@@ -137,20 +165,25 @@ document.getElementById('fnSimDivCota').value=f.ultimoDiv>0?f.ultimoDiv:'';
 document.getElementById('fnDataAtualizacao').value=f.dataAtualizacao||new Date().toISOString().slice(0,10);
 document.getElementById('fnSimAporteMensal').value=f.aporteMensal>0?f.aporteMensal:'';
 document.getElementById('fnSimCotasAtuais').value=f.cotasAtuais>0?f.cotasAtuais:'';
-selecionarModalidadeFundo(f.modalidade||'fiis');
+}
+
+function carregarCamposFundo(){
+garantirEstruturaInvestimentos();const mod=appData.fundoConfig.modalidade||'fiis';
+selecionarModalidadeFundo(mod);
 }
 
 function sincronizarCotaFundo(val){document.getElementById('fnPrecoCotaDados').value=val;document.getElementById('fnSimPrecoCota').value=val;salvarDadosFundo();}
 function sincronizarDivFundo(val){document.getElementById('fnUltimoDivDados').value=val;document.getElementById('fnSimDivCota').value=val;salvarDadosFundo();}
 
 function salvarDadosFundo(){
-garantirEstruturaInvestimentos();const f=appData.fundoConfig;
+garantirEstruturaInvestimentos();const f=appData.fundoConfig,mod=f.modalidade||'fiis';
 f.ticker=document.getElementById('fnTickerAtivo').value.trim();
 f.precoCota=lerNumero(document.getElementById('fnSimPrecoCota').value);
 f.ultimoDiv=lerNumero(document.getElementById('fnSimDivCota').value);
 f.dataAtualizacao=document.getElementById('fnDataAtualizacao').value;
 f.aporteMensal=lerNumero(document.getElementById('fnSimAporteMensal').value);
 f.cotasAtuais=lerNumero(document.getElementById('fnSimCotasAtuais').value);
+appData.fundosPorModalidade[mod]=Object.assign({},f);
 calcularTotaisInvestimento();renderizarMetaInvestimento();renderizarSimulacaoFundo();gerarAnaliseInteligente();salvar();
 }
 
@@ -162,6 +195,8 @@ const elDivTotal=document.getElementById('fnSimDivTotal'),elMagic=document.getEl
 if(elDivTotal)elDivTotal.value=moeda(divTotalAtual);
 if(elMagic)elMagic.value=cotasMagicNumber>0?`${cotasMagicNumber} cotas`:'0 cotas';
 const tbody=document.getElementById('tabela360MesesFundo');if(!tbody)return;
+const{patrimonioLiquido}=calcularTotaisInvestimento();
+const patrimonioOutros=Math.max(0,patrimonioLiquido-(cotasIniciais*precoCota));
 let qtdCotas=cotasIniciais,caixaSobras=0,mesMetaAtingida=null;
 const metaAlvo=Number(appData.metaInvestimento)||0;
 let htmlLinhas='';
@@ -174,7 +209,7 @@ qtdCotas+=novasCotas;
 caixaSobras=precoCota>0?disponivelParaCompra-(novasCotas*precoCota):0;
 const patrimonioCotas=qtdCotas*precoCota;
 const rendimentoNovo=qtdCotas*divCota;
-if(metaAlvo>0&&mesMetaAtingida===null&&patrimonioCotas>=metaAlvo)mesMetaAtingida=m;
+if(metaAlvo>0&&mesMetaAtingida===null&&(patrimonioCotas+patrimonioOutros)>=metaAlvo)mesMetaAtingida=m;
 htmlLinhas+=`<tr class="hover:bg-white/[0.03]"><td class="py-2 px-3 text-slate-400">Ano ${anoIdx}</td><td class="py-2 px-3 font-bold text-slate-200">${m}º Mês</td><td class="py-2 px-3 text-indigo-300">${moeda(aporteMensal)}</td><td class="py-2 px-3 text-amber-300 font-bold">${qtdCotas.toLocaleString('pt-BR')}</td><td class="py-2 px-3 text-cyan-300 font-bold">${moeda(patrimonioCotas)}</td><td class="py-2 px-3 text-right text-emerald-400 font-bold">+ ${moeda(rendimentoNovo)}</td></tr>`;
 }
 tbody.innerHTML=htmlLinhas;
@@ -183,9 +218,9 @@ const elPat360=document.getElementById('lblPatrimonio360Meses');if(elPat360)elPa
 const elTempo=document.getElementById('lblTempoAtingirMetaFundo');
 if(elTempo){
 if(metaAlvo<=0){elTempo.textContent='Defina uma Meta Investida no topo para calcular o tempo';}
-else if(cotasIniciais*precoCota>=metaAlvo){elTempo.innerHTML=`<span class="text-emerald-400">✅ Meta de ${moeda(metaAlvo)} já atingida!</span>`;}
-else if(mesMetaAtingida!==null){const anos=Math.floor(mesMetaAtingida/12),mesesRest=mesMetaAtingida%12;elTempo.textContent=`Atinge ${moeda(metaAlvo)} em ${mesMetaAtingida} meses (${anos>0?anos+' anos e ':''}${mesesRest} meses)`;}
-else{elTempo.textContent=`Mais de 360 meses para atingir ${moeda(metaAlvo)} (aumente o aporte)`;}
+else if(patrimonioLiquido>=metaAlvo){elTempo.innerHTML=`<span class="text-emerald-400">✅ Meta de ${moeda(metaAlvo)} já atingida!</span>`;}
+else if(mesMetaAtingida!==null){const anos=Math.floor(mesMetaAtingida/12),mesesRest=mesMetaAtingida%12;elTempo.textContent=`Faltam ${moeda(metaAlvo-patrimonioLiquido)} • Atinge em ${mesMetaAtingida} meses (${anos>0?anos+'a ':''}${mesesRest}m)`;}
+else{elTempo.textContent=`Faltam ${moeda(metaAlvo-patrimonioLiquido)} • Mais de 360 meses no ritmo atual`;}
 }
 }
 
@@ -204,21 +239,41 @@ function salvarMetaInvestimento(){appData.metaInvestimento=lerNumero(document.ge
 function calcularTotaisInvestimento(){
 garantirEstruturaInvestimentos();
 let somaCaixinhas=0,lucroCaixinhas=0;
-['bb','mp','inter','nubank'].forEach(k=>{const b=appData.caixinhasBancos[k];if(b){somaCaixinhas+=Number(b.aportado)||0;lucroCaixinhas+=Number(b.divBruto)||0;}});
-const f=appData.fundoConfig,patrimonioFundos=(Number(f.cotasAtuais)||0)*(Number(f.precoCota)||0),lucroFundos=(Number(f.cotasAtuais)||0)*(Number(f.ultimoDiv)||0);
+['bb','mp','inter','nubank'].forEach(k=>{
+const b=appData.caixinhasBancos[k];
+if(b){
+const ap=Number(b.aportado)||0,luc=Number(b.divBruto)||0;
+somaCaixinhas+=ap;lucroCaixinhas+=luc;
+const mini=document.getElementById('miniSaldo-'+k);if(mini)mini.textContent=moeda(ap+luc);
+}
+});
+let patrimonioFundos=0,lucroFundos=0;
+['acoes','fiis','imobiliarios'].forEach(m=>{
+const item=appData.fundosPorModalidade[m];
+if(item){
+patrimonioFundos+=(Number(item.cotasAtuais)||0)*(Number(item.precoCota)||0);
+lucroFundos+=(Number(item.cotasAtuais)||0)*(Number(item.ultimoDiv)||0);
+}
+});
 const somaInvestido=somaCaixinhas+patrimonioFundos,lucroCalculado=lucroCaixinhas+lucroFundos;
 const elInv=document.getElementById('inputValorInvestido'),elLuc=document.getElementById('inputValorLucrado');
 if(elInv)elInv.value=somaInvestido>0?somaInvestido.toFixed(2):'0,00';
 if(elLuc)elLuc.value=lucroCalculado>0?lucroCalculado.toFixed(2):'0,00';
-const ret=appData.retirado||0,patrimonioLiquido=Math.max(0,(somaInvestido+lucroCalculado)-ret);
-const lblPat=document.getElementById('lblPatrimonioTotal');if(lblPat)lblPat.textContent=moeda(patrimonioLiquido);
-return{somaInvestido,lucroCalculado,patrimonioLiquido};
+const ret=appData.retirado||0,totalCaixinhasLiquido=somaCaixinhas+lucroCaixinhas,totalFundosLiquido=patrimonioFundos+lucroFundos;
+const patrimonioLiquido=Math.max(0,(totalCaixinhasLiquido+totalFundosLiquido)-ret);
+const lblPat=document.getElementById('lblPatrimonioTotal'),lblSubCx=document.getElementById('lblSubtotalCaixinhas'),lblSubFn=document.getElementById('lblSubtotalFundos'),lblHeadCx=document.getElementById('lblHeaderTotalCaixinha'),lblHeadFn=document.getElementById('lblHeaderTotalFundos');
+if(lblPat)lblPat.textContent=moeda(patrimonioLiquido);
+if(lblSubCx)lblSubCx.textContent=moeda(totalCaixinhasLiquido);
+if(lblSubFn)lblSubFn.textContent=moeda(totalFundosLiquido);
+if(lblHeadCx)lblHeadCx.textContent=moeda(totalCaixinhasLiquido);
+if(lblHeadFn)lblHeadFn.textContent=moeda(totalFundosLiquido);
+return{somaInvestido,lucroCalculado,patrimonioLiquido,totalCaixinhasLiquido,totalFundosLiquido};
 }
 
 function renderizarMetaInvestimento(){
-const{somaInvestido,lucroCalculado}=calcularTotaisInvestimento(),ret=appData.retirado||0,patrimonio=Math.max(0,(somaInvestido+lucroCalculado)-ret),meta=appData.metaInvestimento||0,barra=document.getElementById('barraMetaInvestida'),lblStatus=document.getElementById('lblMetaInvestidaStatus'),lblPct=document.getElementById('lblPctMetaInvestida');
+const{patrimonioLiquido,totalCaixinhasLiquido,totalFundosLiquido}=calcularTotaisInvestimento(),meta=appData.metaInvestimento||0,barra=document.getElementById('barraMetaInvestida'),lblStatus=document.getElementById('lblMetaInvestidaStatus'),lblPct=document.getElementById('lblPctMetaInvestida');
 if(!barra||!lblStatus||!lblPct)return;
-if(meta>0){const pct=Math.min(100,Math.round((patrimonio/meta)*100));barra.style.width=pct+'%';lblPct.textContent=pct+'%';if(patrimonio>=meta){lblStatus.innerHTML=`<span class="text-emerald-400 font-bold">✅ Meta batida! Superou em ${moeda(patrimonio-meta)}.</span>`;}else{lblStatus.innerHTML=`Faltam <b class="text-amber-300 valor-mono">${moeda(meta-patrimonio)}</b>.`;}}else{barra.style.width='0%';lblPct.textContent='0%';lblStatus.textContent='Defina uma meta.';}
+if(meta>0){const pct=Math.min(100,Math.round((patrimonioLiquido/meta)*100));barra.style.width=pct+'%';lblPct.textContent=pct+'%';if(patrimonioLiquido>=meta){lblStatus.innerHTML=`<span class="text-emerald-400 font-bold">✅ Meta batida! Superou em ${moeda(patrimonioLiquido-meta)} (Bancos: ${moeda(totalCaixinhasLiquido)} | Fundos: ${moeda(totalFundosLiquido)}).</span>`;}else{lblStatus.innerHTML=`Faltam <b class="text-amber-300 valor-mono">${moeda(meta-patrimonioLiquido)}</b> para atingir a meta (Acumulado: <b class="text-emerald-300 valor-mono">${moeda(patrimonioLiquido)}</b>).`;}}else{barra.style.width='0%';lblPct.textContent='0%';lblStatus.textContent='Defina uma meta para acompanhar o progresso somado de Caixinhas e Fundos.';}
 }
 
 function agendarRenderizacao(){if(timerRenderizacao)clearTimeout(timerRenderizacao);timerRenderizacao=setTimeout(()=>renderizarTudo(),250);}
@@ -355,7 +410,7 @@ const canvas=document.getElementById('chartProjecaoAportes');if(!canvas)return;
 if(!chartProjecaoAportes){chartProjecaoAportes=new Chart(canvas,{type:'bar',plugins:[pluginLucroVerdeSimulador],data:{labels:['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'],datasets:[{label:'Aporte Planejado',data:dados,backgroundColor:'#6366f1',borderRadius:6}]},options:{responsive:true,maintainAspectRatio:false,layout:{padding:{top:24}},plugins:{legend:{display:false},tooltip:{callbacks:{afterLabel:function(context){return'Lucro Passivo: + '+moeda(lucrosPassivosSimulador[context.dataIndex]||0);}}}},scales:{y:{beginAtZero:true,grid:{color:'rgba(255,255,255,0.05)'}},x:{grid:{display:false}}}}});}else{chartProjecaoAportes.data.datasets[0].data=dados;chartProjecaoAportes.update();}
 }
 
-function salvarInvestimentosRetirado(val){appData.retirado=lerNumero(val);calcularTotaisInvestimento();renderizarMetaInvestimento();salvar();gerarAnaliseInteligente();}
+function salvarInvestimentosRetirado(val){appData.retirado=lerNumero(val);calcularTotaisInvestimento();renderizarMetaInvestimento();renderizarSimulacaoFundo();salvar();gerarAnaliseInteligente();}
 
 function geraranaliseInteligente(){
 const elConteudo=document.getElementById('conteudoAnalise');if(!elConteudo)return;
