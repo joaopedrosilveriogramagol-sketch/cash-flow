@@ -57,6 +57,7 @@
 </header>
 <main class="max-w-[1920px] w-[98vw] sm:w-[96vw] mx-auto px-2 sm:px-4 mt-4 pb-12">
 <div id="aba-principal" class="tab-pane grid grid-cols-1 xl:grid-cols-12 gap-4 sm:gap-5">
+<!-- COLUNA LATERAL ESQUERDA -->
 <div class="xl:col-span-4 2xl:col-span-3 space-y-4 sm:space-y-5 sidebar">
 <div class="card-dark rounded-[20px] p-4 sm:p-5 border-emerald-500/25">
 <div class="flex justify-between items-center mb-2"><p class="text-[10px] tracking-widest uppercase text-emerald-300 font-bold"><i class="fa-solid fa-piggy-bank mr-1"></i> Meta de Sobra Mensal</p><button type="button" onclick="pedirNotificacao();criarRipple(event)" class="text-[10px] px-2.5 py-1 rounded-full btn-press bg-white/5 border border-white/10 hover:bg-white/10 transition-colors">🔔 Alerta</button></div>
@@ -80,62 +81,77 @@
 </div>
 </div>
 
+<!-- COLUNA PRINCIPAL DIREITA REORGANIZADA -->
 <div class="xl:col-span-8 2xl:col-span-9 space-y-4 sm:space-y-5">
-<!-- FAIXA UPGRADE ABA GERAL: INDICADORES EXECUTIVOS EM TEMPO REAL -->
+<!-- 1. INDICADORES EXECUTIVOS NO TOPO (TAXA POUPANÇA, QUITADAS, FALTA PAGAR, PATRIMÔNIO) -->
 <div id="painelKpisGeral" class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4"></div>
 
-<div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-5">
-<div class="card-dark rounded-[20px] p-4 sm:p-5 h-[320px] sm:h-[340px] flex flex-col"><div class="flex justify-between items-center mb-2"><h3 class="text-[11px] font-bold uppercase tracking-widest text-slate-400"><i class="fa-solid fa-chart-column text-emerald-400 mr-1"></i> Balanço Mensal</h3><span class="text-[10px] text-slate-400">Renda x Gastos x Lucro</span></div><div class="flex-1 relative"><canvas id="chartBar"></canvas></div></div>
-<div class="card-dark rounded-[20px] p-4 sm:p-5 h-[320px] sm:h-[340px] flex flex-col"><div class="flex justify-between items-center mb-2"><h3 class="text-[11px] font-bold uppercase tracking-widest text-slate-400"><i class="fa-solid fa-chart-area text-cyan-400 mr-1"></i> Evolução do Saldo</h3><span class="text-[10px] text-slate-400">Histórico de meses</span></div><div class="flex-1 relative"><canvas id="chartLinha"></canvas></div></div>
-<div class="card-dark rounded-[20px] p-4 sm:p-6 lg:col-span-2 border-emerald-500/30 bg-gradient-to-br from-[#111c2c] to-[#0d1524] shadow-xl">
-<div class="flex flex-wrap justify-between items-center gap-3 mb-4">
+<!-- 2. GASTO DIÁRIO RECOMENDADO & RITMO DO MÊS (LOGO ABAIXO DOS KPIS) -->
+<div class="card-dark rounded-[20px] p-4 sm:p-5 border-emerald-500/30 bg-gradient-to-br from-[#111c2c] to-[#0d1524] shadow-xl">
+<div class="flex flex-wrap justify-between items-center gap-3 mb-3">
 <div>
 <h3 class="text-xs sm:text-sm font-extrabold uppercase tracking-widest text-emerald-300 flex items-center gap-2"><i class="fa-solid fa-calendar-day"></i> Gasto Diário Recomendado & Ritmo do Mês</h3>
-<p class="text-[11px] text-slate-400 mt-0.5">Calculado dinamicamente com base no seu saldo líquido atual e dias restantes do mês.</p>
-</div>
-<div class="flex items-center gap-2">
-<div class="bg-indigo-500/10 px-3.5 py-1.5 rounded-xl border border-indigo-500/30 text-right">
-<span class="text-[10px] uppercase text-indigo-300 block">Reserva p/ Meta</span>
-<span id="lblMetaReservaGeral" class="font-black valor-mono text-indigo-300 text-sm">R$ 0,00</span>
-</div>
-<div class="bg-emerald-500/10 px-3.5 py-1.5 rounded-xl border border-emerald-500/30 text-right">
-<span class="text-[10px] uppercase text-emerald-300 block">Disponível p/ Gastar</span>
-<span id="lblSaldoLiquidoGeral" class="font-black valor-mono text-emerald-400 text-sm">R$ 0,00</span>
+<p class="text-[11px] text-slate-400 mt-0.5">Orçamento diário atualizado em tempo real conforme seu saldo líquido e dias restantes.</p>
 </div>
 </div>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
+<div class="bg-emerald-500/10 px-4 py-2.5 rounded-2xl border border-emerald-500/25 flex justify-between items-center">
+<div><span class="text-[10px] uppercase tracking-wider text-emerald-300 font-bold block">Reserva p/ Meta</span><span class="text-[9px] text-slate-400">Meta protegida no mês</span></div>
+<span id="lblMetaReservaGeral" class="font-black valor-mono text-emerald-400 text-sm sm:text-base">R$ 0,00</span>
 </div>
-<div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2 border-t border-white/10 text-center">
-<div class="bg-black/30 p-3.5 rounded-2xl border border-white/5"><span class="text-[10px] uppercase text-slate-400 block">Dias Restantes no Mês</span><h4 id="lblDiasRestantes" class="text-base font-black valor-mono text-slate-200 mt-1">0 dias</h4><span class="text-[9px] text-slate-500">Até o fechamento mensal</span></div>
-<div class="bg-emerald-500/10 p-3.5 rounded-2xl border border-emerald-500/20 flex flex-col justify-center items-center">
+<div class="bg-cyan-500/10 px-4 py-2.5 rounded-2xl border border-cyan-500/25 flex justify-between items-center">
+<div><span class="text-[10px] uppercase tracking-wider text-cyan-300 font-bold block">Disponível p/ Gastar</span><span class="text-[9px] text-slate-400">Saldo líquido atual</span></div>
+<span id="lblSaldoLiquidoGeral" class="font-black valor-mono text-cyan-300 text-sm sm:text-base">R$ 0,00</span>
+</div>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-3 border-t border-white/10 text-center">
+<div class="bg-black/30 p-3 rounded-2xl border border-white/5"><span class="text-[10px] uppercase text-slate-400 block">Dias Restantes no Mês</span><h4 id="lblDiasRestantes" class="text-base sm:text-lg font-black valor-mono text-slate-200 mt-0.5">0 dias</h4><span class="text-[9px] text-slate-500">Até o fechamento mensal</span></div>
+<div class="bg-emerald-500/10 p-3 rounded-2xl border border-emerald-500/20 flex flex-col justify-center items-center">
 <span class="text-[10px] uppercase text-emerald-300 block font-bold">Limite Total Diário</span>
-<h4 id="lblGastoDiarioRecomendado" class="text-lg sm:text-xl font-black valor-mono text-emerald-400 mt-0.5">R$ 0,00 / dia</h4>
-<span class="text-[9px] text-emerald-300/80 mt-0.5">Considerando todo o saldo</span>
+<h4 id="lblGastoDiarioRecomendado" class="text-base sm:text-lg font-black valor-mono text-emerald-400 mt-0.5">R$ 0,00 / dia</h4>
+<span class="text-[9px] text-emerald-300/80">Considerando todo o saldo</span>
 </div>
-<div class="bg-cyan-500/10 p-3.5 rounded-2xl border border-cyan-500/20 flex flex-col justify-center items-center">
-<span class="text-[10px] uppercase text-cyan-300 block font-bold">Limite Diário Protegendo a Meta</span>
-<h4 id="lblGastoDiarioComMeta" class="text-lg sm:text-xl font-black valor-mono text-cyan-300 mt-0.5">R$ 0,00 / dia</h4>
-<span class="text-[9px] text-cyan-300/80 mt-0.5">Garantindo sua meta de economia</span>
+<div class="bg-indigo-500/10 p-3 rounded-2xl border border-indigo-500/20 flex flex-col justify-center items-center">
+<span class="text-[10px] uppercase text-indigo-300 block font-bold">Limite Diário Protegendo a Meta</span>
+<h4 id="lblGastoDiarioComMeta" class="text-base sm:text-lg font-black valor-mono text-indigo-300 mt-0.5">R$ 0,00 / dia</h4>
+<span class="text-[9px] text-indigo-300/80">Garantindo sua meta mensal</span>
 </div>
 </div>
 </div>
-<div class="card-dark rounded-[20px] p-4 sm:p-5 h-auto min-h-[360px] flex flex-col lg:col-span-2">
-<div class="flex flex-wrap justify-between items-center gap-2 mb-3">
+
+<!-- 3. GRÁFICOS CORRENTES DO MÊS E DA CONTA AGRUPADOS E PRÓXIMOS -->
+<div class="card-dark rounded-[22px] p-4 sm:p-5 border-white/10 bg-[#0e1628]">
+<div class="flex flex-wrap justify-between items-center gap-2 mb-3 pb-2.5 border-b border-white/10">
 <div>
-<h3 class="text-[11px] font-bold uppercase tracking-widest text-slate-400"><i class="fa-solid fa-chart-pie text-indigo-400 mr-1"></i> Distribuição de Gastos por Tópico (% da Renda)</h3>
-<p class="text-[10px] text-slate-400 mt-0.5">Visualize o peso de cada categoria no seu orçamento mensal</p>
+<h3 class="text-xs font-extrabold uppercase tracking-widest text-slate-200 flex items-center gap-2"><i class="fa-solid fa-chart-pie text-emerald-400"></i> Painel Visual do Mês & Evolução da Conta</h3>
+<p class="text-[10px] text-slate-400">Visão integrada de Balanço Mensal, Evolução do Saldo e Distribuição por Tópico</p>
 </div>
 <div class="flex items-center gap-2">
 <span id="lblMaiorTopicoGeral" class="text-[10px] px-2.5 py-1 rounded-full bg-indigo-500/15 text-indigo-300 border border-indigo-500/30 font-semibold">Maior: —</span>
 <span id="lblContasEncerradas" class="text-[10px] px-2.5 py-1 rounded-full bg-amber-500/15 text-amber-300 border border-amber-500/30 font-semibold">0 encerradas</span>
 </div>
 </div>
-<div class="flex-1 grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
-<div class="md:col-span-6 h-[240px] sm:h-[280px] relative flex items-center justify-center"><canvas id="chartPizza"></canvas></div>
-<div id="legendaPizza" class="md:col-span-6 space-y-2 max-h-[260px] overflow-y-auto pr-1"></div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-stretch">
+<div class="lg:col-span-4 bg-black/25 rounded-2xl p-3.5 border border-white/5 flex flex-col h-[260px]">
+<div class="flex justify-between items-center mb-2"><h4 class="text-[10px] font-bold uppercase tracking-widest text-slate-400"><i class="fa-solid fa-chart-column text-emerald-400 mr-1"></i> Balanço Mensal</h4><span class="text-[9px] text-slate-500">Renda x Gastos</span></div>
+<div class="flex-1 relative"><canvas id="chartBar"></canvas></div>
+</div>
+<div class="lg:col-span-4 bg-black/25 rounded-2xl p-3.5 border border-white/5 flex flex-col h-[260px]">
+<div class="flex justify-between items-center mb-2"><h4 class="text-[10px] font-bold uppercase tracking-widest text-slate-400"><i class="fa-solid fa-chart-area text-cyan-400 mr-1"></i> Evolução do Saldo</h4><span class="text-[9px] text-slate-500">Histórico</span></div>
+<div class="flex-1 relative"><canvas id="chartLinha"></canvas></div>
+</div>
+<div class="lg:col-span-4 bg-black/25 rounded-2xl p-3.5 border border-white/5 flex flex-col h-[260px]">
+<div class="flex justify-between items-center mb-2"><h4 class="text-[10px] font-bold uppercase tracking-widest text-slate-400"><i class="fa-solid fa-bullseye text-indigo-400 mr-1"></i> Gastos por Tópico</h4><span class="text-[9px] text-slate-500">% da Renda</span></div>
+<div class="flex-1 grid grid-cols-12 gap-2 items-center min-h-0">
+<div class="col-span-5 h-[185px] relative flex items-center justify-center"><canvas id="chartPizza"></canvas></div>
+<div id="legendaPizza" class="col-span-7 space-y-1.5 max-h-[190px] overflow-y-auto pr-1 text-[11px]"></div>
 </div>
 </div>
 </div>
-<div class="flex flex-wrap justify-between items-center gap-2 pt-2">
+</div>
+
+<!-- 4. TÓPICOS DE GASTOS LOGO ABAIXO -->
+<div class="flex flex-wrap justify-between items-center gap-2 pt-1">
 <div>
 <h2 class="text-[12px] font-bold tracking-widest uppercase"><i class="fa-solid fa-layer-group text-emerald-400 mr-2"></i>Tópicos de Gastos</h2>
 <p class="text-[11px] text-emerald-300 mt-0.5">✏️ Crie tópicos personalizados (ex: Moradia, Alimentação, Lazer) e acompanhe a execução de cada despesa.</p>
