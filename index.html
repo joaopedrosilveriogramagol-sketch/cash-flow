@@ -11,7 +11,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link rel="stylesheet" href="style.css">
 </head>
-<body class="bg-[#0a0f1e] text-slate-100 min-h-screen">
+<body class="bg-[#0a0f1e] text-slate-100 min-h-screen pb-16 md:pb-0">
 <div id="telaAuth" class="fixed inset-0 bg-[#0a0f1e] z-50 flex items-center justify-center p-4">
 <div class="card-dark rounded-[24px] w-full max-w-md p-6 sm:p-8 shadow-2xl border-emerald-500/30 card-anim">
 <div class="text-center mb-6">
@@ -30,8 +30,8 @@
 
 <div id="appPrincipal" class="hidden">
 <header class="bg-[#101828] border-b border-white/[0.06] sticky top-0 z-30 shadow-md">
-<div class="max-w-[1920px] w-[98vw] sm:w-[96vw] mx-auto px-2 sm:px-4 py-2.5 flex flex-col md:flex-row justify-between items-center gap-3">
-<div class="flex items-center justify-between w-full md:w-auto gap-3">
+<div class="max-w-[1920px] w-[98vw] sm:w-[96vw] mx-auto px-2 sm:px-4 py-2.5 flex flex-col md:flex-row justify-between items-center gap-2.5">
+<div class="flex items-center justify-between w-full md:w-auto gap-2">
 <div class="flex items-center gap-2.5">
 <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-400 to-cyan-400 flex items-center justify-center text-black shrink-0 shadow-lg shadow-emerald-500/30"><i class="fa-solid fa-wallet text-sm"></i></div>
 <div>
@@ -40,15 +40,18 @@
 </div>
 </div>
 <div class="flex items-center gap-1.5 md:hidden">
+<button type="button" onclick="toggleModoPrivacidade();criarRipple(event)" id="btnPrivacidadeMobile" class="w-7 h-7 rounded-full btn-press bg-white/5 hover:bg-white/10 flex items-center justify-center text-slate-300" title="Ocultar/Mostrar Valores"><i class="fa-solid fa-eye text-xs"></i></button>
 <button type="button" onclick="mudarMesGlobal(-1);criarRipple(event)" class="w-7 h-7 rounded-full btn-press bg-white/5 hover:bg-white/10 flex items-center justify-center"><i class="fa-solid fa-chevron-left text-[10px]"></i></button>
 <input type="month" id="globalDateMobile" autocomplete="off" onchange="sincronizarDataGlobal(this.value)" class="bg-transparent text-[11px] font-bold campo-interativo border border-white/10 rounded-full px-2 py-1 w-28">
 <button type="button" onclick="mudarMesGlobal(1);criarRipple(event)" class="w-7 h-7 rounded-full btn-press bg-white/5 hover:bg-white/10 flex items-center justify-center"><i class="fa-solid fa-chevron-right text-[10px]"></i></button>
 </div>
 </div>
 <div class="flex items-center gap-2 overflow-x-auto w-full md:w-auto pb-1 md:pb-0 no-scrollbar">
+<div class="hidden md:flex items-center gap-1.5 shrink-0">
 <button type="button" onclick="mudarAba('principal');criarRipple(event)" id="btnTab-principal" class="tab-btn btn-press px-3 py-1.5 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 bg-emerald-500 text-black shadow-lg shadow-emerald-500/25 shrink-0 cursor-pointer"><i class="fa-solid fa-house"></i> Geral</button>
 <button type="button" onclick="mudarAba('investimentos');criarRipple(event)" id="btnTab-investimentos" class="tab-btn btn-press px-3 py-1.5 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 bg-white/5 text-slate-300 hover:bg-white/10 border border-white/5 shrink-0 cursor-pointer"><i class="fa-solid fa-chart-line"></i> Investimentos</button>
 <button type="button" onclick="mudarAba('analise');criarRipple(event)" id="btnTab-analise" class="tab-btn btn-press px-3 py-1.5 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 bg-white/5 text-slate-300 hover:bg-white/10 border border-white/5 shrink-0 cursor-pointer"><i class="fa-solid fa-brain"></i> Análise</button>
+</div>
 <button type="button" id="btnAdminPainel" onclick="abrirModalAdmin();criarRipple(event)" class="hidden px-3 py-1.5 btn-press rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 text-xs font-bold hover:bg-amber-500/30 flex items-center gap-1.5 shrink-0"><i class="fa-solid fa-shield-halved"></i> Admin</button>
 <input type="search" id="buscaGlobal" autocomplete="off" value="" oninput="agendarRenderizacao()" placeholder="🔍 Buscar..." class="input-dark campo-interativo bg-[#0a0f1e] border border-white/10 rounded-full px-3 py-1.5 text-xs w-28 sm:w-36 outline-none shrink-0">
 <select id="filtroPago" autocomplete="off" onchange="renderizarTudo(true)" class="input-dark campo-interativo bg-[#0a0f1e] border border-white/10 rounded-full px-2.5 py-1.5 text-xs shrink-0"><option value="todos">Todos</option><option value="naopago">Pendentes</option><option value="pago">Pagos</option></select>
@@ -57,6 +60,7 @@
 <input type="month" id="globalDate" autocomplete="off" onchange="sincronizarDataGlobal(this.value)" class="bg-transparent text-xs font-bold campo-interativo border border-white/10 rounded-full px-2.5 py-1">
 <button type="button" onclick="mudarMesGlobal(1);criarRipple(event)" class="w-7 h-7 rounded-full btn-press bg-white/5 hover:bg-white/10 flex items-center justify-center"><i class="fa-solid fa-chevron-right text-[10px]"></i></button>
 </div>
+<button type="button" onclick="toggleModoPrivacidade();criarRipple(event)" id="btnPrivacidadeDesktop" class="hidden md:flex w-8 h-8 rounded-full btn-press bg-white/5 border border-white/10 hover:bg-white/10 items-center justify-center text-slate-300 shrink-0 cursor-pointer" title="Modo Privacidade (Ocultar Valores)"><i class="fa-solid fa-eye text-xs"></i></button>
 <select id="seletorTema" onchange="mudarTemaBancario(this.value)" class="input-dark campo-interativo bg-[#0a0f1e] border border-white/10 rounded-full px-2.5 py-1.5 text-xs font-bold shrink-0">
 <option value="dark">🌑 Dark</option><option value="nubank">💜 Nubank</option><option value="apple">⚪ Apple</option><option value="pink">🌸 Pink</option><option value="light">☀️ Light</option>
 </select>
@@ -92,11 +96,14 @@
 </div>
 <div class="card-dark rounded-[20px] p-4 sm:p-5 border-emerald-500/25">
 <div class="flex justify-between items-center mb-2"><h3 class="text-[11px] font-bold uppercase tracking-widest text-emerald-300"><i class="fa-solid fa-sack-dollar mr-1"></i> Renda Mensal</h3><button type="button" onclick="adicionarRenda();criarRipple(event)" class="px-3 py-1.5 btn-press rounded-full bg-emerald-500 text-black text-[11px] font-bold hover:bg-emerald-400 cursor-pointer shadow-lg shadow-emerald-500/20">+ Renda</button></div>
-<p class="text-[10px] text-slate-400 mb-3">O check de recebido é salvo individualmente para cada mês</p>
+<p class="text-[10px] text-slate-400 mb-3">Valores e recebimentos independentes por mês</p>
 <div id="listaRenda" class="space-y-3"></div>
 </div>
 <div class="card-dark rounded-[20px] p-4 sm:p-5">
-<h3 class="text-[11px] font-bold uppercase tracking-widest mb-2"><i class="fa-solid fa-file-import text-indigo-400 mr-1"></i> Importar extrato rápido</h3>
+<div class="flex justify-between items-center mb-2">
+<h3 class="text-[11px] font-bold uppercase tracking-widest"><i class="fa-solid fa-file-import text-indigo-400 mr-1"></i> Importar extrato rápido</h3>
+<label class="flex items-center gap-1 text-[10px] text-emerald-300 cursor-pointer"><input type="checkbox" id="chkExtratoPontual" checked class="accent-emerald-500 rounded"> Só neste mês</label>
+</div>
 <textarea id="extratoInput" placeholder="Cole aqui seu extrato:&#10;UBER 25,50&#10;IFood 45,00" class="input-dark campo-interativo w-full bg-[#0a0f1e] border border-white/10 rounded-xl p-3 text-xs h-20"></textarea>
 <button type="button" onclick="importarExtrato();criarRipple(event)" class="w-full mt-2 btn-press py-2.5 rounded-full bg-emerald-500 text-black text-xs font-bold hover:bg-emerald-400 shadow-lg shadow-emerald-500/20">Lançar gastos rápidos</button>
 </div>
@@ -145,7 +152,7 @@
 </div>
 </div>
 
-<!-- 3. GRÁFICOS CORRENTES DO MÊS E DA CONTA AGRUPADOS COM PROPORÇÃO OTIMIZADA -->
+<!-- 3. GRÁFICOS CORRENTES DO MÊS E DA CONTA AGRUPADOS -->
 <div class="card-dark rounded-[22px] p-4 sm:p-5 border-white/10 bg-[#0e1628]">
 <div class="flex flex-wrap justify-between items-center gap-2 mb-3 pb-2.5 border-b border-white/10">
 <div>
@@ -180,7 +187,7 @@
 <div class="flex flex-wrap justify-between items-center gap-2 pt-1">
 <div>
 <h2 class="text-[12px] font-bold tracking-widest uppercase"><i class="fa-solid fa-layer-group text-emerald-400 mr-2"></i>Tópicos de Gastos</h2>
-<p class="text-[11px] text-emerald-300 mt-0.5">✏️ O status de pago/pendente é independente para cada mês selecionado no topo.</p>
+<p class="text-[11px] text-emerald-300 mt-0.5">✏️ Valores, vencimentos e status de pagamento são salvos por mês. Reordene tópicos com ◀ ▶.</p>
 </div>
 <div class="flex items-center gap-2">
 <button type="button" onclick="alternarTodosTopicos();criarRipple(event)" class="px-3.5 py-2 btn-press rounded-full bg-white/5 border border-white/10 text-slate-300 text-xs font-bold hover:bg-white/10 cursor-pointer"><i class="fa-solid fa-compress mr-1"></i> Expandir/Colapsar Todos</button>
@@ -191,6 +198,7 @@
 </div>
 </div>
 
+<!-- ABA INVESTIMENTOS -->
 <div id="aba-investimentos" class="tab-pane hidden space-y-6">
 <div class="card-dark rounded-[24px] p-4 sm:p-6 shadow-2xl border-emerald-500/30">
 <div class="flex flex-wrap justify-between items-center gap-4 mb-6 pb-4 border-b border-white/10">
@@ -345,7 +353,7 @@
 <div id="atalhosAtivosFamosos" class="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar"></div>
 </div>
 
-<!-- MINHA CARTEIRA MULTI-ATIVOS SALVA (EVITA SOBRESCRITA AO PESQUISAR OUTRO FUNDO) -->
+<!-- MINHA CARTEIRA MULTI-ATIVOS SALVA -->
 <div class="bg-indigo-500/5 p-4 rounded-2xl border border-indigo-500/25">
 <div class="flex flex-wrap justify-between items-center gap-2 mb-3">
 <div>
@@ -385,9 +393,13 @@
 </div>
 
 <div class="bg-[#0a0f1e] rounded-2xl border border-white/10 overflow-hidden">
-<div class="px-4 py-3 bg-black/40 border-b border-white/10 flex justify-between items-center">
-<h5 class="text-[11px] font-bold uppercase tracking-widest text-indigo-300"><i class="fa-solid fa-table-list mr-1.5"></i> Simulação Mês a Mês (360 Meses)</h5>
-<span class="text-[10px] text-slate-400">Reinvestimento Automático de Dividendos</span>
+<div class="px-4 py-3 bg-black/40 border-b border-white/10 flex flex-wrap justify-between items-center gap-2">
+<h5 class="text-[11px] font-bold uppercase tracking-widest text-indigo-300"><i class="fa-solid fa-table-list mr-1.5"></i> Projeção de Evolução (360 Meses / 30 Anos)</h5>
+<div class="flex items-center gap-1.5 flex-wrap">
+<button type="button" onclick="mudarFiltroTabela360('todos')" id="btnFiltro360-todos" class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-indigo-500 text-white cursor-pointer">360 Meses</button>
+<button type="button" onclick="mudarFiltroTabela360('anual')" id="btnFiltro360-anual" class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-white/5 text-slate-300 hover:bg-white/10 cursor-pointer">Resumo Anual (30a)</button>
+<button type="button" onclick="mudarFiltroTabela360('marcos')" id="btnFiltro360-marcos" class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-white/5 text-slate-300 hover:bg-white/10 cursor-pointer">Marcos (1, 5, 10, 20, 30a)</button>
+</div>
 </div>
 <div class="max-h-[360px] overflow-y-auto">
 <table class="w-full text-left border-collapse text-xs">
@@ -404,33 +416,94 @@
 </div>
 </div>
 
+<!-- ABA ANÁLISE 360º TOTALMENTE REFORMULADA E RESPONSIVA -->
 <div id="aba-analise" class="tab-pane hidden space-y-6">
 <div class="card-dark rounded-[24px] p-4 sm:p-6 shadow-2xl border-emerald-500/30">
 <div class="flex flex-wrap justify-between items-center gap-4 mb-6 pb-4 border-b border-white/10">
 <div class="flex items-center gap-3">
-<div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-emerald-400 to-indigo-500 flex items-center justify-center text-black shadow-lg shadow-emerald-500/20"><i class="fa-solid fa-brain text-lg"></i></div>
-<div><h2 class="text-sm sm:text-base font-extrabold uppercase tracking-widest text-emerald-300">Diagnóstico & Saúde Financeira 360º</h2><p class="text-xs text-slate-400 mt-0.5">Análise minuciosa de gastos e eficiência.</p></div>
+<div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-emerald-400 to-indigo-500 flex items-center justify-center text-black shadow-lg shadow-emerald-500/20 shrink-0"><i class="fa-solid fa-brain text-lg"></i></div>
+<div><h2 class="text-sm sm:text-base font-extrabold uppercase tracking-widest text-emerald-300">Inteligência & Saúde Financeira 360º</h2><p class="text-xs text-slate-400 mt-0.5">Gráfico Radar dos 5 Pilares, Liberdade Financeira, Simulador de Cortes e Conquistas.</p></div>
 </div>
-<div id="badgeScoreSaude" class="px-4 py-2 rounded-2xl border border-emerald-500/30 bg-emerald-500/10 text-right"><span class="text-[10px] uppercase tracking-widest text-slate-300 block">Score Financeiro</span><span id="lblScoreNota" class="font-black valor-mono text-emerald-400 text-base">0 / 100</span></div>
+<div class="flex items-center gap-3">
+<div id="badgeComparativoHistorico" class="px-3.5 py-2 rounded-2xl border border-white/10 bg-white/5 text-right hidden sm:block"><span class="text-[9px] uppercase tracking-widest text-slate-400 block">Ritmo vs Histórico</span><span id="lblComparativoHistorico" class="font-bold valor-mono text-slate-200 text-xs">Estável</span></div>
+<div id="badgeScoreSaude" class="px-4 py-2 rounded-2xl border border-emerald-500/30 bg-emerald-500/10 text-right"><span class="text-[10px] uppercase tracking-widest text-slate-300 block">Score Geral</span><span id="lblScoreNota" class="font-black valor-mono text-emerald-400 text-base">0 / 100</span></div>
 </div>
-<div id="conteudoAnalise" class="space-y-5 text-xs"></div>
-<div class="grid grid-cols-1 lg:grid-cols-2 gap-5 mt-6">
-<div class="bg-black/30 p-4 sm:p-5 rounded-2xl border border-emerald-500/30 flex flex-col justify-between">
+</div>
+
+<!-- LINHA 1: RESUMO + RADAR 5 PILARES + RUNWAY & LIBERDADE FINANCEIRA -->
+<div id="conteudoAnalise" class="space-y-4 text-xs mb-6"></div>
+
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-5 mb-6">
+<!-- GRÁFICO RADAR 5 PILARES -->
+<div class="lg:col-span-5 bg-black/30 p-4 sm:p-5 rounded-2xl border border-emerald-500/25 flex flex-col">
+<div class="flex justify-between items-center mb-2">
+<h4 class="text-xs font-extrabold uppercase tracking-widest text-emerald-300 flex items-center gap-2"><i class="fa-solid fa-compass"></i> Radar dos 5 Pilares Financeiros</h4>
+<span class="text-[10px] text-slate-400">Meta: 100 pts</span>
+</div>
+<div class="flex-1 relative min-h-[250px] flex items-center justify-center"><canvas id="chartRadarSaude"></canvas></div>
+<div id="legendaPilaresRadar" class="grid grid-cols-5 gap-1.5 mt-3 text-center"></div>
+</div>
+
+<!-- SOBREVIVÊNCIA (RUNWAY) & CROSSOVER POINT (LIBERDADE FINANCEIRA) -->
+<div class="lg:col-span-7 bg-black/30 p-4 sm:p-5 rounded-2xl border border-cyan-500/25 flex flex-col justify-between space-y-4">
 <div>
-<div class="flex justify-between items-center mb-3"><h4 class="text-xs font-extrabold uppercase tracking-widest text-emerald-300 flex items-center gap-2"><i class="fa-solid fa-trophy"></i> Diário de Conquistas</h4><button type="button" onclick="abrirModalConquista();criarRipple(event)" class="text-[10px] px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-bold">+ Registrar</button></div>
-<p class="text-[11px] text-slate-300 mb-3">Marcos rumo à independência financeira.</p>
-<div id="listaConquistasAnalise" class="space-y-2 max-h-52 overflow-y-auto pr-1"></div>
+<h4 class="text-xs font-extrabold uppercase tracking-widest text-cyan-300 mb-1 flex items-center gap-2"><i class="fa-solid fa-umbrella-beach"></i> Independência Financeira & Reserva de Sobrevivência</h4>
+<p class="text-[11px] text-slate-400">Cruzamento em tempo real do seu Custo de Vida Mensal com suas Caixinhas e Dividendos.</p>
+</div>
+<div id="painelRunwayLiberdade" class="space-y-4"></div>
+<div id="analiseInvestimentosDetalhada" class="space-y-2 text-xs text-slate-300 pt-2 border-t border-white/10"></div>
 </div>
 </div>
-<div class="bg-black/30 p-4 sm:p-5 rounded-2xl border border-cyan-500/25"><h4 class="text-xs font-extrabold uppercase tracking-widest text-cyan-300 mb-3 flex items-center gap-2"><i class="fa-solid fa-chart-pie"></i> Diagnóstico da Carteira</h4><div id="analiseInvestimentosDetalhada" class="space-y-2.5 text-xs text-slate-300"></div></div>
-<div class="bg-black/30 p-4 sm:p-5 rounded-2xl border border-indigo-500/25"><h4 class="text-xs font-extrabold uppercase tracking-widest text-indigo-300 mb-3 flex items-center gap-2"><i class="fa-solid fa-lightbulb"></i> Plano de Ação</h4><div id="dicasEconomia" class="space-y-2.5 text-xs text-slate-300"></div></div>
-<div class="bg-black/30 p-4 sm:p-5 rounded-2xl border border-amber-500/25"><h4 class="text-xs font-extrabold uppercase tracking-widest text-amber-300 mb-3 flex items-center gap-2"><i class="fa-solid fa-ranking-star"></i> Raio-X por Tópico</h4><div id="rankingTopicosAnalise" class="space-y-2.5 text-xs text-slate-300"></div></div>
+
+<!-- LINHA 2: SIMULADOR INTERATIVO DE CORTES "E SE?" + RAIO-X POR TÓPICO -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-5 mb-6">
+<div class="lg:col-span-7 bg-black/30 p-4 sm:p-5 rounded-2xl border border-indigo-500/30 flex flex-col justify-between">
+<div>
+<div class="flex flex-wrap justify-between items-center gap-2 mb-2">
+<h4 class="text-xs font-extrabold uppercase tracking-widest text-indigo-300 flex items-center gap-2"><i class="fa-solid fa-sliders"></i> Simulador Interativo "E Se Eu Reduzir Gastos?"</h4>
+<button type="button" onclick="resetarSlidersCorte()" class="text-[10px] px-2.5 py-1 rounded-full bg-white/5 hover:bg-white/10 text-slate-300 cursor-pointer">Zerar Sliders</button>
+</div>
+<p class="text-[11px] text-slate-400 mb-4">Arraste as barras abaixo para simular cortes percentuais nos seus principais tópicos e veja o impacto em 1 ano no CDI.</p>
+<div id="containerSlidersCorteAnalise" class="space-y-3"></div>
+</div>
+<div id="resultadoSimuladorCorteAnalise" class="mt-4 p-3.5 rounded-2xl bg-indigo-500/10 border border-indigo-500/30 flex flex-wrap justify-between items-center gap-3"></div>
+</div>
+
+<div class="lg:col-span-5 bg-black/30 p-4 sm:p-5 rounded-2xl border border-amber-500/25 flex flex-col justify-between">
+<div>
+<h4 class="text-xs font-extrabold uppercase tracking-widest text-amber-300 mb-3 flex items-center gap-2"><i class="fa-solid fa-ranking-star"></i> Raio-X de Peso por Tópico</h4>
+<div id="rankingTopicosAnalise" class="space-y-2.5 text-xs text-slate-300 max-h-[260px] overflow-y-auto pr-1"></div>
+</div>
+<div id="dicasEconomia" class="space-y-2 text-xs text-slate-300 mt-4 pt-3 border-t border-white/10"></div>
+</div>
+</div>
+
+<!-- LINHA 3: DIÁRIO DE CONQUISTAS COM PROGRESSO E EXCLUSÃO -->
+<div class="bg-black/30 p-4 sm:p-5 rounded-2xl border border-emerald-500/30">
+<div class="flex flex-wrap justify-between items-center gap-2 mb-3">
+<div>
+<h4 class="text-xs font-extrabold uppercase tracking-widest text-emerald-300 flex items-center gap-2"><i class="fa-solid fa-trophy"></i> Diário de Conquistas & Próxima Medalha</h4>
+<p class="text-[11px] text-slate-400">Marcos automáticos desbloqueados pelo seu patrimônio e vitórias pessoais registradas.</p>
+</div>
+<button type="button" onclick="abrirModalConquista();criarRipple(event)" class="text-xs px-3.5 py-1.5 rounded-full bg-emerald-500 text-black font-extrabold hover:bg-emerald-400 cursor-pointer shadow-lg shadow-emerald-500/20">+ Registrar Conquista</button>
+</div>
+<div id="barraProximaMedalhaAnalise" class="mb-4"></div>
+<div id="listaConquistasAnalise" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 max-h-60 overflow-y-auto pr-1"></div>
 </div>
 </div>
 </div>
 </main>
 
-<button type="button" onclick="abrirModalQuickExpense();criarRipple(event)" class="fixed bottom-6 right-6 w-14 h-14 rounded-full btn-press bg-gradient-to-br from-emerald-400 to-cyan-400 text-black font-black flex items-center justify-center shadow-2xl shadow-emerald-500/50 hover:scale-110 active:scale-95 transition-all z-40" title="Gasto Rápido"><i class="fa-solid fa-plus text-lg"></i></button>
+<!-- BARRA DE NAVEGAÇÃO INFERIOR MOBILE (ESTILO APP NATIVO) -->
+<nav class="md:hidden fixed bottom-0 left-0 right-0 bg-[#101828]/95 backdrop-blur-md border-t border-white/10 z-40 px-3 py-2 flex justify-around items-center shadow-2xl">
+<button type="button" onclick="mudarAba('principal')" id="btnMob-principal" class="mob-nav-btn flex flex-col items-center gap-0.5 text-emerald-400 font-bold text-[10px]"><i class="fa-solid fa-house text-sm"></i><span>Geral</span></button>
+<button type="button" onclick="mudarAba('investimentos')" id="btnMob-investimentos" class="mob-nav-btn flex flex-col items-center gap-0.5 text-slate-400 font-semibold text-[10px]"><i class="fa-solid fa-chart-line text-sm"></i><span>Investir</span></button>
+<button type="button" onclick="abrirModalQuickExpense()" class="w-11 h-11 -mt-5 rounded-full bg-gradient-to-br from-emerald-400 to-cyan-400 text-black flex items-center justify-center shadow-lg shadow-emerald-500/40"><i class="fa-solid fa-plus text-base"></i></button>
+<button type="button" onclick="mudarAba('analise')" id="btnMob-analise" class="mob-nav-btn flex flex-col items-center gap-0.5 text-slate-400 font-semibold text-[10px]"><i class="fa-solid fa-brain text-sm"></i><span>Análise</span></button>
+<button type="button" onclick="abrirModalInvestirSaldo()" class="flex flex-col items-center gap-0.5 text-slate-400 font-semibold text-[10px]"><i class="fa-solid fa-paper-plane text-sm"></i><span>Aportar</span></button>
+</nav>
+
+<button type="button" onclick="abrirModalQuickExpense();criarRipple(event)" class="hidden md:flex fixed bottom-6 right-6 w-14 h-14 rounded-full btn-press bg-gradient-to-br from-emerald-400 to-cyan-400 text-black font-black items-center justify-center shadow-2xl shadow-emerald-500/50 hover:scale-110 active:scale-95 transition-all z-40 cursor-pointer" title="Gasto Rápido"><i class="fa-solid fa-plus text-lg"></i></button>
 
 <div id="modalInvestirSaldo" class="fixed inset-0 bg-black/75 z-50 hidden flex items-center justify-center p-4">
 <div class="card-dark rounded-[24px] w-full max-w-sm p-6 shadow-2xl border-emerald-500/30">
@@ -454,11 +527,12 @@
 
 <div id="modalPrazo" class="fixed inset-0 bg-black/75 z-50 hidden flex items-center justify-center p-4">
 <div class="card-dark rounded-[20px] w-full max-w-md p-6">
-<div class="flex justify-between items-center mb-4"><h3 class="font-bold text-sm">Definir Prazo & Dia de Vencimento</h3><button type="button" onclick="fecharModalPrazo()" class="w-8 h-8 rounded-full bg-white/5">✕</button></div>
+<div class="flex justify-between items-center mb-4"><h3 class="font-bold text-sm">Configurar Prazo, Vencimento & Tópico</h3><button type="button" onclick="fecharModalPrazo()" class="w-8 h-8 rounded-full bg-white/5">✕</button></div>
 <div class="space-y-3">
-<div><label class="text-[10px] uppercase text-slate-400 block mb-1">Recorrência</label><select id="modalTipoPrazo" onchange="alternarTipoPrazoModal()" class="input-dark campo-interativo w-full bg-[#0a0f1e] border border-white/10 rounded-xl px-4 py-2.5 text-xs font-bold"><option value="fixo">Mensal Fixo (Contínuo)</option><option value="data">Parcelado / Com Mês Final</option></select></div>
+<div><label class="text-[10px] uppercase text-slate-400 block mb-1">Recorrência do Lançamento</label><select id="modalTipoPrazo" onchange="alternarTipoPrazoModal()" class="input-dark campo-interativo w-full bg-[#0a0f1e] border border-white/10 rounded-xl px-4 py-2.5 text-xs font-bold"><option value="fixo">Mensal Fixo (Todos os meses)</option><option value="unico">Apenas neste mês (Pontual / Variável)</option><option value="data">Parcelado / Com Mês Final</option></select></div>
 <div id="divDataFimModal" class="hidden"><label class="text-[10px] uppercase text-slate-400 block mb-1">Mês da Última Parcela</label><input type="month" id="modalDataFim" class="input-dark campo-interativo w-full bg-[#0a0f1e] border border-white/10 rounded-xl px-4 py-2.5 text-xs font-bold"></div>
 <div><label class="text-[10px] uppercase text-slate-400 block mb-1">Dia do Vencimento no Mês (1 a 31 - Opcional)</label><input type="number" min="1" max="31" id="modalDiaVencimento" placeholder="Ex: 10, 15, 25" class="input-dark campo-interativo valor-mono w-full bg-[#0a0f1e] border border-white/10 rounded-xl px-4 py-2.5 text-xs font-bold"></div>
+<div id="divMoverTopicoModal" class="hidden"><label class="text-[10px] uppercase text-slate-400 block mb-1">Mover para outro Tópico</label><select id="modalMoverTopico" class="input-dark campo-interativo w-full bg-[#0a0f1e] border border-white/10 rounded-xl px-4 py-2.5 text-xs font-bold"></select></div>
 </div>
 <div class="flex gap-2 mt-5"><button type="button" onclick="fecharModalPrazo()" class="flex-1 py-3 rounded-xl bg-white/5 border text-xs">Cancelar</button><button type="button" onclick="salvarPrazoModal();criarRipple(event)" class="flex-1 py-3 rounded-xl bg-emerald-500 text-black font-bold text-xs">Salvar</button></div>
 </div>
@@ -469,9 +543,10 @@
 <div class="card-dark rounded-[24px] w-full max-w-sm p-6 shadow-2xl border-emerald-500/30">
 <div class="flex justify-between items-center mb-4"><h3 class="font-bold text-sm uppercase tracking-wider text-emerald-300"><i class="fa-solid fa-bolt"></i> Gasto Rápido</h3><button type="button" onclick="fecharModalQuickExpense()" class="w-8 h-8 rounded-full bg-white/5">✕</button></div>
 <div class="space-y-3">
-<div><label class="text-[10px] uppercase text-slate-400 block mb-1">Nome</label><input type="text" id="qeNome" placeholder="Ex: Café" class="input-dark campo-interativo w-full bg-[#0a0f1e] border border-white/10 rounded-xl px-4 py-2.5 text-xs font-semibold"></div>
+<div><label class="text-[10px] uppercase text-slate-400 block mb-1">Nome</label><input type="text" id="qeNome" placeholder="Ex: Café, Uber, Farmácia" class="input-dark campo-interativo w-full bg-[#0a0f1e] border border-white/10 rounded-xl px-4 py-2.5 text-xs font-semibold"></div>
 <div><label class="text-[10px] uppercase text-slate-400 block mb-1">Valor (R$)</label><div class="relative"><span class="absolute left-3.5 top-2.5 text-xs text-emerald-400 font-bold">R$</span><input type="text" inputmode="decimal" id="qeValor" placeholder="0,00" class="input-dark campo-interativo valor-mono w-full bg-[#0a0f1e] border border-white/10 rounded-full pl-9 pr-4 py-2.5 text-xs font-bold text-emerald-300"></div></div>
 <div><label class="text-[10px] uppercase text-slate-400 block mb-1">Tópico</label><select id="qeTopico" class="input-dark campo-interativo w-full bg-[#0a0f1e] border border-white/10 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-200"></select></div>
+<div><label class="text-[10px] uppercase text-slate-400 block mb-1">Tipo de Gasto</label><select id="qeTipoPrazo" class="input-dark campo-interativo w-full bg-[#0a0f1e] border border-white/10 rounded-xl px-3 py-2 text-xs font-semibold text-emerald-300"><option value="unico">Apenas neste mês (Pontual)</option><option value="fixo">Mensal Fixo (Recorrente)</option></select></div>
 </div>
 <div class="flex gap-2 mt-5"><button type="button" onclick="fecharModalQuickExpense()" class="flex-1 py-3 rounded-xl bg-white/5 border text-xs">Cancelar</button><button type="button" onclick="salvarQuickExpense();criarRipple(event)" class="flex-1 py-3 rounded-xl bg-emerald-500 text-black font-bold text-xs">Adicionar</button></div>
 </div>
@@ -483,7 +558,7 @@
 <div class="flex gap-2 mt-5"><button type="button" onclick="fecharModalConquista()" class="flex-1 py-3 rounded-xl bg-white/5 border text-xs">Cancelar</button><button type="button" onclick="salvarConquistaModal();criarRipple(event)" class="flex-1 py-3 rounded-xl bg-emerald-500 text-black font-bold text-xs">Salvar</button></div>
 </div>
 </div>
-<div id="toast" class="fixed bottom-5 left-1/2 -translate-x-1/2 bg-[#141d33] border border-emerald-500/30 px-5 py-3 rounded-full text-sm shadow-2xl opacity-0 pointer-events-none transition z-[100]"></div>
+<div id="toast" class="fixed bottom-16 md:bottom-5 left-1/2 -translate-x-1/2 bg-[#141d33] border border-emerald-500/30 px-5 py-3 rounded-full text-sm shadow-2xl opacity-0 pointer-events-none transition z-[100]"></div>
 <script src="script.js"></script>
 </body>
 </html>
