@@ -457,11 +457,11 @@ const metaEco=Number(appData.metaEconomia)||0;
 const saldoLiquido=totalR-totalD,gastoDiario=saldoLiquido>0?saldoLiquido/diasRestantes:0;
 const saldoProtegido=Math.max(0,saldoLiquido-metaEco),gastoDiarioComMeta=saldoProtegido>0?saldoProtegido/diasRestantes:0;
 const elSaldo=document.getElementById('lblSaldoLiquidoGeral'),elMetaRes=document.getElementById('lblMetaReservaGeral'),elDias=document.getElementById('lblDiasRestantes'),elDiario=document.getElementById('lblGastoDiarioRecomendado'),elDiarioMeta=document.getElementById('lblGastoDiarioComMeta');
-if(elSaldo){elSaldo.textContent=moeda(saldoLiquido);elSaldo.className=`font-black valor-mono text-sm ${saldoLiquido>=0?'text-emerald-400':'text-rose-400'}`;}
+if(elSaldo){elSaldo.textContent=moeda(saldoLiquido);elSaldo.className=`font-black valor-mono text-sm sm:text-base ${saldoLiquido>=0?'text-cyan-300':'text-rose-400'}`;}
 if(elMetaRes)elMetaRes.textContent=moeda(metaEco);
 if(elDias)elDias.textContent=`${diasRestantes} dias`;
-if(elDiario){elDiario.textContent=`${moeda(gastoDiario)} / dia`;elDiario.className=`text-lg sm:text-xl font-black valor-mono mt-0.5 ${gastoDiario>0?'text-emerald-400':'text-rose-400'}`;}
-if(elDiarioMeta){elDiarioMeta.textContent=`${moeda(gastoDiarioComMeta)} / dia`;elDiarioMeta.className=`text-lg sm:text-xl font-black valor-mono mt-0.5 ${gastoDiarioComMeta>0?'text-cyan-300':'text-amber-300'}`;}
+if(elDiario){elDiario.textContent=`${moeda(gastoDiario)} / dia`;elDiario.className=`text-base sm:text-lg font-black valor-mono mt-0.5 ${gastoDiario>0?'text-emerald-400':'text-rose-400'}`;}
+if(elDiarioMeta){elDiarioMeta.textContent=`${moeda(gastoDiarioComMeta)} / dia`;elDiarioMeta.className=`text-base sm:text-lg font-black valor-mono mt-0.5 ${gastoDiarioComMeta>0?'text-indigo-300':'text-amber-300'}`;}
 }
 
 function renderizarVencimentos(){
@@ -614,8 +614,8 @@ window.gerarAnaliseInteligente=geraranaliseInteligente;
 function initCharts(){
 if(chartPizza)return;Chart.defaults.color='#94a3b8';Chart.defaults.borderColor='rgba(255,255,255,0.06)';
 chartPizza=new Chart(document.getElementById('chartPizza'),{type:'doughnut',data:{labels:[],datasets:[{data:[],backgroundColor:['#10b981','#6366f1','#f59e0b','#f43f5e','#06b6d4','#8b5cf6'],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,cutout:'68%',plugins:{legend:{display:false}}}});
-chartBar=new Chart(document.getElementById('chartBar'),{type:'bar',data:{labels:['Renda','Despesas','Lucro','Saldo'],datasets:[{data:[0,0,0,0],backgroundColor:['#10b981','#f43f5e','#06b6d4','#6366f1'],borderRadius:12}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}});
-chartLinha=new Chart(document.getElementById('chartLinha').getContext('2d'),{type:'line',data:{labels:[],datasets:[{label:'Saldo',data:[],borderColor:'#10b981',backgroundColor:'rgba(16,185,129,0.1)',fill:true,tension:0.3,borderWidth:3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{grid:{color:'rgba(255,255,255,0.05)'}},x:{grid:{display:false}}}}});
+chartBar=new Chart(document.getElementById('chartBar'),{type:'bar',data:{labels:['Renda','Despesas','Lucro','Saldo'],datasets:[{data:[0,0,0,0],backgroundColor:['#10b981','#f43f5e','#06b6d4','#6366f1'],borderRadius:10}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}});
+chartLinha=new Chart(document.getElementById('chartLinha').getContext('2d'),{type:'line',data:{labels:[],datasets:[{label:'Saldo',data:[],borderColor:'#10b981',backgroundColor:'rgba(16,185,129,0.1)',fill:true,tension:0.3,borderWidth:2.5}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{grid:{color:'rgba(255,255,255,0.05)'}},x:{grid:{display:false}}}}});
 }
 
 function atualizarGrafico(){
@@ -625,9 +625,9 @@ if(!chartPizza)return;let porTopico={},totalR=0,totalD=0;
 chartPizza.data.labels=Object.keys(porTopico);chartPizza.data.datasets[0].data=Object.values(porTopico);chartPizza.update();
 const{lucroCalculado}=calcularTotaisInvestimento();chartBar.data.datasets[0].data=[totalR,totalD,lucroCalculado,totalR-totalD];chartBar.update();
 const leg=document.getElementById('legendaPizza'),lblMaior=document.getElementById('lblMaiorTopicoGeral');leg.innerHTML='';const entries=Object.entries(porTopico).sort((a,b)=>b[1]-a[1]);
-if(entries.length===0){leg.innerHTML=`<p class="text-xs text-slate-500 text-center py-2">Sem despesas lançadas</p>`;if(lblMaior)lblMaior.textContent='Maior: —';}else{
+if(entries.length===0){leg.innerHTML=`<p class="text-[11px] text-slate-500 text-center py-2">Sem despesas</p>`;if(lblMaior)lblMaior.textContent='Maior: —';}else{
 if(lblMaior)lblMaior.textContent=`Maior: ${entries[0][0]} (${moeda(entries[0][1])})`;
-entries.forEach(([nome,valor],idx)=>{const cores=['bg-emerald-500','bg-indigo-500','bg-amber-500','bg-rose-500','bg-cyan-500','bg-violet-500'],pct=Math.round((valor/(totalR||1))*100);leg.innerHTML+=`<div class="flex justify-between items-center bg-[#0a0f1e] border border-white/5 rounded-full px-3 py-1.5"><div class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full ${cores[idx%cores.length]}"></span>${nome} <span class="text-slate-500">${pct}% da renda</span></div><span class="font-bold valor-mono">${moeda(valor)}</span></div>`;});
+entries.forEach(([nome,valor],idx)=>{const cores=['bg-emerald-500','bg-indigo-500','bg-amber-500','bg-rose-500','bg-cyan-500','bg-violet-500'],pct=Math.round((valor/(totalR||1))*100);leg.innerHTML+=`<div class="flex justify-between items-center bg-[#0a0f1e] border border-white/5 rounded-full px-2.5 py-1"><div class="flex items-center gap-1.5 truncate"><span class="w-2 h-2 rounded-full shrink-0 ${cores[idx%cores.length]}"></span><span class="truncate">${nome}</span> <span class="text-slate-500 text-[10px]">${pct}%</span></div><span class="font-bold valor-mono text-[10px] ml-1 shrink-0">${moeda(valor)}</span></div>`;});
 }
 chartLinha.data.labels=(appData.historicoSaldo||[]).map(h=>h.mes);chartLinha.data.datasets[0].data=(appData.historicoSaldo||[]).map(h=>h.saldo);chartLinha.update();
 }
