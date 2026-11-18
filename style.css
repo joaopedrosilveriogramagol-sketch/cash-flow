@@ -8,12 +8,54 @@ body.modo-privado .valor-mono{filter:blur(7px);user-select:none}
 @keyframes pisca{0%,100%{border-color:rgba(244,63,94,0.3)}50%{border-color:rgba(244,63,94,0.9);box-shadow:0 0 0 4px rgba(244,63,94,0.25)}}
 @keyframes pulseGlow{0%,100%{transform:scale(1);opacity:.8}50%{transform:scale(1.3);opacity:1;box-shadow:0 0 10px currentColor}}
 .status-pulse{animation:pulseGlow 2s infinite ease-in-out}
-body.light{background:#f8fafc!important;color:#0f172a!important}
-body.light header,body.light nav{background:#fff!important;border-color:#cbd5e1!important;box-shadow:0 2px 10px rgba(0,0,0,0.04)!important}
-body.light .card-dark{background:#fff!important;border:1px solid #cbd5e1!important;box-shadow:0 4px 12px rgba(0,0,0,0.05)!important;color:#0f172a!important}
-body.light .input-dark{background:#f1f5f9!important;border:1px solid #cbd5e1!important;color:#0f172a!important}
-body.light .text-slate-400{color:#475569!important}
-body.light .text-slate-300{color:#334155!important}
+.card-dark{background:#111a2e;border:1px solid rgba(255,255,255,0.08);box-shadow:0 4px 20px rgba(0,0,0,0.3);transition:border-color .15s ease,transform .15s ease}
+.card-dark:hover{border-color:rgba(255,255,255,0.15)}
+.campo-interativo{transition:all .15s ease}
+.campo-interativo:hover{border-color:rgba(16,185,129,0.6)!important;background:rgba(16,185,129,0.04)!important}
+.campo-interativo:focus{border-color:rgb(16,185,129)!important;box-shadow:0 0 0 2px rgba(16,185,129,0.15)!important;outline:none}
+
+/* TEMA LIGHT CLEAN (ALTO CONTRASTE TOTAL) */
+body.light{background:#f1f5f9!important;color:#0f172a!important}
+body.light header,body.light nav{background:#ffffff!important;border-color:#cbd5e1!important;box-shadow:0 2px 12px rgba(15,23,42,0.06)!important}
+body.light .card-dark{background:#ffffff!important;border:1px solid #cbd5e1!important;box-shadow:0 4px 14px rgba(15,23,42,0.05)!important;color:#0f172a!important}
+body.light [class*="from-[#"],body.light [class*="to-[#"]{background-image:none!important;background-color:#ffffff!important}
+body.light [class*="bg-[#0"],body.light [class*="bg-[#1"],body.light [class*="bg-black/"]{background-color:#f8fafc!important;border-color:#cbd5e1!important;color:#0f172a!important}
+body.light .input-dark,body.light select,body.light textarea{background:#ffffff!important;border:1px solid #94a3b8!important;color:#0f172a!important;font-weight:700!important}
+body.light .text-slate-100,body.light .text-slate-200,body.light .text-white{color:#0f172a!important}
+body.light .text-slate-300,body.light .text-slate-400,body.light .text-slate-500{color:#334155!important;font-weight:600}
+body.light .text-emerald-300,body.light .text-emerald-400,body.light .text-emerald-200{color:#047857!important;font-weight:800}
+body.light .text-cyan-300,body.light .text-cyan-400{color:#0e7490!important;font-weight:800}
+body.light .text-indigo-300,body.light .text-indigo-400,body.light .text-indigo-200{color:#4338ca!important;font-weight:800}
+body.light .text-amber-300,body.light .text-amber-400,body.light .text-amber-200{color:#b45309!important;font-weight:800}
+body.light .text-rose-300,body.light .text-rose-400,body.light .text-rose-200{color:#be123c!important;font-weight:800}
+body.light .text-purple-300{color:#6d28d9!important;font-weight:800}
+body.light .bg-white\/5,body.light .bg-white\/\[0\.03\]{background-color:#e2e8f0!important;color:#0f172a!important;border-color:#cbd5e1!important}
+body.light .border-white\/5,body.light .border-white\/10,body.light .border-white\/\[0\.08\]{border-color:#cbd5e1!important}
+body.light thead{background:#e2e8f0!important;color:#0f172a!important}
+body.light #toast{background:#0f172a!important;color:#ffffff!important}
+
+/* TEMA PINK FEMININO REAL (ROSA CLARO VIBRANTE & ALTO CONTRASTE) */
+body.theme-pink{background:#fdf2f8!important;color:#831843!important}
+body.theme-pink header,body.theme-pink nav{background:#fce7f3!important;border-bottom:1px solid #f9a8d4!important;box-shadow:0 4px 15px rgba(236,72,153,0.12)!important}
+body.theme-pink .card-dark{background:#ffffff!important;border:1.5px solid #f9a8d4!important;box-shadow:0 6px 20px rgba(236,72,153,0.09)!important;color:#831843!important}
+body.theme-pink [class*="from-[#"],body.theme-pink [class*="to-[#"]{background-image:linear-gradient(135deg,#ffffff 0%,#fdf2f8 100%)!important}
+body.theme-pink [class*="bg-[#0"],body.theme-pink [class*="bg-[#1"],body.theme-pink [class*="bg-black/"]{background-color:#fdf2f8!important;border-color:#fbcfe8!important;color:#831843!important}
+body.theme-pink .input-dark,body.theme-pink select,body.theme-pink textarea{background:#ffffff!important;border:1.5px solid #f472b6!important;color:#831843!important;font-weight:700!important}
+body.theme-pink .text-slate-100,body.theme-pink .text-slate-200,body.theme-pink .text-white{color:#831843!important}
+body.theme-pink .text-slate-300,body.theme-pink .text-slate-400,body.theme-pink .text-slate-500{color:#9d174d!important;font-weight:600}
+body.theme-pink .text-emerald-300,body.theme-pink .text-emerald-400,body.theme-pink .text-emerald-200{color:#db2777!important;font-weight:800}
+body.theme-pink .text-cyan-300,body.theme-pink .text-cyan-400{color:#be185d!important;font-weight:800}
+body.theme-pink .text-indigo-300,body.theme-pink .text-indigo-400{color:#9333ea!important;font-weight:800}
+body.theme-pink .text-amber-300,body.theme-pink .text-amber-400{color:#c026d3!important;font-weight:800}
+body.theme-pink .text-rose-300,body.theme-pink .text-rose-400{color:#e11d48!important;font-weight:800}
+body.theme-pink .bg-emerald-500,body.theme-pink .bg-indigo-500{background-color:#ec4899!important;color:#ffffff!important;box-shadow:0 4px 12px rgba(236,72,153,0.35)!important}
+body.theme-pink .from-emerald-400{--tw-gradient-from:#f472b6!important;--tw-gradient-to:#db2777!important;color:#ffffff!important}
+body.theme-pink .bg-white\/5,body.theme-pink .bg-white\/\[0\.03\]{background-color:#fce7f3!important;color:#831843!important;border-color:#f9a8d4!important}
+body.theme-pink .border-white\/5,body.theme-pink .border-white\/10,body.theme-pink .border-emerald-500\/30,body.theme-pink .border-emerald-500\/25{border-color:#f9a8d4!important}
+body.theme-pink thead{background:#fce7f3!important;color:#831843!important}
+body.theme-pink #toast{background:#831843!important;color:#ffffff!important;border-color:#f472b6!important}
+
+/* TEMAS NUBANK & APPLE */
 body.theme-nubank{background:#120a1f!important;color:#f3e8ff!important}
 body.theme-nubank header,body.theme-nubank nav{background:#1e1033!important;border-color:rgba(168,85,247,0.15)!important}
 body.theme-nubank .card-dark{background:#1a0f2b!important;border-color:rgba(168,85,247,0.2)!important}
@@ -22,16 +64,8 @@ body.theme-apple{background:#000!important;color:#f5f5f7!important}
 body.theme-apple header,body.theme-apple nav{background:#1c1c1e!important;border-color:rgba(255,255,255,0.1)!important}
 body.theme-apple .card-dark{background:#1c1c1e!important;border-color:rgba(255,255,255,0.1)!important}
 body.theme-apple .input-dark{background:#2c2c2e!important;border-color:rgba(255,255,255,0.15)!important;color:#f5f5f7!important}
-body.theme-pink{background:#1a0814!important;color:#fce7f3!important}
-body.theme-pink header,body.theme-pink nav{background:#2c0c20!important;border-color:rgba(244,114,182,0.2)!important}
-body.theme-pink .card-dark{background:#280d20!important;border:1px solid rgba(244,114,182,0.25)!important;box-shadow:0 4px 12px rgba(0,0,0,0.2)!important}
-body.theme-pink .input-dark{background:#1a0814!important;border:1px solid rgba(244,114,182,0.25)!important;color:#fce7f3!important}
+
 @media(min-width:1280px){.sidebar{position:sticky;top:84px;height:calc(100vh - 100px);overflow-y:auto}}
-.campo-interativo{transition:all .15s ease}
-.campo-interativo:hover{border-color:rgba(16,185,129,0.6)!important;background:rgba(16,185,129,0.04)!important}
-.campo-interativo:focus{border-color:rgb(16,185,129)!important;box-shadow:0 0 0 2px rgba(16,185,129,0.15)!important;outline:none}
-.card-dark{background:#111a2e;border:1px solid rgba(255,255,255,0.08);box-shadow:0 4px 20px rgba(0,0,0,0.3);transition:border-color .15s ease,transform .15s ease}
-.card-dark:hover{border-color:rgba(255,255,255,0.15)}
 .btn-press{position:relative;overflow:hidden;transition:transform .1s ease,background-color .15s ease;will-change:transform}
 .btn-press:active{transform:scale(0.96)}
 .ripple{position:absolute;border-radius:50%;background:rgba(255,255,255,0.25);transform:scale(0);animation:rippleEffect .4s linear;pointer-events:none}
@@ -42,3 +76,5 @@ body.theme-pink .input-dark{background:#1a0814!important;border:1px solid rgba(2
 .bloco-expansivel{display:block;animation:slideIn .25s ease}
 .bloco-expansivel.retraido{display:none!important}
 input[type=range]{accent-color:#10b981;cursor:pointer}
+body.theme-pink input[type=range]{accent-color:#ec4899}
+@media print{.no-print,header,nav,#modalCommandPalette{display:none!important}body{background:#fff!important;color:#000!important}.card-dark{box-shadow:none!important;border:1px solid #ccc!important;break-inside:avoid}}
