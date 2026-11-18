@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
 <meta name="theme-color" content="#0a0f1e"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="manifest" href='data:application/manifest+json,{"name":"Cash Flow","short_name":"CashFlow","start_url":".","display":"standalone","background_color":"#0a0f1e","theme_color":"#10b981"}'>
-<title>Cash Flow</title>
+<title>Cash Flow Executive</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -29,7 +29,7 @@
 </div>
 
 <div id="appPrincipal" class="hidden">
-<header class="bg-[#101828] border-b border-white/[0.06] sticky top-0 z-30 shadow-md">
+<header class="bg-[#101828] border-b border-white/[0.06] sticky top-0 z-30 shadow-md no-print">
 <div class="max-w-[1920px] w-[98vw] sm:w-[96vw] mx-auto px-2 sm:px-4 py-2.5 flex flex-col md:flex-row justify-between items-center gap-2.5">
 <div class="flex items-center justify-between w-full md:w-auto gap-2">
 <div class="flex items-center gap-2.5">
@@ -40,7 +40,8 @@
 </div>
 </div>
 <div class="flex items-center gap-1.5 md:hidden">
-<button type="button" onclick="toggleModoPrivacidade();criarRipple(event)" id="btnPrivacidadeMobile" class="w-7 h-7 rounded-full btn-press bg-white/5 hover:bg-white/10 flex items-center justify-center text-slate-300" title="Ocultar/Mostrar Valores"><i class="fa-solid fa-eye text-xs"></i></button>
+<button type="button" onclick="abrirCommandPalette()" class="w-7 h-7 rounded-full btn-press bg-white/5 flex items-center justify-center text-slate-300" title="Comandos"><i class="fa-solid fa-terminal text-[10px]"></i></button>
+<button type="button" onclick="toggleModoPrivacidade();criarRipple(event)" id="btnPrivacidadeMobile" class="w-7 h-7 rounded-full btn-press bg-white/5 hover:bg-white/10 flex items-center justify-center text-slate-300"><i class="fa-solid fa-eye text-xs"></i></button>
 <button type="button" onclick="mudarMesGlobal(-1);criarRipple(event)" class="w-7 h-7 rounded-full btn-press bg-white/5 hover:bg-white/10 flex items-center justify-center"><i class="fa-solid fa-chevron-left text-[10px]"></i></button>
 <input type="month" id="globalDateMobile" autocomplete="off" onchange="sincronizarDataGlobal(this.value)" class="bg-transparent text-[11px] font-bold campo-interativo border border-white/10 rounded-full px-2 py-1 w-28">
 <button type="button" onclick="mudarMesGlobal(1);criarRipple(event)" class="w-7 h-7 rounded-full btn-press bg-white/5 hover:bg-white/10 flex items-center justify-center"><i class="fa-solid fa-chevron-right text-[10px]"></i></button>
@@ -53,23 +54,26 @@
 <button type="button" onclick="mudarAba('analise');criarRipple(event)" id="btnTab-analise" class="tab-btn btn-press px-3 py-1.5 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 bg-white/5 text-slate-300 hover:bg-white/10 border border-white/5 shrink-0 cursor-pointer"><i class="fa-solid fa-brain"></i> Análise</button>
 </div>
 <button type="button" id="btnAdminPainel" onclick="abrirModalAdmin();criarRipple(event)" class="hidden px-3 py-1.5 btn-press rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 text-xs font-bold hover:bg-amber-500/30 flex items-center gap-1.5 shrink-0"><i class="fa-solid fa-shield-halved"></i> Admin</button>
-<input type="search" id="buscaGlobal" autocomplete="off" value="" oninput="agendarRenderizacao()" placeholder="🔍 Buscar..." class="input-dark campo-interativo bg-[#0a0f1e] border border-white/10 rounded-full px-3 py-1.5 text-xs w-28 sm:w-36 outline-none shrink-0">
+<input type="search" id="buscaGlobal" autocomplete="off" value="" oninput="agendarRenderizacao()" placeholder="🔍 Buscar..." class="input-dark campo-interativo bg-[#0a0f1e] border border-white/10 rounded-full px-3 py-1.5 text-xs w-28 sm:w-32 outline-none shrink-0">
+<button type="button" onclick="abrirCommandPalette()" class="hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 text-[11px] font-bold text-slate-300 shrink-0 cursor-pointer" title="Atalho Executivo (Ctrl+K)"><i class="fa-solid fa-bolt text-amber-400"></i><span>Ctrl+K</span></button>
 <select id="filtroPago" autocomplete="off" onchange="renderizarTudo(true)" class="input-dark campo-interativo bg-[#0a0f1e] border border-white/10 rounded-full px-2.5 py-1.5 text-xs shrink-0"><option value="todos">Todos</option><option value="naopago">Pendentes</option><option value="pago">Pagos</option></select>
 <div class="hidden md:flex items-center gap-1 shrink-0">
 <button type="button" onclick="mudarMesGlobal(-1);criarRipple(event)" class="w-7 h-7 rounded-full btn-press bg-white/5 hover:bg-white/10 flex items-center justify-center"><i class="fa-solid fa-chevron-left text-[10px]"></i></button>
 <input type="month" id="globalDate" autocomplete="off" onchange="sincronizarDataGlobal(this.value)" class="bg-transparent text-xs font-bold campo-interativo border border-white/10 rounded-full px-2.5 py-1">
 <button type="button" onclick="mudarMesGlobal(1);criarRipple(event)" class="w-7 h-7 rounded-full btn-press bg-white/5 hover:bg-white/10 flex items-center justify-center"><i class="fa-solid fa-chevron-right text-[10px]"></i></button>
 </div>
-<button type="button" onclick="toggleModoPrivacidade();criarRipple(event)" id="btnPrivacidadeDesktop" class="hidden md:flex w-8 h-8 rounded-full btn-press bg-white/5 border border-white/10 hover:bg-white/10 items-center justify-center text-slate-300 shrink-0 cursor-pointer" title="Modo Privacidade (Ocultar Valores)"><i class="fa-solid fa-eye text-xs"></i></button>
+<button type="button" onclick="toggleModoPrivacidade();criarRipple(event)" id="btnPrivacidadeDesktop" class="hidden md:flex w-8 h-8 rounded-full btn-press bg-white/5 border border-white/10 hover:bg-white/10 items-center justify-center text-slate-300 shrink-0 cursor-pointer" title="Modo Privacidade"><i class="fa-solid fa-eye text-xs"></i></button>
 <select id="seletorTema" onchange="mudarTemaBancario(this.value)" class="input-dark campo-interativo bg-[#0a0f1e] border border-white/10 rounded-full px-2.5 py-1.5 text-xs font-bold shrink-0">
 <option value="dark">🌑 Dark</option><option value="nubank">💜 Nubank</option><option value="apple">⚪ Apple</option><option value="pink">🌸 Pink</option><option value="light">☀️ Light</option>
 </select>
 <div class="relative shrink-0">
 <button type="button" onclick="toggleMenuConfig(event)" class="px-3 py-1.5 rounded-full btn-press bg-white/5 border border-white/10 text-xs hover:bg-white/10 flex items-center gap-1.5 cursor-pointer"><i class="fa-solid fa-gear"></i><span class="hidden sm:inline">Opções</span></button>
-<div id="menuConfigHeader" class="hidden fixed right-4 top-14 w-48 card-dark rounded-2xl p-2 shadow-2xl border border-white/15 z-50 space-y-1">
+<div id="menuConfigHeader" class="hidden fixed right-4 top-14 w-52 card-dark rounded-2xl p-2 shadow-2xl border border-white/15 z-50 space-y-1">
+<button type="button" onclick="gerarRelatorioExecutivo();fecharMenuConfig()" class="w-full text-left px-3 py-2 rounded-xl text-xs hover:bg-white/10 flex items-center gap-2 font-bold text-emerald-300"><i class="fa-solid fa-file-pdf"></i> Relatório Executivo (PDF)</button>
+<button type="button" onclick="abrirCommandPalette();fecharMenuConfig()" class="w-full text-left px-3 py-2 rounded-xl text-xs hover:bg-white/10 flex items-center gap-2"><i class="fa-solid fa-terminal text-amber-400"></i> Command Palette (Ctrl+K)</button>
 <button type="button" onclick="exportarBackup();fecharMenuConfig()" class="w-full text-left px-3 py-2 rounded-xl text-xs hover:bg-white/10 flex items-center gap-2"><i class="fa-solid fa-download text-emerald-400"></i> Baixar Backup JSON</button>
 <button type="button" onclick="document.getElementById('importFile').click();fecharMenuConfig()" class="w-full text-left px-3 py-2 rounded-xl text-xs hover:bg-white/10 flex items-center gap-2"><i class="fa-solid fa-upload text-indigo-400"></i> Importar Backup</button>
-<button type="button" onclick="verificarEAtualizarCotacoes24h(true);fecharMenuConfig()" class="w-full text-left px-3 py-2 rounded-xl text-xs hover:bg-white/10 flex items-center gap-2"><i class="fa-solid fa-rotate text-cyan-400"></i> Atualizar Cotações</button>
+<button type="button" onclick="verificarEAtualizarCotacoes24h(true);fecharMenuConfig()" class="w-full text-left px-3 py-2 rounded-xl text-xs hover:bg-white/10 flex items-center gap-2"><i class="fa-solid fa-rotate text-cyan-400"></i> Atualizar Cotações & Dólar</button>
 <hr class="border-white/10 my-1">
 <button type="button" onclick="resetarPadrao();fecharMenuConfig()" class="w-full text-left px-3 py-2 rounded-xl text-xs text-rose-300 hover:bg-rose-500/20 flex items-center gap-2"><i class="fa-solid fa-trash-can"></i> Resetar Dados</button>
 </div>
@@ -81,8 +85,8 @@
 </header>
 
 <main class="max-w-[1920px] w-[98vw] sm:w-[96vw] mx-auto px-2 sm:px-4 mt-4 pb-12">
+<!-- ABA GERAL -->
 <div id="aba-principal" class="tab-pane grid grid-cols-1 xl:grid-cols-12 gap-4 sm:gap-5">
-<!-- COLUNA LATERAL ESQUERDA -->
 <div class="xl:col-span-4 2xl:col-span-3 space-y-4 sm:space-y-5 sidebar">
 <div class="card-dark rounded-[20px] p-4 sm:p-5 border-emerald-500/25">
 <div class="flex justify-between items-center mb-2"><p class="text-[10px] tracking-widest uppercase text-emerald-300 font-bold"><i class="fa-solid fa-piggy-bank mr-1"></i> Meta de Sobra Mensal</p><button type="button" onclick="pedirNotificacao();criarRipple(event)" class="text-[10px] px-2.5 py-1 rounded-full btn-press bg-white/5 border border-white/10 hover:bg-white/10 transition-colors">🔔 Alerta</button></div>
@@ -91,7 +95,7 @@
 </div>
 <div id="resumoCards" class="grid grid-cols-1 gap-4"></div>
 <div class="card-dark rounded-[20px] p-4 sm:p-5 border-amber-500/20">
-<div class="flex justify-between items-center mb-3"><h3 class="text-[11px] font-bold tracking-widest uppercase text-amber-300"><i class="fa-solid fa-clock mr-1"></i> Vencimentos & Alertas</h3><span class="text-[9px] px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-300">Neste mês</span></div>
+<div class="flex justify-between items-center mb-3"><h3 class="text-[11px] font-bold tracking-widest uppercase text-amber-300"><i class="fa-solid fa-clock mr-1"></i> Vencimentos & Passivo Futuro</h3><span id="lblPassivoParcelasTotal" class="text-[9px] px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-300 valor-mono font-bold">Passivo: R$ 0</span></div>
 <div id="listaVencimentos" class="space-y-2 text-xs"></div>
 </div>
 <div class="card-dark rounded-[20px] p-4 sm:p-5 border-emerald-500/25">
@@ -99,29 +103,31 @@
 <p class="text-[10px] text-slate-400 mb-3">Valores e recebimentos independentes por mês</p>
 <div id="listaRenda" class="space-y-3"></div>
 </div>
-<div class="card-dark rounded-[20px] p-4 sm:p-5">
+<div class="card-dark rounded-[20px] p-4 sm:p-5 no-print">
 <div class="flex justify-between items-center mb-2">
-<h3 class="text-[11px] font-bold uppercase tracking-widest"><i class="fa-solid fa-file-import text-indigo-400 mr-1"></i> Importar extrato rápido</h3>
+<h3 class="text-[11px] font-bold uppercase tracking-widest"><i class="fa-solid fa-file-import text-indigo-400 mr-1"></i> Importar extrato / CSV</h3>
 <label class="flex items-center gap-1 text-[10px] text-emerald-300 cursor-pointer"><input type="checkbox" id="chkExtratoPontual" checked class="accent-emerald-500 rounded"> Só neste mês</label>
 </div>
-<textarea id="extratoInput" placeholder="Cole aqui seu extrato:&#10;UBER 25,50&#10;IFood 45,00" class="input-dark campo-interativo w-full bg-[#0a0f1e] border border-white/10 rounded-xl p-3 text-xs h-20"></textarea>
+<textarea id="extratoInput" placeholder="Cole linhas do extrato ou CSV:&#10;UBER 25,50&#10;IFood 45,00" class="input-dark campo-interativo w-full bg-[#0a0f1e] border border-white/10 rounded-xl p-3 text-xs h-20"></textarea>
 <button type="button" onclick="importarExtrato();criarRipple(event)" class="w-full mt-2 btn-press py-2.5 rounded-full bg-emerald-500 text-black text-xs font-bold hover:bg-emerald-400 shadow-lg shadow-emerald-500/20">Lançar gastos rápidos</button>
 </div>
 </div>
 
-<!-- COLUNA PRINCIPAL DIREITA -->
 <div class="xl:col-span-8 2xl:col-span-9 space-y-4 sm:space-y-5">
-<!-- 1. INDICADORES EXECUTIVOS NO TOPO -->
+<!-- 1. KPIS -->
 <div id="painelKpisGeral" class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4"></div>
 
-<!-- 2. GASTO DIÁRIO RECOMENDADO & RITMO DO MÊS + TRANSFERÊNCIA PARA INVESTIMENTOS -->
+<!-- 2. GASTO DIÁRIO & RITMO -->
 <div class="card-dark rounded-[20px] p-4 sm:p-5 border-emerald-500/30 bg-gradient-to-br from-[#111c2c] to-[#0d1524] shadow-xl">
 <div class="flex flex-wrap justify-between items-center gap-3 mb-3">
 <div>
 <h3 class="text-xs sm:text-sm font-extrabold uppercase tracking-widest text-emerald-300 flex items-center gap-2"><i class="fa-solid fa-calendar-day"></i> Gasto Diário Recomendado & Ritmo do Mês</h3>
 <p class="text-[11px] text-slate-400 mt-0.5">Calculado sobre o seu saldo previsto e também sobre o caixa real de contas pendentes.</p>
 </div>
+<div class="flex items-center gap-2 no-print">
+<button type="button" onclick="gerarRelatorioExecutivo();criarRipple(event)" class="px-3 py-1.5 rounded-full btn-press bg-white/5 border border-white/10 hover:bg-white/10 text-xs font-bold flex items-center gap-1.5 cursor-pointer" title="Imprimir / Salvar PDF"><i class="fa-solid fa-print text-cyan-300"></i><span class="hidden sm:inline">Relatório</span></button>
 <button type="button" onclick="abrirModalInvestirSaldo();criarRipple(event)" class="px-3.5 py-1.5 rounded-full btn-press bg-gradient-to-r from-emerald-400 to-cyan-400 text-black font-extrabold text-xs shadow-lg shadow-emerald-500/20 flex items-center gap-1.5 cursor-pointer"><i class="fa-solid fa-paper-plane"></i> Investir Saldo Livre</button>
+</div>
 </div>
 <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-3">
 <div class="bg-emerald-500/10 px-4 py-2.5 rounded-2xl border border-emerald-500/25 flex justify-between items-center">
@@ -139,20 +145,12 @@
 </div>
 <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-3 border-t border-white/10 text-center">
 <div class="bg-black/30 p-3 rounded-2xl border border-white/5"><span class="text-[10px] uppercase text-slate-400 block">Dias Restantes no Mês</span><h4 id="lblDiasRestantes" class="text-base sm:text-lg font-black valor-mono text-slate-200 mt-0.5">0 dias</h4><span class="text-[9px] text-slate-500">Até o fechamento mensal</span></div>
-<div class="bg-emerald-500/10 p-3 rounded-2xl border border-emerald-500/20 flex flex-col justify-center items-center">
-<span class="text-[10px] uppercase text-emerald-300 block font-bold">Limite Total Diário</span>
-<h4 id="lblGastoDiarioRecomendado" class="text-base sm:text-lg font-black valor-mono text-emerald-400 mt-0.5">R$ 0,00 / dia</h4>
-<span class="text-[9px] text-emerald-300/80">Considerando todo o saldo</span>
-</div>
-<div class="bg-indigo-500/10 p-3 rounded-2xl border border-indigo-500/20 flex flex-col justify-center items-center">
-<span class="text-[10px] uppercase text-indigo-300 block font-bold">Limite Diário Protegendo a Meta</span>
-<h4 id="lblGastoDiarioComMeta" class="text-base sm:text-lg font-black valor-mono text-indigo-300 mt-0.5">R$ 0,00 / dia</h4>
-<span class="text-[9px] text-indigo-300/80">Garantindo sua meta mensal</span>
-</div>
+<div class="bg-emerald-500/10 p-3 rounded-2xl border border-emerald-500/20 flex flex-col justify-center items-center"><span class="text-[10px] uppercase text-emerald-300 block font-bold">Limite Total Diário</span><h4 id="lblGastoDiarioRecomendado" class="text-base sm:text-lg font-black valor-mono text-emerald-400 mt-0.5">R$ 0,00 / dia</h4><span class="text-[9px] text-emerald-300/80">Considerando todo o saldo</span></div>
+<div class="bg-indigo-500/10 p-3 rounded-2xl border border-indigo-500/20 flex flex-col justify-center items-center"><span class="text-[10px] uppercase text-indigo-300 block font-bold">Limite Diário Protegendo a Meta</span><h4 id="lblGastoDiarioComMeta" class="text-base sm:text-lg font-black valor-mono text-indigo-300 mt-0.5">R$ 0,00 / dia</h4><span class="text-[9px] text-indigo-300/80">Garantindo sua meta mensal</span></div>
 </div>
 </div>
 
-<!-- 3. GRÁFICOS CORRENTES DO MÊS E DA CONTA AGRUPADOS -->
+<!-- 3. GRÁFICOS -->
 <div class="card-dark rounded-[22px] p-4 sm:p-5 border-white/10 bg-[#0e1628]">
 <div class="flex flex-wrap justify-between items-center gap-2 mb-3 pb-2.5 border-b border-white/10">
 <div>
@@ -183,13 +181,13 @@
 </div>
 </div>
 
-<!-- 4. TÓPICOS DE GASTOS LOGO ABAIXO -->
+<!-- 4. TÓPICOS DE GASTOS -->
 <div class="flex flex-wrap justify-between items-center gap-2 pt-1">
 <div>
-<h2 class="text-[12px] font-bold tracking-widest uppercase"><i class="fa-solid fa-layer-group text-emerald-400 mr-2"></i>Tópicos de Gastos</h2>
-<p class="text-[11px] text-emerald-300 mt-0.5">✏️ Valores, vencimentos e status de pagamento são salvos por mês. Reordene tópicos com ◀ ▶.</p>
+<h2 class="text-[12px] font-bold tracking-widest uppercase"><i class="fa-solid fa-layer-group text-emerald-400 mr-2"></i>Tópicos de Gastos & Orçamento (Budget Cap)</h2>
+<p class="text-[11px] text-emerald-300 mt-0.5">✏️ Defina tetos de gastos opcionais por tópico, controle parcelas (03/10) e reordene com ◀ ▶.</p>
 </div>
-<div class="flex items-center gap-2">
+<div class="flex items-center gap-2 no-print">
 <button type="button" onclick="alternarTodosTopicos();criarRipple(event)" class="px-3.5 py-2 btn-press rounded-full bg-white/5 border border-white/10 text-slate-300 text-xs font-bold hover:bg-white/10 cursor-pointer"><i class="fa-solid fa-compress mr-1"></i> Expandir/Colapsar Todos</button>
 <button type="button" onclick="abrirModalTopico();criarRipple(event)" class="px-4 py-2 btn-press rounded-full bg-indigo-500 text-white text-xs font-bold hover:bg-indigo-400 cursor-pointer shadow-lg shadow-indigo-500/20">+ Novo Tópico</button>
 </div>
@@ -203,21 +201,23 @@
 <div class="card-dark rounded-[24px] p-4 sm:p-6 shadow-2xl border-emerald-500/30">
 <div class="flex flex-wrap justify-between items-center gap-4 mb-6 pb-4 border-b border-white/10">
 <div>
-<h2 class="text-sm sm:text-base font-extrabold uppercase tracking-widest text-emerald-300 flex items-center gap-2"><i class="fa-solid fa-chart-line"></i> Gestão de Investimentos & CDI</h2>
-<p class="text-xs text-slate-400 mt-1">Acompanhe seu patrimônio líquido, metas, rendimentos líquidos de IR e carteira multi-ativos.</p>
+<h2 class="text-sm sm:text-base font-extrabold uppercase tracking-widest text-emerald-300 flex items-center gap-2"><i class="fa-solid fa-chart-line"></i> Wealth Management & Investimentos</h2>
+<p class="text-xs text-slate-400 mt-1">Alocação estratégica, Preço Médio (PM), Yield on Cost (YoC), Câmbio PTAX e Caixinhas CDI.</p>
 </div>
-<div class="flex gap-3 flex-wrap">
+<div class="flex gap-2.5 flex-wrap items-center">
+<div class="bg-cyan-500/10 px-3 py-2 rounded-xl border border-cyan-500/30"><span class="text-[9px] uppercase text-cyan-300 block">Dólar PTAX (USD)</span><span id="lblCotacaoDolarTopo" class="font-bold valor-mono text-cyan-300 text-xs sm:text-sm">R$ 5,80</span></div>
 <div class="bg-amber-500/10 px-3.5 py-2 rounded-xl border border-amber-500/30"><span class="text-[9px] uppercase text-amber-300 block">Total Caixinhas CDI</span><span id="lblSubtotalCaixinhas" class="font-bold valor-mono text-amber-300 text-xs sm:text-sm">R$ 0,00</span></div>
 <div class="bg-indigo-500/10 px-3.5 py-2 rounded-xl border border-indigo-500/30"><span class="text-[9px] uppercase text-indigo-300 block">Total Carteira Ativos</span><span id="lblSubtotalFundos" class="font-bold valor-mono text-indigo-300 text-xs sm:text-sm">R$ 0,00</span></div>
 <div class="bg-emerald-500/10 px-4 py-2 rounded-xl border border-emerald-500/30"><span class="text-[10px] uppercase text-emerald-300 block">Patrimônio Líquido Total</span><span id="lblPatrimonioTotal" class="font-black valor-mono text-emerald-400 text-sm sm:text-base">R$ 0,00</span></div>
 </div>
 </div>
 
+<!-- META DE INVESTIMENTO -->
 <div class="card-dark rounded-[20px] p-4 sm:p-5 mb-6 border-emerald-500/30 bg-[#0d1b2a]">
 <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
 <div class="md:col-span-5">
 <div class="flex justify-between items-center mb-1.5"><p class="text-[10px] tracking-widest uppercase text-emerald-300 font-bold"><i class="fa-solid fa-bullseye mr-1"></i> Meta Investida (Soma Bancos + Carteira)</p><span id="lblPctMetaInvestida" class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-mono font-bold">0%</span></div>
-<div class="flex gap-2 items-center"><span class="text-xs text-emerald-400 font-bold">R$</span><input id="metaInvestimento" type="text" inputmode="decimal" oninput="salvarMetaInvestimento()" placeholder="Ex: 10000,00" class="input-dark campo-interativo valor-mono w-full bg-[#0a0f1e] border border-white/10 rounded-full px-4 py-2 text-sm font-bold text-emerald-300"></div>
+<div class="flex gap-2 items-center"><span class="text-xs text-emerald-400 font-bold">R$</span><input id="metaInvestimento" type="text" inputmode="decimal" oninput="salvarMetaInvestimento()" placeholder="Ex: 100000,00" class="input-dark campo-interativo valor-mono w-full bg-[#0a0f1e] border border-white/10 rounded-full px-4 py-2 text-sm font-bold text-emerald-300"></div>
 </div>
 <div class="md:col-span-7 flex flex-col justify-center">
 <div class="h-3 bg-black/40 rounded-full overflow-hidden p-0.5 border border-white/10"><div id="barraMetaInvestida" class="h-full bg-gradient-to-r from-emerald-400 via-cyan-400 to-indigo-400 rounded-full transition-all duration-500" style="width:0%"></div></div>
@@ -226,7 +226,33 @@
 </div>
 </div>
 
-<!-- ACCORDION 1: CAIXINHA & RENDA DE BANCOS + SIMULADOR JUROS COMPOSTOS ACOPLADO -->
+<!-- ACCORDION EXECUTIVO: ALOCAÇÃO ESTRATÉGICA & REBALANCEAMENTO -->
+<div class="card-dark rounded-2xl mb-6 border-cyan-500/30 bg-[#12141c] overflow-hidden">
+<div onclick="toggleAccordionInv('accAlocacao','iconeAccAlocacao','txtAccAlocacao',false)" class="p-4 sm:p-5 flex flex-wrap justify-between items-center gap-3 cursor-pointer select-none hover:bg-white/[0.03] transition-colors">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-xl bg-cyan-500/20 border border-cyan-500/40 flex items-center justify-center text-cyan-300 shrink-0"><i class="fa-solid fa-scale-balanced text-sm"></i></div>
+<div>
+<h3 class="text-xs sm:text-sm font-extrabold uppercase tracking-widest text-cyan-300 flex items-center gap-2">Matriz de Alocação & Rebalanceamento Inteligente <span class="text-[10px] px-2.5 py-0.5 rounded-full bg-cyan-500/20 text-cyan-200 border border-cyan-500/40 font-bold">Asset Allocation</span></h3>
+<p class="text-[11px] text-slate-400 mt-0.5">Compare o peso atual de cada classe de ativo com a sua meta ideal e descubra onde fazer o próximo aporte</p>
+</div>
+</div>
+<div class="px-3 py-1.5 rounded-full bg-cyan-500/15 border border-cyan-500/30 flex items-center gap-1.5 text-cyan-300 text-[11px] font-bold"><span id="txtAccAlocacao">Retrair</span><i id="iconeAccAlocacao" class="fa-solid fa-chevron-down transition-transform duration-300 rotacionado-180"></i></div>
+</div>
+<div id="accAlocacao" class="bloco-expansivel">
+<div class="px-4 sm:px-5 pb-5 pt-3 border-t border-white/10 grid grid-cols-1 lg:grid-cols-12 gap-5 items-center" onclick="event.stopPropagation()">
+<div class="lg:col-span-4 bg-black/25 p-4 rounded-2xl border border-white/5 h-[230px] flex flex-col">
+<h4 class="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-2"><i class="fa-solid fa-chart-pie text-cyan-400 mr-1"></i> Divisão Atual do Patrimônio</h4>
+<div class="flex-1 relative"><canvas id="chartAlocacaoCarteira"></canvas></div>
+</div>
+<div class="lg:col-span-8 space-y-3">
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5" id="inputsTargetAllocation"></div>
+<div id="cardRecomendacaoRebalanceamento" class="p-3.5 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 text-xs text-slate-200"></div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ACCORDION 1: CAIXINHA & RENDA DE BANCOS -->
 <div class="card-dark rounded-2xl mb-6 border-amber-500/30 bg-[#12141c] overflow-hidden">
 <div onclick="toggleAccordionInv('accCaixinha','iconeAccCaixinha','txtAccCaixinha',true)" class="p-4 sm:p-5 flex flex-wrap justify-between items-center gap-3 cursor-pointer select-none hover:bg-white/[0.03] transition-colors">
 <div class="flex items-center gap-3">
@@ -248,11 +274,7 @@
 <div class="flex items-center gap-2">
 <span class="text-[10px] text-slate-400">Alíquota IR CDB/Caixinha:</span>
 <select id="selectAliquotaIrCaixinha" onchange="salvarDadosCaixinha(false)" class="input-dark bg-[#0a0f1e] border border-white/10 rounded-full px-3 py-1 text-[11px] font-bold text-amber-300">
-<option value="0">Isento / Bruto (0% IR)</option>
-<option value="22.5">Até 180 dias (22,5% IR)</option>
-<option value="20">181 a 360 dias (20% IR)</option>
-<option value="17.5">361 a 720 dias (17,5% IR)</option>
-<option value="15">Acima de 720 dias (15% IR)</option>
+<option value="0">Isento / Bruto (0% IR)</option><option value="22.5">Até 180 dias (22,5% IR)</option><option value="20">181 a 360 dias (20% IR)</option><option value="17.5">361 a 720 dias (17,5% IR)</option><option value="15">Acima de 720 dias (15% IR)</option>
 </select>
 </div>
 </div>
@@ -284,7 +306,7 @@
 <div class="flex-1 relative min-h-[220px]"><canvas id="chartCaixinhaComparativo"></canvas></div>
 </div>
 
-<!-- SIMULADOR DE PROJEÇÃO & JUROS COMPOSTOS ACOPLADO -->
+<!-- SIMULADOR DE PROJEÇÃO ACOPLADO -->
 <div class="bg-[#0a0f1e] p-4 sm:p-5 rounded-2xl border border-amber-500/25">
 <div class="flex flex-wrap justify-between items-center gap-2 mb-3">
 <h4 class="text-xs sm:text-sm font-extrabold uppercase tracking-widest text-amber-300 flex items-center gap-2"><i class="fa-solid fa-wand-magic-sparkles text-emerald-400"></i> Simulador de Projeção & Juros Compostos (CDI Bancos)</h4>
@@ -306,14 +328,14 @@
 </div>
 </div>
 
-<!-- ACCORDION 2: FUNDOS & INVESTIMENTOS NÃO BANCÁRIOS + CARTEIRA MULTI-ATIVOS -->
+<!-- ACCORDION 2: FUNDOS & INVESTIMENTOS NÃO BANCÁRIOS + PREÇO MÉDIO E YOC -->
 <div class="card-dark rounded-2xl border-indigo-500/30 bg-[#12141c] overflow-hidden">
 <div onclick="toggleAccordionInv('accFundos','iconeAccFundos','txtAccFundos',false)" class="p-4 sm:p-5 flex flex-wrap justify-between items-center gap-3 cursor-pointer select-none hover:bg-white/[0.03] transition-colors">
 <div class="flex items-center gap-3">
 <div class="w-9 h-9 rounded-xl bg-indigo-500/20 border border-indigo-500/40 flex items-center justify-center text-indigo-300 shrink-0"><i class="fa-solid fa-chart-pie text-sm"></i></div>
 <div>
 <h3 class="text-xs sm:text-sm font-extrabold uppercase tracking-widest text-indigo-300 flex items-center gap-2">Fundos & Investimentos Não Bancários <span id="badgeTipoFundo" class="text-[10px] px-2.5 py-0.5 rounded-full bg-indigo-500/20 text-indigo-200 border border-indigo-500/40 font-bold">Fundos Imobiliários</span></h3>
-<p class="text-[11px] text-slate-400 mt-0.5">Clique aqui para expandir ou retrair Ações Brasileiras, Fundos Imobiliários, Ações Estrangeiras e Carteira</p>
+<p class="text-[11px] text-slate-400 mt-0.5">Ações BR, FIIs e Exterior com Preço Médio (PM), Ganho de Capital (%) e Yield on Cost (YoC)</p>
 </div>
 </div>
 <div class="flex items-center gap-3">
@@ -353,12 +375,11 @@
 <div id="atalhosAtivosFamosos" class="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar"></div>
 </div>
 
-<!-- MINHA CARTEIRA MULTI-ATIVOS SALVA -->
 <div class="bg-indigo-500/5 p-4 rounded-2xl border border-indigo-500/25">
 <div class="flex flex-wrap justify-between items-center gap-2 mb-3">
 <div>
-<h4 class="text-[11px] font-bold uppercase tracking-widest text-indigo-300"><i class="fa-solid fa-briefcase mr-1"></i> Minha Carteira Salva de Ativos (Multi-Ativos)</h4>
-<p class="text-[10px] text-slate-400">Salve vários ativos diferentes (ex: MXRF11, HGLG11, PETR4) para somar no seu Patrimônio sem perder dados ao simular outros códigos.</p>
+<h4 class="text-[11px] font-bold uppercase tracking-widest text-indigo-300"><i class="fa-solid fa-briefcase mr-1"></i> Minha Carteira Executiva (Multi-Ativos com PM & YoC)</h4>
+<p class="text-[10px] text-slate-400">Acompanhe Preço Médio de compra, valorização da cota (%) e Yield on Cost de cada posição.</p>
 </div>
 <button type="button" onclick="salvarAtivoNaCarteira();criarRipple(event)" class="px-3.5 py-1.5 rounded-full btn-press bg-emerald-500 text-black font-extrabold text-xs hover:bg-emerald-400 cursor-pointer shadow-lg shadow-emerald-500/20">+ Salvar/Atualizar Ativo na Carteira</button>
 </div>
@@ -366,9 +387,10 @@
 </div>
 
 <div class="bg-black/25 p-4 rounded-2xl border border-white/5">
-<h4 class="text-[11px] font-bold uppercase tracking-widest text-cyan-300 mb-3"><i class="fa-solid fa-database mr-1"></i> Dados do Fundo / Ativo (<span id="lblCategoriaFundoDados">Fundos Imobiliários</span>)</h4>
-<div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-<div><label class="text-[10px] uppercase text-slate-400 block mb-1">Preço da Cota (R$)</label><div class="relative"><span class="absolute left-3 top-2 text-xs text-cyan-400 font-bold">R$</span><input type="text" inputmode="decimal" id="fnPrecoCotaDados" oninput="sincronizarCotaFundo(this.value)" placeholder="10,00" class="input-dark campo-interativo valor-mono w-full bg-[#0a0f1e] border border-white/10 rounded-full pl-8 pr-3 py-1.5 text-xs font-bold text-cyan-300"></div></div>
+<h4 class="text-[11px] font-bold uppercase tracking-widest text-cyan-300 mb-3"><i class="fa-solid fa-database mr-1"></i> Dados de Mercado & Preço Médio (<span id="lblCategoriaFundoDados">Fundos Imobiliários</span>)</h4>
+<div class="grid grid-cols-1 sm:grid-cols-4 gap-3">
+<div><label class="text-[10px] uppercase text-slate-400 block mb-1">Cotação Atual (R$)</label><div class="relative"><span class="absolute left-3 top-2 text-xs text-cyan-400 font-bold">R$</span><input type="text" inputmode="decimal" id="fnPrecoCotaDados" oninput="sincronizarCotaFundo(this.value)" placeholder="10,00" class="input-dark campo-interativo valor-mono w-full bg-[#0a0f1e] border border-white/10 rounded-full pl-8 pr-3 py-1.5 text-xs font-bold text-cyan-300"></div></div>
+<div><label class="text-[10px] uppercase text-slate-400 block mb-1">Seu Preço Médio (PM)</label><div class="relative"><span class="absolute left-3 top-2 text-xs text-amber-400 font-bold">R$</span><input type="text" inputmode="decimal" id="fnPrecoMedioCompra" oninput="agendarSalvarDadosFundo()" placeholder="Opcional" class="input-dark campo-interativo valor-mono w-full bg-[#0a0f1e] border border-white/10 rounded-full pl-8 pr-3 py-1.5 text-xs font-bold text-amber-300"></div></div>
 <div><label class="text-[10px] uppercase text-slate-400 block mb-1">Último Dividendo (R$)</label><div class="relative"><span class="absolute left-3 top-2 text-xs text-emerald-400 font-bold">R$</span><input type="text" inputmode="decimal" id="fnUltimoDivDados" oninput="sincronizarDivFundo(this.value)" placeholder="0,10" class="input-dark campo-interativo valor-mono w-full bg-[#0a0f1e] border border-white/10 rounded-full pl-8 pr-3 py-1.5 text-xs font-bold text-emerald-300"></div></div>
 <div><label class="text-[10px] uppercase text-slate-400 block mb-1">Atualizado em (Auto 24h)</label><input type="text" id="fnDataAtualizacao" readonly class="input-dark valor-mono w-full bg-[#0a0f1e]/60 border border-white/10 rounded-full px-3 py-1.5 text-xs font-bold text-slate-300 cursor-not-allowed"></div>
 </div>
@@ -388,7 +410,7 @@
 <div><label class="text-[10px] uppercase text-slate-400 block mb-1">Aporte Mensal</label><div class="relative"><span class="absolute left-3 top-2 text-xs text-indigo-400 font-bold">R$</span><input type="text" inputmode="decimal" id="fnSimAporteMensal" oninput="agendarSalvarDadosFundo()" placeholder="500,00" class="input-dark campo-interativo valor-mono w-full bg-[#0a0f1e] border border-white/10 rounded-full pl-8 pr-3 py-1.5 text-xs font-bold text-indigo-300"></div></div>
 <div><label class="text-[10px] uppercase text-slate-400 block mb-1">Qtd. Cotas Atuais</label><input type="text" inputmode="numeric" id="fnSimCotasAtuais" oninput="agendarSalvarDadosFundo()" placeholder="0" class="input-dark campo-interativo valor-mono w-full bg-[#0a0f1e] border border-white/10 rounded-full px-3 py-1.5 text-xs font-bold text-amber-300"></div>
 <div><label class="text-[10px] uppercase text-slate-400 block mb-1">Dividendo Total</label><input type="text" id="fnSimDivTotal" readonly class="input-dark valor-mono w-full bg-[#0a0f1e]/60 border border-white/10 rounded-full px-3 py-1.5 text-xs font-bold text-emerald-400 cursor-not-allowed"></div>
-<div><label class="text-[10px] uppercase text-slate-400 block mb-1">Cotas p/ Dividendo</label><input type="text" id="fnSimCotasPorDiv" readonly class="input-dark valor-mono w-full bg-[#0a0f1e]/60 border border-white/10 rounded-full px-3 py-1.5 text-xs font-bold text-purple-300 cursor-not-allowed"></div>
+<div><label class="text-[10px] uppercase text-slate-400 block mb-1">Magic Number</label><input type="text" id="fnSimCotasPorDiv" readonly class="input-dark valor-mono w-full bg-[#0a0f1e]/60 border border-white/10 rounded-full px-3 py-1.5 text-xs font-bold text-purple-300 cursor-not-allowed"></div>
 </div>
 </div>
 
@@ -416,7 +438,7 @@
 </div>
 </div>
 
-<!-- ABA ANÁLISE 360º TOTALMENTE REFORMULADA E RESPONSIVA -->
+<!-- ABA ANÁLISE 360º -->
 <div id="aba-analise" class="tab-pane hidden space-y-6">
 <div class="card-dark rounded-[24px] p-4 sm:p-6 shadow-2xl border-emerald-500/30">
 <div class="flex flex-wrap justify-between items-center gap-4 mb-6 pb-4 border-b border-white/10">
@@ -430,11 +452,9 @@
 </div>
 </div>
 
-<!-- LINHA 1: RESUMO + RADAR 5 PILARES + RUNWAY & LIBERDADE FINANCEIRA -->
 <div id="conteudoAnalise" class="space-y-4 text-xs mb-6"></div>
 
 <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 mb-6">
-<!-- GRÁFICO RADAR 5 PILARES -->
 <div class="lg:col-span-5 bg-black/30 p-4 sm:p-5 rounded-2xl border border-emerald-500/25 flex flex-col">
 <div class="flex justify-between items-center mb-2">
 <h4 class="text-xs font-extrabold uppercase tracking-widest text-emerald-300 flex items-center gap-2"><i class="fa-solid fa-compass"></i> Radar dos 5 Pilares Financeiros</h4>
@@ -444,7 +464,6 @@
 <div id="legendaPilaresRadar" class="grid grid-cols-5 gap-1.5 mt-3 text-center"></div>
 </div>
 
-<!-- SOBREVIVÊNCIA (RUNWAY) & CROSSOVER POINT (LIBERDADE FINANCEIRA) -->
 <div class="lg:col-span-7 bg-black/30 p-4 sm:p-5 rounded-2xl border border-cyan-500/25 flex flex-col justify-between space-y-4">
 <div>
 <h4 class="text-xs font-extrabold uppercase tracking-widest text-cyan-300 mb-1 flex items-center gap-2"><i class="fa-solid fa-umbrella-beach"></i> Independência Financeira & Reserva de Sobrevivência</h4>
@@ -455,7 +474,6 @@
 </div>
 </div>
 
-<!-- LINHA 2: SIMULADOR INTERATIVO DE CORTES "E SE?" + RAIO-X POR TÓPICO -->
 <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 mb-6">
 <div class="lg:col-span-7 bg-black/30 p-4 sm:p-5 rounded-2xl border border-indigo-500/30 flex flex-col justify-between">
 <div>
@@ -478,7 +496,6 @@
 </div>
 </div>
 
-<!-- LINHA 3: DIÁRIO DE CONQUISTAS COM PROGRESSO E EXCLUSÃO -->
 <div class="bg-black/30 p-4 sm:p-5 rounded-2xl border border-emerald-500/30">
 <div class="flex flex-wrap justify-between items-center gap-2 mb-3">
 <div>
@@ -494,8 +511,8 @@
 </div>
 </main>
 
-<!-- BARRA DE NAVEGAÇÃO INFERIOR MOBILE (ESTILO APP NATIVO) -->
-<nav class="md:hidden fixed bottom-0 left-0 right-0 bg-[#101828]/95 backdrop-blur-md border-t border-white/10 z-40 px-3 py-2 flex justify-around items-center shadow-2xl">
+<!-- BARRA MOBILE -->
+<nav class="md:hidden fixed bottom-0 left-0 right-0 bg-[#101828]/95 backdrop-blur-md border-t border-white/10 z-40 px-3 py-2 flex justify-around items-center shadow-2xl no-print">
 <button type="button" onclick="mudarAba('principal')" id="btnMob-principal" class="mob-nav-btn flex flex-col items-center gap-0.5 text-emerald-400 font-bold text-[10px]"><i class="fa-solid fa-house text-sm"></i><span>Geral</span></button>
 <button type="button" onclick="mudarAba('investimentos')" id="btnMob-investimentos" class="mob-nav-btn flex flex-col items-center gap-0.5 text-slate-400 font-semibold text-[10px]"><i class="fa-solid fa-chart-line text-sm"></i><span>Investir</span></button>
 <button type="button" onclick="abrirModalQuickExpense()" class="w-11 h-11 -mt-5 rounded-full bg-gradient-to-br from-emerald-400 to-cyan-400 text-black flex items-center justify-center shadow-lg shadow-emerald-500/40"><i class="fa-solid fa-plus text-base"></i></button>
@@ -503,9 +520,22 @@
 <button type="button" onclick="abrirModalInvestirSaldo()" class="flex flex-col items-center gap-0.5 text-slate-400 font-semibold text-[10px]"><i class="fa-solid fa-paper-plane text-sm"></i><span>Aportar</span></button>
 </nav>
 
-<button type="button" onclick="abrirModalQuickExpense();criarRipple(event)" class="hidden md:flex fixed bottom-6 right-6 w-14 h-14 rounded-full btn-press bg-gradient-to-br from-emerald-400 to-cyan-400 text-black font-black items-center justify-center shadow-2xl shadow-emerald-500/50 hover:scale-110 active:scale-95 transition-all z-40 cursor-pointer" title="Gasto Rápido"><i class="fa-solid fa-plus text-lg"></i></button>
+<button type="button" onclick="abrirModalQuickExpense();criarRipple(event)" class="hidden md:flex fixed bottom-6 right-6 w-14 h-14 rounded-full btn-press bg-gradient-to-br from-emerald-400 to-cyan-400 text-black font-black items-center justify-center shadow-2xl shadow-emerald-500/50 hover:scale-110 active:scale-95 transition-all z-40 cursor-pointer no-print" title="Gasto Rápido"><i class="fa-solid fa-plus text-lg"></i></button>
 
-<div id="modalInvestirSaldo" class="fixed inset-0 bg-black/75 z-50 hidden flex items-center justify-center p-4">
+<!-- COMMAND PALETTE (CTRL + K) -->
+<div id="modalCommandPalette" class="fixed inset-0 bg-black/75 z-50 hidden flex items-start justify-center pt-20 p-4 no-print" onclick="if(event.target===this)fecharCommandPalette()">
+<div class="card-dark rounded-[24px] w-full max-w-lg p-4 shadow-2xl border-emerald-500/40 card-anim">
+<div class="flex items-center gap-3 border-b border-white/10 pb-3">
+<i class="fa-solid fa-terminal text-emerald-400 text-sm ml-2"></i>
+<input type="text" id="inputCommandPalette" oninput="filtrarCommandPalette(this.value)" onkeydown="navegarCommandPalette(event)" placeholder="Digite um comando ou 'Nome Valor' p/ lançar gasto rápido (ex: Uber 32,90)..." class="bg-transparent w-full text-xs sm:text-sm font-semibold outline-none">
+<button type="button" onclick="fecharCommandPalette()" class="text-[10px] px-2 py-1 rounded bg-white/5 text-slate-400">ESC</button>
+</div>
+<div id="listaCommandPalette" class="mt-3 max-h-72 overflow-y-auto space-y-1"></div>
+</div>
+</div>
+
+<!-- MODAIS -->
+<div id="modalInvestirSaldo" class="fixed inset-0 bg-black/75 z-50 hidden flex items-center justify-center p-4 no-print">
 <div class="card-dark rounded-[24px] w-full max-w-sm p-6 shadow-2xl border-emerald-500/30">
 <div class="flex justify-between items-center mb-4"><h3 class="font-bold text-sm uppercase tracking-wider text-emerald-300"><i class="fa-solid fa-paper-plane mr-1"></i> Investir Saldo Livre</h3><button type="button" onclick="fecharModalInvestirSaldo()" class="w-8 h-8 rounded-full bg-white/5">✕</button></div>
 <div class="space-y-3">
@@ -517,7 +547,7 @@
 </div>
 </div>
 
-<div id="modalAdmin" class="fixed inset-0 bg-black/75 z-50 hidden flex items-center justify-center p-4">
+<div id="modalAdmin" class="fixed inset-0 bg-black/75 z-50 hidden flex items-center justify-center p-4 no-print">
 <div class="card-dark rounded-[24px] w-full max-w-lg p-6 border-amber-500/40">
 <div class="flex justify-between items-center mb-4"><h3 class="font-bold text-sm uppercase tracking-wider text-amber-300"><i class="fa-solid fa-shield-halved"></i> Painel Admin</h3><button type="button" onclick="fecharModalAdmin()" class="w-8 h-8 rounded-full bg-white/5">✕</button></div>
 <div class="bg-black/30 p-4 rounded-xl border border-white/5 text-xs text-slate-300 space-y-2"><p>⚡ Autenticado</p><p>🔐 Supabase Sincronizado</p></div>
@@ -525,12 +555,15 @@
 </div>
 </div>
 
-<div id="modalPrazo" class="fixed inset-0 bg-black/75 z-50 hidden flex items-center justify-center p-4">
+<div id="modalPrazo" class="fixed inset-0 bg-black/75 z-50 hidden flex items-center justify-center p-4 no-print">
 <div class="card-dark rounded-[20px] w-full max-w-md p-6">
-<div class="flex justify-between items-center mb-4"><h3 class="font-bold text-sm">Configurar Prazo, Vencimento & Tópico</h3><button type="button" onclick="fecharModalPrazo()" class="w-8 h-8 rounded-full bg-white/5">✕</button></div>
+<div class="flex justify-between items-center mb-4"><h3 class="font-bold text-sm">Configurar Prazo, Parcelas & Tópico</h3><button type="button" onclick="fecharModalPrazo()" class="w-8 h-8 rounded-full bg-white/5">✕</button></div>
 <div class="space-y-3">
-<div><label class="text-[10px] uppercase text-slate-400 block mb-1">Recorrência do Lançamento</label><select id="modalTipoPrazo" onchange="alternarTipoPrazoModal()" class="input-dark campo-interativo w-full bg-[#0a0f1e] border border-white/10 rounded-xl px-4 py-2.5 text-xs font-bold"><option value="fixo">Mensal Fixo (Todos os meses)</option><option value="unico">Apenas neste mês (Pontual / Variável)</option><option value="data">Parcelado / Com Mês Final</option></select></div>
-<div id="divDataFimModal" class="hidden"><label class="text-[10px] uppercase text-slate-400 block mb-1">Mês da Última Parcela</label><input type="month" id="modalDataFim" class="input-dark campo-interativo w-full bg-[#0a0f1e] border border-white/10 rounded-xl px-4 py-2.5 text-xs font-bold"></div>
+<div><label class="text-[10px] uppercase text-slate-400 block mb-1">Recorrência do Lançamento</label><select id="modalTipoPrazo" onchange="alternarTipoPrazoModal()" class="input-dark campo-interativo w-full bg-[#0a0f1e] border border-white/10 rounded-xl px-4 py-2.5 text-xs font-bold"><option value="fixo">Mensal Fixo (Todos os meses)</option><option value="unico">Apenas neste mês (Pontual / Variável)</option><option value="data">Parcelado / Com Mês Inicial e Final</option></select></div>
+<div id="divDataFimModal" class="hidden grid grid-cols-2 gap-2.5">
+<div><label class="text-[10px] uppercase text-slate-400 block mb-1">Mês 1ª Parcela</label><input type="month" id="modalDataInicio" class="input-dark campo-interativo w-full bg-[#0a0f1e] border border-white/10 rounded-xl px-3 py-2 text-xs font-bold"></div>
+<div><label class="text-[10px] uppercase text-slate-400 block mb-1">Mês Última Parcela</label><input type="month" id="modalDataFim" class="input-dark campo-interativo w-full bg-[#0a0f1e] border border-white/10 rounded-xl px-3 py-2 text-xs font-bold"></div>
+</div>
 <div><label class="text-[10px] uppercase text-slate-400 block mb-1">Dia do Vencimento no Mês (1 a 31 - Opcional)</label><input type="number" min="1" max="31" id="modalDiaVencimento" placeholder="Ex: 10, 15, 25" class="input-dark campo-interativo valor-mono w-full bg-[#0a0f1e] border border-white/10 rounded-xl px-4 py-2.5 text-xs font-bold"></div>
 <div id="divMoverTopicoModal" class="hidden"><label class="text-[10px] uppercase text-slate-400 block mb-1">Mover para outro Tópico</label><select id="modalMoverTopico" class="input-dark campo-interativo w-full bg-[#0a0f1e] border border-white/10 rounded-xl px-4 py-2.5 text-xs font-bold"></select></div>
 </div>
@@ -538,8 +571,9 @@
 </div>
 </div>
 
-<div id="modalTopico" class="fixed inset-0 bg-black/75 z-50 hidden flex items-center justify-center p-4"><div class="card-dark rounded-[20px] w-full max-w-sm p-6"><h3 class="font-bold mb-4">Novo Tópico</h3><input id="inputNovoTopico" placeholder="Ex: Moradia" onkeydown="if(event.key==='Enter')confirmarNovoTopico()" class="input-dark campo-interativo w-full bg-[#0a0f1e] border border-white/10 rounded-xl px-4 py-3 text-sm"><div class="flex gap-2 mt-4"><button type="button" onclick="fecharModalTopico()" class="flex-1 py-3 rounded-xl bg-white/5 border text-sm">Cancelar</button><button type="button" onclick="confirmarNovoTopico();criarRipple(event)" class="flex-1 py-3 rounded-xl bg-indigo-500 text-white font-bold text-sm">Criar</button></div></div></div>
-<div id="modalQuickExpense" class="fixed inset-0 bg-black/75 z-50 hidden flex items-center justify-center p-4">
+<div id="modalTopico" class="fixed inset-0 bg-black/75 z-50 hidden flex items-center justify-center p-4 no-print"><div class="card-dark rounded-[20px] w-full max-w-sm p-6"><h3 class="font-bold mb-4">Novo Tópico</h3><div class="space-y-3"><input id="inputNovoTopico" placeholder="Título (Ex: Moradia, Lazer)" onkeydown="if(event.key==='Enter')confirmarNovoTopico()" class="input-dark campo-interativo w-full bg-[#0a0f1e] border border-white/10 rounded-xl px-4 py-3 text-xs font-bold"><input id="inputTetoNovoTopico" type="number" placeholder="Teto Máximo Mensal R$ (Opcional)" class="input-dark campo-interativo valor-mono w-full bg-[#0a0f1e] border border-white/10 rounded-xl px-4 py-3 text-xs font-bold"></div><div class="flex gap-2 mt-4"><button type="button" onclick="fecharModalTopico()" class="flex-1 py-3 rounded-xl bg-white/5 border text-xs">Cancelar</button><button type="button" onclick="confirmarNovoTopico();criarRipple(event)" class="flex-1 py-3 rounded-xl bg-indigo-500 text-white font-bold text-xs">Criar</button></div></div></div>
+
+<div id="modalQuickExpense" class="fixed inset-0 bg-black/75 z-50 hidden flex items-center justify-center p-4 no-print">
 <div class="card-dark rounded-[24px] w-full max-w-sm p-6 shadow-2xl border-emerald-500/30">
 <div class="flex justify-between items-center mb-4"><h3 class="font-bold text-sm uppercase tracking-wider text-emerald-300"><i class="fa-solid fa-bolt"></i> Gasto Rápido</h3><button type="button" onclick="fecharModalQuickExpense()" class="w-8 h-8 rounded-full bg-white/5">✕</button></div>
 <div class="space-y-3">
@@ -551,14 +585,16 @@
 <div class="flex gap-2 mt-5"><button type="button" onclick="fecharModalQuickExpense()" class="flex-1 py-3 rounded-xl bg-white/5 border text-xs">Cancelar</button><button type="button" onclick="salvarQuickExpense();criarRipple(event)" class="flex-1 py-3 rounded-xl bg-emerald-500 text-black font-bold text-xs">Adicionar</button></div>
 </div>
 </div>
-<div id="modalConquista" class="fixed inset-0 bg-black/75 z-50 hidden flex items-center justify-center p-4">
+
+<div id="modalConquista" class="fixed inset-0 bg-black/75 z-50 hidden flex items-center justify-center p-4 no-print">
 <div class="card-dark rounded-[24px] w-full max-w-sm p-6 shadow-2xl border-emerald-500/30">
 <div class="flex justify-between items-center mb-4"><h3 class="font-bold text-sm uppercase tracking-wider text-emerald-300"><i class="fa-solid fa-trophy"></i> Nova Conquista</h3><button type="button" onclick="fecharModalConquista()" class="w-8 h-8 rounded-full bg-white/5">✕</button></div>
 <div class="space-y-3"><div><label class="text-[10px] uppercase text-slate-400 block mb-1">Descreva sua vitória</label><textarea id="inputTextoConquista" placeholder="Vitória..." class="input-dark campo-interativo w-full bg-[#0a0f1e] border border-white/10 rounded-xl p-3 text-xs h-24 resize-none"></textarea></div></div>
 <div class="flex gap-2 mt-5"><button type="button" onclick="fecharModalConquista()" class="flex-1 py-3 rounded-xl bg-white/5 border text-xs">Cancelar</button><button type="button" onclick="salvarConquistaModal();criarRipple(event)" class="flex-1 py-3 rounded-xl bg-emerald-500 text-black font-bold text-xs">Salvar</button></div>
 </div>
 </div>
-<div id="toast" class="fixed bottom-16 md:bottom-5 left-1/2 -translate-x-1/2 bg-[#141d33] border border-emerald-500/30 px-5 py-3 rounded-full text-sm shadow-2xl opacity-0 pointer-events-none transition z-[100]"></div>
+
+<div id="toast" class="fixed bottom-16 md:bottom-5 left-1/2 -translate-x-1/2 bg-[#141d33] border border-emerald-500/30 px-5 py-2.5 rounded-full text-xs sm:text-sm shadow-2xl opacity-0 pointer-events-none transition z-[100] flex items-center gap-3 no-print"></div>
 <script src="script.js"></script>
 </body>
 </html>
