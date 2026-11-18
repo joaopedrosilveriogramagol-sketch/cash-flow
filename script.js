@@ -16,44 +16,41 @@ acoes_ext:[
 ]
 };
 
-function dataHoraAtualFormatada(){
-const d=new Date();
-return `${d.toLocaleDateString('pt-BR')} às ${d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})}`;
-}
+function dataHoraAtualFormatada(){const d=new Date();return `${d.toLocaleDateString('pt-BR')} às ${d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})}`;}
 
-const dadosPadrao={globalDate:new Date().toISOString().slice(0,7),tema:"dark",modoPrivado:false,metaEconomia:0,metaInvestimento:0,historicoSaldo:[],retirado:0,taxaCdi:13.65,pctCdi:100,aliquotaIrCaixinha:0,ultimaAtualizacaoCd:new Date().toISOString().slice(0,10),ultimoSyncCotacoesTs:0,catalogoCotacoesCache:null,historicoInvestimentos:[],projecaoMeses:{},rendas:[],topicos:[],conquistasManuais:[],carteiraAtivos:[],cortesSimuladosAnalise:{},filtroTabela360:"todos",caixinhaAtiva:"nubank",caixinhasBancos:{bb:{aportado:0,divBruto:0,divDiario:0,pctCdi:100,taxaCdi:13.65},mp:{aportado:0,divBruto:0,divDiario:0,pctCdi:100,taxaCdi:13.65},inter:{aportado:0,divBruto:0,divDiario:0,pctCdi:100,taxaCdi:13.65},nubank:{aportado:0,divBruto:0,divDiario:0,pctCdi:100,taxaCdi:13.65}},fundoConfig:{modalidade:"fiis",ticker:"MXRF11",precoCota:9.95,ultimoDiv:0.10,dataAtualizacao:dataHoraAtualFormatada(),aporteMensal:500,cotasAtuais:0},fundosPorModalidade:{acoes_br:{ticker:"PETR4",precoCota:36.50,ultimoDiv:0.45,dataAtualizacao:dataHoraAtualFormatada(),aporteMensal:500,cotasAtuais:0},fiis:{ticker:"MXRF11",precoCota:9.95,ultimoDiv:0.10,dataAtualizacao:dataHoraAtualFormatada(),aporteMensal:500,cotasAtuais:0},acoes_ext:{ticker:"AAPL",precoCota:1280.00,ultimoDiv:1.25,dataAtualizacao:dataHoraAtualFormatada(),aporteMensal:500,cotasAtuais:0}}};
-let appData=JSON.parse(JSON.stringify(dadosPadrao)),usuarioAtual=null,modoCadastro=false,autenticadoEmAndamento=false,carregandoInicial=false,timerSalvarNuvem=null,timerRenderizacao=null,timerAutoSync24h=null,timerDebounceFundo=null;
-let itemEditandoPrazo=null,chartPizza=null,chartBar=null,chartLinha=null,chartCaixinhaComparativo=null,chartProjecaoAportes=null,chartRadarSaude=null,lucrosPassivosSimulador=[0,0,0,0,0,0,0,0,0,0,0,0];
+const dadosPadrao={globalDate:new Date().toISOString().slice(0,7),tema:"dark",modoPrivado:false,metaEconomia:0,metaInvestimento:0,cotacaoDolar:5.80,targetAlocacao:{cdi:40,fiis:25,acoes_br:20,acoes_ext:15},historicoSaldo:[],retirado:0,taxaCdi:13.65,pctCdi:100,aliquotaIrCaixinha:0,ultimaAtualizacaoCd:new Date().toISOString().slice(0,10),ultimoSyncCotacoesTs:0,catalogoCotacoesCache:null,historicoInvestimentos:[],projecaoMeses:{},rendas:[],topicos:[],conquistasManuais:[],carteiraAtivos:[],cortesSimuladosAnalise:{},filtroTabela360:"todos",caixinhaAtiva:"nubank",caixinhasBancos:{bb:{aportado:0,divBruto:0,divDiario:0,pctCdi:100,taxaCdi:13.65},mp:{aportado:0,divBruto:0,divDiario:0,pctCdi:100,taxaCdi:13.65},inter:{aportado:0,divBruto:0,divDiario:0,pctCdi:100,taxaCdi:13.65},nubank:{aportado:0,divBruto:0,divDiario:0,pctCdi:100,taxaCdi:13.65}},fundoConfig:{modalidade:"fiis",ticker:"MXRF11",precoCota:9.95,precoMedio:9.95,ultimoDiv:0.10,dataAtualizacao:dataHoraAtualFormatada(),aporteMensal:500,cotasAtuais:0},fundosPorModalidade:{acoes_br:{ticker:"PETR4",precoCota:36.50,precoMedio:36.50,ultimoDiv:0.45,dataAtualizacao:dataHoraAtualFormatada(),aporteMensal:500,cotasAtuais:0},fiis:{ticker:"MXRF11",precoCota:9.95,precoMedio:9.95,ultimoDiv:0.10,dataAtualizacao:dataHoraAtualFormatada(),aporteMensal:500,cotasAtuais:0},acoes_ext:{ticker:"AAPL",precoCota:1280.00,precoMedio:1280.00,ultimoDiv:1.25,dataAtualizacao:dataHoraAtualFormatada(),aporteMensal:500,cotasAtuais:0}}};
+let appData=JSON.parse(JSON.stringify(dadosPadrao)),usuarioAtual=null,modoCadastro=false,autenticadoEmAndamento=false,carregandoInicial=false,timerSalvarNuvem=null,timerRenderizacao=null,timerAutoSync24h=null,timerDebounceFundo=null,timerToast=null,snapshotUndo=null;
+let itemEditandoPrazo=null,chartPizza=null,chartBar=null,chartLinha=null,chartCaixinhaComparativo=null,chartProjecaoAportes=null,chartRadarSaude=null,chartAlocacaoCarteira=null,lucrosPassivosSimulador=[0,0,0,0,0,0,0,0,0,0,0,0],comandosFiltradosPalette=[];
 
 function lerNumero(val){if(typeof val==='number')return val;if(!val)return 0;let s=String(val).trim();if(s.includes(',')&&s.includes('.'))s=s.replace(/\./g,'').replace(',','.');else if(s.includes(','))s=s.replace(',','.');const n=parseFloat(s);return isNaN(n)?0:n;}
 function criarRipple(e){if(!e||!e.currentTarget)return;const btn=e.currentTarget,circle=document.createElement('span'),diameter=Math.max(btn.clientWidth,btn.clientHeight),radius=diameter/2;circle.style.width=circle.style.height=`${diameter}px`;circle.style.left=`${e.clientX-btn.getBoundingClientRect().left-radius}px`;circle.style.top=`${e.clientY-btn.getBoundingClientRect().top-radius}px`;circle.classList.add('ripple');const rippleEl=btn.getElementsByClassName('ripple')[0];if(rippleEl)rippleEl.remove();btn.appendChild(circle);}
 
-function toggleModoPrivacidade(){
-appData.modoPrivado=!appData.modoPrivado;
-aplicarModoPrivacidade();
-salvar();
-}
+function toggleModoPrivacidade(){appData.modoPrivado=!appData.modoPrivado;aplicarModoPrivacidade();salvar();}
 function aplicarModoPrivacidade(){
 document.body.classList.toggle('modo-privado',!!appData.modoPrivado);
-const icone=appData.modoPrivado?'<i class="fa-solid fa-eye-slash text-amber-300 text-xs"></i>':'<i class="fa-solid fa-eye text-xs"></i>';
+const icone=appData.modoPrivado?'<i class="fa-solid fa-eye-slash text-amber-400 text-xs"></i>':'<i class="fa-solid fa-eye text-xs"></i>';
 const b1=document.getElementById('btnPrivacidadeDesktop'),b2=document.getElementById('btnPrivacidadeMobile');
 if(b1)b1.innerHTML=icone;if(b2)b2.innerHTML=icone;
 }
 
 function atualizarBadgeNuvem(estado){
 const el=document.getElementById('badgeSyncNuvem');if(!el)return;
-if(estado==='salvando'){el.className='text-[9px] text-amber-300 font-semibold flex items-center gap-1';el.innerHTML='<i class="fa-solid fa-rotate fa-spin"></i> Salvando...';}
-else if(estado==='erro'){el.className='text-[9px] text-rose-400 font-semibold flex items-center gap-1';el.innerHTML='<i class="fa-solid fa-triangle-exclamation"></i> Salvo apenas local';}
+if(estado==='salvando'){el.className='text-[9px] text-amber-400 font-semibold flex items-center gap-1';el.innerHTML='<i class="fa-solid fa-rotate fa-spin"></i> Salvando...';}
+else if(estado==='erro'){el.className='text-[9px] text-rose-400 font-semibold flex items-center gap-1';el.innerHTML='<i class="fa-solid fa-triangle-exclamation"></i> Salvo local';}
 else{el.className='text-[9px] text-emerald-400 font-semibold flex items-center gap-1';el.innerHTML='<i class="fa-solid fa-cloud-check"></i> Salvo na nuvem';}
 }
 
 function toggleMenuConfig(ev){if(ev)ev.stopPropagation();const m=document.getElementById('menuConfigHeader');if(m)m.classList.toggle('hidden');}
 function fecharMenuConfig(){const m=document.getElementById('menuConfigHeader');if(m)m.classList.add('hidden');}
 
-const pluginLucroVerdeSimulador={id:'lucroVerdeSimulador',afterDatasetsDraw(chart){const{ctx}=chart,meta=chart.getDatasetMeta(0);if(!meta||meta.hidden)return;meta.data.forEach((bar,index)=>{const lucroMes=lucrosPassivosSimulador[index]||0,aporteMes=chart.data.datasets[0].data[index]||0;if(lucroMes>0||aporteMes>0){ctx.save();ctx.fillStyle='#10b981';ctx.font='extrabold 10px "JetBrains Mono", monospace';ctx.textAlign='center';ctx.fillText('+R$ '+lucroMes.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2}),bar.x,bar.y-8);ctx.restore();}});}};
+const pluginLucroVerdeSimulador={id:'lucroVerdeSimulador',afterDatasetsDraw(chart){const{ctx}=chart,meta=chart.getDatasetMeta(0);if(!meta||meta.hidden)return;const corTxt=document.body.classList.contains('theme-pink')?'#be185d':document.body.classList.contains('light')?'#047857':'#10b981';meta.data.forEach((bar,index)=>{const lucroMes=lucrosPassivosSimulador[index]||0,aporteMes=chart.data.datasets[0].data[index]||0;if(lucroMes>0||aporteMes>0){ctx.save();ctx.fillStyle=corTxt;ctx.font='extrabold 10px "JetBrains Mono", monospace';ctx.textAlign='center';ctx.fillText('+R$ '+lucroMes.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2}),bar.x,bar.y-8);ctx.restore();}});}};
 
 document.addEventListener('DOMContentLoaded',async()=>{
 initCharts();
+document.addEventListener('keydown',e=>{
+if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();abrirCommandPalette();}
+else if(e.key==='Escape'){fecharCommandPalette();}
+});
 document.addEventListener('click',e=>{
 const dd=document.getElementById('dropdownAtivosFamosos'),inp=document.getElementById('buscaAtivoFamoso');
 if(dd&&!dd.contains(e.target)&&e.target!==inp)dd.classList.add('hidden');
@@ -72,7 +69,20 @@ async function executarAutenticacao(){if(autenticadoEmAndamento)return;const nom
 
 async function fazerLogout(){if(timerSalvarNuvem){clearTimeout(timerSalvarNuvem);timerSalvarNuvem=null;}if(timerAutoSync24h){clearInterval(timerAutoSync24h);timerAutoSync24h=null;}if(usuarioAtual&&!carregandoInicial)await salvarNaNuvemAgora(usuarioAtual.id,JSON.parse(JSON.stringify(appData)));usuarioAtual=null;appData=JSON.parse(JSON.stringify(dadosPadrao));document.getElementById('authPassword').value='';document.getElementById('btnAdminPainel').classList.add('hidden');document.getElementById('appPrincipal').classList.add('hidden');document.getElementById('telaAuth').classList.remove('hidden');toast('Sessão terminada!');dbSupabase.auth.signOut().catch(()=>{});}
 
-/* HELPERS DE VALORES E STATUS POR MÊS */
+/* SISTEMA UNDO (DESFAZER EXCLUSÕES) */
+function guardarSnapshotUndo(msg){
+snapshotUndo=JSON.parse(JSON.stringify(appData));
+toast(msg,true);
+}
+function desfazerUltimaAcao(){
+if(!snapshotUndo)return;
+appData=JSON.parse(JSON.stringify(snapshotUndo));
+snapshotUndo=null;
+salvar();preencherCamposInterface();renderizarTudo(true);
+toast('Ação desfeita com sucesso!');
+}
+
+/* HELPERS MENSAIS */
 function obterValorNoMes(obj,mesRef=appData.globalDate){
 if(obj&&obj.valoresPorMes&&typeof obj.valoresPorMes==='object'&&mesRef in obj.valoresPorMes)return Number(obj.valoresPorMes[mesRef])||0;
 return Number(obj?.valor)||0;
@@ -80,8 +90,7 @@ return Number(obj?.valor)||0;
 function definirValorNoMes(obj,val,mesRef=appData.globalDate){
 if(!obj)return;
 if(!obj.valoresPorMes||typeof obj.valoresPorMes!=='object')obj.valoresPorMes={};
-obj.valoresPorMes[mesRef]=val;
-obj.valor=val;
+obj.valoresPorMes[mesRef]=val;obj.valor=val;
 }
 function isRecebidoNoMes(r,mesRef=appData.globalDate){
 if(r.recebidosPorMes&&typeof r.recebidosPorMes==='object'&&mesRef in r.recebidosPorMes)return!!r.recebidosPorMes[mesRef];
@@ -102,6 +111,7 @@ item.pagosPorMes[mesRef]=!!val;item.pago=!!val;
 function itemVisivelNoMes(obj,mesRef=appData.globalDate){
 if(!obj)return false;
 if(obj.tipoPrazo==='unico'&&obj.mesUnico)return obj.mesUnico===mesRef;
+if(obj.tipoPrazo==='data'&&obj.dataInicio&&mesRef<obj.dataInicio)return false;
 return true;
 }
 
@@ -110,21 +120,21 @@ if(!appData.caixinhasBancos)appData.caixinhasBancos=JSON.parse(JSON.stringify(da
 ['bb','mp','inter','nubank'].forEach(b=>{if(!appData.caixinhasBancos[b])appData.caixinhasBancos[b]={aportado:0,divBruto:0,divDiario:0,pctCdi:100,taxaCdi:appData.taxaCdi||13.65};});
 if(!appData.caixinhaAtiva)appData.caixinhaAtiva='nubank';
 if(appData.aliquotaIrCaixinha===undefined)appData.aliquotaIrCaixinha=0;
+if(!appData.cotacaoDolar)appData.cotacaoDolar=5.80;
+if(!appData.targetAlocacao)appData.targetAlocacao={cdi:40,fiis:25,acoes_br:20,acoes_ext:15};
 if(!appData.cortesSimuladosAnalise)appData.cortesSimuladosAnalise={};
 if(!appData.filtroTabela360)appData.filtroTabela360='todos';
 if(!appData.fundoConfig)appData.fundoConfig=JSON.parse(JSON.stringify(dadosPadrao.fundoConfig));
 if(appData.fundoConfig.modalidade==='acoes')appData.fundoConfig.modalidade='acoes_br';
 if(appData.fundoConfig.modalidade==='imobiliarios')appData.fundoConfig.modalidade='acoes_ext';
 if(!appData.fundosPorModalidade)appData.fundosPorModalidade=JSON.parse(JSON.stringify(dadosPadrao.fundosPorModalidade));
-if(appData.fundosPorModalidade.acoes&&!appData.fundosPorModalidade.acoes_br)appData.fundosPorModalidade.acoes_br=appData.fundosPorModalidade.acoes;
-if(appData.fundosPorModalidade.imobiliarios&&!appData.fundosPorModalidade.acoes_ext)appData.fundosPorModalidade.acoes_ext=appData.fundosPorModalidade.imobiliarios;
 ['acoes_br','fiis','acoes_ext'].forEach(m=>{if(!appData.fundosPorModalidade[m])appData.fundosPorModalidade[m]=JSON.parse(JSON.stringify(dadosPadrao.fundosPorModalidade[m]));});
 if(!Array.isArray(appData.carteiraAtivos)){
 appData.carteiraAtivos=[];
 ['acoes_br','fiis','acoes_ext'].forEach(m=>{
 const item=appData.fundosPorModalidade[m];
 if(item&&Number(item.cotasAtuais)>0&&item.ticker){
-appData.carteiraAtivos.push({ticker:item.ticker.toUpperCase(),modalidade:m,cotas:Number(item.cotasAtuais),precoCota:Number(item.precoCota)||10,ultimoDiv:Number(item.ultimoDiv)||0.1});
+appData.carteiraAtivos.push({ticker:item.ticker.toUpperCase(),modalidade:m,cotas:Number(item.cotasAtuais),precoCota:Number(item.precoCota)||10,precoMedio:Number(item.precoMedio||item.precoCota)||10,ultimoDiv:Number(item.ultimoDiv)||0.1});
 }
 });
 }
@@ -143,13 +153,18 @@ if(item&&cached.preco>0){item.preco=cached.preco;item.div=cached.div;}
 async function verificarEAtualizarCotacoes24h(forcar=false){
 garantirEstruturaInvestimentos();
 const agora=Date.now(),ultimo=Number(appData.ultimoSyncCotacoesTs)||0;
+const elUsd=document.getElementById('lblCotacaoDolarTopo');if(elUsd)elUsd.textContent=moeda(appData.cotacaoDolar||5.80);
 if(!forcar&&ultimo>0&&(agora-ultimo)<INTERVALO_24H_MS){
 const dtStr=appData.fundoConfig.dataAtualizacao||dataHoraAtualFormatada();
 const elDt=document.getElementById('fnDataAtualizacao');if(elDt)elDt.value=dtStr;
 return;
 }
-const lblSync=document.getElementById('lblStatusSync24h');if(lblSync)lblSync.textContent='🔄 Sincronizando cotações B3...';
+const lblSync=document.getElementById('lblStatusSync24h');if(lblSync)lblSync.textContent='🔄 Sincronizando B3 & PTAX...';
 let atualizadosApi=0;
+try{
+const rUsd=await fetch('https://economia.awesomeapi.com.br/json/last/USD-BRL');
+if(rUsd.ok){const jUsd=await rUsd.json();const bid=parseFloat(jUsd?.USDBRL?.bid);if(bid>0){appData.cotacaoDolar=Number(bid.toFixed(2));if(elUsd)elUsd.textContent=moeda(appData.cotacaoDolar);}}
+}catch(e){}
 for(const grupo of ['acoes_br','fiis']){
 const lista=CATALOGO_ATIVOS_FAMOSOS[grupo];
 const lotes=[lista.slice(0,10),lista.slice(10,20)];
@@ -188,17 +203,16 @@ const ref=(CATALOGO_ATIVOS_FAMOSOS[item.modalidade]||[]).find(x=>x.ticker===item
 if(ref){item.precoCota=ref.preco;item.ultimoDiv=ref.div;}
 });
 const modAtual=appData.fundoConfig.modalidade||'fiis';
-if(appData.fundosPorModalidade[modAtual]){
-appData.fundoConfig=Object.assign({modalidade:modAtual},appData.fundosPorModalidade[modAtual]);
-}
+if(appData.fundosPorModalidade[modAtual])appData.fundoConfig=Object.assign({modalidade:modAtual},appData.fundosPorModalidade[modAtual]);
 appData.fundoConfig.dataAtualizacao=carimbo;
 preencherInputsFundo(appData.fundoConfig);
 renderizarAtalhosAtivosFamosos(modAtual);
 renderizarCarteiraMultiAtivos();
 calcularTotaisInvestimento();
 renderizarMetaInvestimento();
+renderizarAlocacaoERebalanceamento();
 renderizarSimulacaoFundo();
-if(lblSync)lblSync.textContent=atualizadosApi>0?`⚡ B3 Sincronizada (${carimbo})`:`⚡ Catálogo Base Ativo (${carimbo})`;
+if(lblSync)lblSync.textContent=atualizadosApi>0?`⚡ B3 & USD (${carimbo})`:`⚡ Catálogo Ativo (${carimbo})`;
 salvar();
 }
 
@@ -217,11 +231,13 @@ document.getElementById('metaEconomia').value=appData.metaEconomia>0?appData.met
 document.getElementById('metaInvestimento').value=appData.metaInvestimento>0?appData.metaInvestimento:'';
 document.getElementById('seletorTema').value=appData.tema||'dark';
 const selIr=document.getElementById('selectAliquotaIrCaixinha');if(selIr)selIr.value=String(appData.aliquotaIrCaixinha||0);
+const elUsd=document.getElementById('lblCotacaoDolarTopo');if(elUsd)elUsd.textContent=moeda(appData.cotacaoDolar||5.80);
 aplicarTemaBancario(appData.tema||'dark');
 aplicarModoPrivacidade();
 carregarCamposCaixinhaAtiva();
 carregarCamposFundo();
 renderizarCarteiraMultiAtivos();
+renderizarAlocacaoERebalanceamento();
 }
 
 async function entrarNoApp(){carregandoInicial=true;document.getElementById('telaAuth').classList.add('hidden');document.getElementById('appPrincipal').classList.remove('hidden');document.getElementById('buscaGlobal').value='';document.getElementById('filtroPago').value='todos';const cacheLocal=localStorage.getItem('cashflow_'+usuarioAtual.id);if(cacheLocal){try{appData=Object.assign(JSON.parse(JSON.stringify(dadosPadrao)),JSON.parse(cacheLocal));preencherCamposInterface();renderizarTudo(true);}catch(e){}}await Promise.all([verificarAdmin(),carregarDoSupabase()]);carregandoInicial=false;preencherCamposInterface();renderizarTudo(true);iniciarMonitoramento24h();}
@@ -234,7 +250,7 @@ async function carregarDoSupabase(){if(!usuarioAtual)return;const uid=usuarioAtu
 
 async function salvarNaNuvemAgora(uid,dados){if(!uid)return;try{atualizarBadgeNuvem('salvando');const{error}=await dbSupabase.from('transacoes').upsert({user_id:uid,payload:dados,Titulo:'Painel Principal'},{onConflict:'user_id'});if(error)throw error;atualizarBadgeNuvem('salvo');}catch(err){atualizarBadgeNuvem('erro');}}
 function salvar(){if(!usuarioAtual||carregandoInicial)return;const uid=usuarioAtual.id,copia=JSON.parse(JSON.stringify(appData));localStorage.setItem('cashflow_'+uid,JSON.stringify(copia));atualizarBadgeNuvem('salvando');if(timerSalvarNuvem)clearTimeout(timerSalvarNuvem);timerSalvarNuvem=setTimeout(()=>salvarNaNuvemAgora(uid,copia),450);}
-function resetarPadrao(){if(confirm('Tem certeza que deseja limpar todos os dados da conta?')){appData=JSON.parse(JSON.stringify(dadosPadrao));document.getElementById('buscaGlobal').value='';document.getElementById('filtroPago').value='todos';preencherCamposInterface();salvar();renderizarTudo(true);toast('Dados resetados!');}}
+function resetarPadrao(){if(confirm('Tem certeza que deseja limpar todos os dados da conta?')){guardarSnapshotUndo('Dados resetados');appData=JSON.parse(JSON.stringify(dadosPadrao));document.getElementById('buscaGlobal').value='';document.getElementById('filtroPago').value='todos';preencherCamposInterface();salvar();renderizarTudo(true);}}
 
 function mudarAba(abaId){
 document.querySelectorAll('.tab-pane').forEach(el=>el.classList.add('hidden'));
@@ -244,8 +260,8 @@ const targetPane=document.getElementById('aba-'+abaId);if(targetPane)targetPane.
 const activeBtn=document.getElementById('btnTab-'+abaId);if(activeBtn){activeBtn.classList.remove('bg-white/5','text-slate-300','border','border-white/5');activeBtn.classList.add('bg-emerald-500','text-black','shadow-lg','shadow-emerald-500/25');}
 const activeMob=document.getElementById('btnMob-'+abaId);if(activeMob){activeMob.classList.remove('text-slate-400','font-semibold');activeMob.classList.add('text-emerald-400','font-bold');}
 if(abaId==='investimentos'){
-carregarCamposCaixinhaAtiva();carregarCamposFundo();renderizarCarteiraMultiAtivos();calcularTotaisInvestimento();renderizarMetaInvestimento();renderizarSimulacaoFundo();renderizarProjecaoMeses();calcularProjecaoMeses();
-setTimeout(()=>{atualizarGraficoCaixinha();if(chartCaixinhaComparativo)chartCaixinhaComparativo.resize();if(chartProjecaoAportes)chartProjecaoAportes.resize();},60);
+carregarCamposCaixinhaAtiva();carregarCamposFundo();renderizarCarteiraMultiAtivos();calcularTotaisInvestimento();renderizarMetaInvestimento();renderizarAlocacaoERebalanceamento();renderizarSimulacaoFundo();renderizarProjecaoMeses();calcularProjecaoMeses();
+setTimeout(()=>{atualizarGraficoCaixinha();if(chartCaixinhaComparativo)chartCaixinhaComparativo.resize();if(chartProjecaoAportes)chartProjecaoAportes.resize();if(chartAlocacaoCarteira)chartAlocacaoCarteira.resize();},60);
 }else if(abaId==='analise'){
 gerarAnaliseInteligente();
 setTimeout(()=>{if(chartRadarSaude)chartRadarSaude.resize();},60);
@@ -258,14 +274,77 @@ if(!wrap)return;
 const estaRetraido=wrap.classList.toggle('retraido');
 if(ic)ic.classList.toggle('rotacionado-180',!estaRetraido);
 if(txt)txt.textContent=estaRetraido?'Expandir':'Retrair';
-if(!estaRetraido&&isCaixinha){setTimeout(()=>{atualizarGraficoCaixinha();calcularProjecaoMeses();if(chartCaixinhaComparativo)chartCaixinhaComparativo.resize();if(chartProjecaoAportes)chartProjecaoAportes.resize();},80);}
+if(!estaRetraido){
+setTimeout(()=>{
+if(isCaixinha){atualizarGraficoCaixinha();calcularProjecaoMeses();if(chartCaixinhaComparativo)chartCaixinhaComparativo.resize();if(chartProjecaoAportes)chartProjecaoAportes.resize();}
+if(chartAlocacaoCarteira)chartAlocacaoCarteira.resize();
+},80);
+}
+}
+
+/* MATRIZ DE ALOCAÇÃO & REBALANCEAMENTO EXECUTIVO */
+function editarTargetAlocacao(chave,val){
+garantirEstruturaInvestimentos();
+appData.targetAlocacao[chave]=Math.max(0,Math.min(100,lerNumero(val)));
+salvar();renderizarAlocacaoERebalanceamento();
+}
+
+function renderizarAlocacaoERebalanceamento(){
+garantirEstruturaInvestimentos();
+const{totalCaixinhasLiquido,patrimonioLiquido}=calcularTotaisInvestimento();
+let somaPorMod={acoes_br:0,fiis:0,acoes_ext:0};
+if(Array.isArray(appData.carteiraAtivos)&&appData.carteiraAtivos.length>0){
+appData.carteiraAtivos.forEach(a=>{
+const v=(Number(a.cotas)||0)*(Number(a.precoCota)||0)+((Number(a.cotas)||0)*(Number(a.ultimoDiv)||0));
+somaPorMod[a.modalidade||'fiis']=(somaPorMod[a.modalidade||'fiis']||0)+v;
+});
+}else{
+['acoes_br','fiis','acoes_ext'].forEach(m=>{
+const item=appData.fundosPorModalidade[m];
+if(item)somaPorMod[m]=((Number(item.cotasAtuais)||0)*(Number(item.precoCota)||0))+((Number(item.cotasAtuais)||0)*(Number(item.ultimoDiv)||0));
+});
+}
+const classes=[
+{id:'cdi',nome:'Caixinhas CDI',atual:totalCaixinhasLiquido,meta:Number(appData.targetAlocacao.cdi)||40,cor:'#f59e0b'},
+{id:'fiis',nome:'Fundos Imob.',atual:somaPorMod.fiis||0,meta:Number(appData.targetAlocacao.fiis)||25,cor:'#6366f1'},
+{id:'acoes_br',nome:'Ações Brasil',atual:somaPorMod.acoes_br||0,meta:Number(appData.targetAlocacao.acoes_br)||20,cor:'#10b981'},
+{id:'acoes_ext',nome:'Exterior (USD)',atual:somaPorMod.acoes_ext||0,meta:Number(appData.targetAlocacao.acoes_ext)||15,cor:'#06b6d4'}
+];
+const contInputs=document.getElementById('inputsTargetAllocation');
+if(contInputs){
+contInputs.innerHTML=classes.map(c=>{
+const pctAtual=patrimonioLiquido>0?Math.round((c.atual/patrimonioLiquido)*100):0;
+return `<div class="bg-black/30 p-3 rounded-xl border border-white/5"><div class="flex justify-between items-center text-[10px] mb-1"><span class="font-bold text-slate-300 truncate">${c.nome}</span><span class="valor-mono text-emerald-400 font-bold">Atual: ${pctAtual}%</span></div><div class="flex items-center gap-1.5"><span class="text-[10px] text-slate-400">Meta %:</span><input type="number" min="0" max="100" value="${c.meta}" onchange="editarTargetAlocacao('${c.id}',this.value)" class="input-dark valor-mono w-full bg-[#0a0f1e] border border-white/10 rounded-lg px-2 py-1 text-xs font-bold text-center"></div><div class="text-[10px] valor-mono text-slate-400 mt-1">${moeda(c.atual)}</div></div>`;
+}).join('');
+}
+const canvasAloc=document.getElementById('chartAlocacaoCarteira');
+if(canvasAloc){
+const vals=classes.map(c=>c.atual);
+if(!chartAlocacaoCarteira){
+chartAlocacaoCarteira=new Chart(canvasAloc,{type:'doughnut',data:{labels:classes.map(c=>c.nome),datasets:[{data:vals,backgroundColor:classes.map(c=>c.cor),borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,cutout:'65%',plugins:{legend:{position:'right',labels:{boxWidth:10,font:{size:10}}}}}});
+}else{
+chartAlocacaoCarteira.data.datasets[0].data=vals;
+chartAlocacaoCarteira.update();
+}
+}
+const cardRec=document.getElementById('cardRecomendacaoRebalanceamento');
+if(cardRec){
+let maiorDeficit=null,maiorGap=-999;
+classes.forEach(c=>{
+const pctAtual=patrimonioLiquido>0?((c.atual/patrimonioLiquido)*100):0;
+const gap=c.meta-pctAtual;
+if(gap>maiorGap){maiorGap=gap;maiorDeficit=c;}
+});
+const faltaValor=patrimonioLiquido>0&&maiorDeficit?Math.max(0,((maiorDeficit.meta/100)*patrimonioLiquido)-maiorDeficit.atual):0;
+cardRec.innerHTML=`<div class="flex items-start gap-2.5"><i class="fa-solid fa-compass-drafting text-cyan-400 text-base mt-0.5"></i><div><span class="font-extrabold uppercase tracking-wider text-[10px] text-cyan-300 block">Recomendação de Rebalanceamento (Próximo Aporte)</span><p class="mt-0.5">${patrimonioLiquido<=0?'Adicione valores nas Caixinhas ou na Carteira para calcular o rebalanceamento ideal.':`Sua classe mais descontada frente à meta é <b>${maiorDeficit.nome}</b> (${maiorGap.toFixed(1)}% abaixo do alvo). Priorize aportar aproximadamente <b class="valor-mono text-emerald-300">${moeda(faltaValor)}</b> nesta modalidade para equilibrar o risco sem vender ativos.`}</p></div></div>`;
+}
 }
 
 const nomesBancos={bb:'Banco do Brasil',mp:'Mercado Pago',inter:'Inter',nubank:'Nubank'};
 function selecionarBancoCaixinha(banco,ev){
 if(ev){ev.stopPropagation();criarRipple(ev);}
 garantirEstruturaInvestimentos();appData.caixinhaAtiva=banco;
-carregarCamposCaixinhaAtiva();calcularTotaisInvestimento();renderizarMetaInvestimento();atualizarGraficoCaixinha();calcularProjecaoMeses();salvar();
+carregarCamposCaixinhaAtiva();calcularTotaisInvestimento();renderizarMetaInvestimento();renderizarAlocacaoERebalanceamento();atualizarGraficoCaixinha();calcularProjecaoMeses();salvar();
 }
 
 function carregarCamposCaixinhaAtiva(){
@@ -309,7 +388,7 @@ document.getElementById('cxDividendoBruto').value=b.divBruto>0?b.divBruto.toFixe
 }else{
 b.divBruto=lerNumero(document.getElementById('cxDividendoBruto').value);
 }
-calcularTotaisInvestimento();renderizarMetaInvestimento();atualizarGraficoCaixinha();calcularProjecaoMeses();gerarAnaliseInteligente();salvar();
+calcularTotaisInvestimento();renderizarMetaInvestimento();renderizarAlocacaoERebalanceamento();atualizarGraficoCaixinha();calcularProjecaoMeses();gerarAnaliseInteligente();salvar();
 }
 
 function atualizarGraficoCaixinha(){
@@ -326,7 +405,7 @@ const diasLabels=Array.from({length:15},(_,i)=>`${(i+1)*2}º Dia`);
 const serieAporte=diasLabels.map((_,i)=>Number((aportado+(divDiario*(i+1)*2)).toFixed(2)));
 const serieDividendoAcum=diasLabels.map((_,i)=>Number((divDiario*(i+1)*2).toFixed(2)));
 if(!chartCaixinhaComparativo){
-chartCaixinhaComparativo=new Chart(canvas,{type:'line',data:{labels:diasLabels,datasets:[{label:'Patrimônio c/ Aporte (R$)',data:serieAporte,borderColor:'#10b981',backgroundColor:'rgba(16,185,129,0.08)',borderWidth:2.5,tension:0.25,fill:false,yAxisID:'y'},{label:'Dividendo Diário Acumulado (R$)',data:serieDividendoAcum,borderColor:'#06b6d4',backgroundColor:'rgba(6,182,212,0.18)',borderWidth:3,tension:0.35,fill:true,yAxisID:'y1'}]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{position:'top'}},scales:{y:{type:'linear',display:true,position:'left',grid:{color:'rgba(255,255,255,0.05)'},ticks:{callback:v=>'R$ '+Number(v).toLocaleString('pt-BR',{maximumFractionDigits:0})}},y1:{type:'linear',display:true,position:'right',beginAtZero:true,grid:{drawOnChartArea:false},ticks:{color:'#22d3ee',callback:v=>'+R$ '+Number(v).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}},x:{grid:{display:false}}}}});
+chartCaixinhaComparativo=new Chart(canvas,{type:'line',data:{labels:diasLabels,datasets:[{label:'Patrimônio c/ Aporte (R$)',data:serieAporte,borderColor:'#10b981',backgroundColor:'rgba(16,185,129,0.08)',borderWidth:2.5,tension:0.25,fill:false,yAxisID:'y'},{label:'Dividendo Diário Acumulado (R$)',data:serieDividendoAcum,borderColor:'#06b6d4',backgroundColor:'rgba(6,182,212,0.18)',borderWidth:3,tension:0.35,fill:true,yAxisID:'y1'}]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{position:'top'}},scales:{y:{type:'linear',display:true,position:'left',grid:{color:'rgba(148,163,184,0.12)'},ticks:{callback:v=>'R$ '+Number(v).toLocaleString('pt-BR',{maximumFractionDigits:0})}},y1:{type:'linear',display:true,position:'right',beginAtZero:true,grid:{drawOnChartArea:false},ticks:{callback:v=>'+R$ '+Number(v).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}},x:{grid:{display:false}}}}});
 }else{
 chartCaixinhaComparativo.data.datasets[0].data=serieAporte;
 chartCaixinhaComparativo.data.datasets[1].data=serieDividendoAcum;
@@ -352,7 +431,7 @@ const inpBusca=document.getElementById('buscaAtivoFamoso');if(inpBusca)inpBusca.
 preencherInputsFundo(appData.fundoConfig);
 renderizarAtalhosAtivosFamosos(mod);
 filtrarAtivosFamosos('');
-calcularTotaisInvestimento();renderizarMetaInvestimento();renderizarSimulacaoFundo();salvar();
+calcularTotaisInvestimento();renderizarMetaInvestimento();renderizarAlocacaoERebalanceamento();renderizarSimulacaoFundo();salvar();
 }
 
 function renderizarAtalhosAtivosFamosos(mod){
@@ -370,31 +449,33 @@ garantirEstruturaInvestimentos();
 const f=appData.fundoConfig;
 const ticker=(document.getElementById('fnTickerAtivo').value||'').trim().toUpperCase();
 const preco=lerNumero(document.getElementById('fnSimPrecoCota').value);
+const pm=lerNumero(document.getElementById('fnPrecoMedioCompra')?.value)||preco;
 const div=lerNumero(document.getElementById('fnSimDivCota').value);
 const cotas=lerNumero(document.getElementById('fnSimCotasAtuais').value);
 if(!ticker||preco<=0){toast('Informe um Ticker e Preço válidos');return;}
 const idx=appData.carteiraAtivos.findIndex(x=>x.ticker===ticker);
 if(cotas<=0){
-if(idx>=0){appData.carteiraAtivos.splice(idx,1);toast(`${ticker} removido da carteira`);}
-else{toast('Informe a quantidade de cotas atuais (> 0)');return;}
+if(idx>=0){guardarSnapshotUndo(`${ticker} removido da carteira`);appData.carteiraAtivos.splice(idx,1);}
+else{toast('Informe Qtd. Cotas Atuais (> 0)');return;}
 }else{
-const obj={ticker,modalidade:f.modalidade||'fiis',cotas,precoCota:preco,ultimoDiv:div};
+const obj={ticker,modalidade:f.modalidade||'fiis',cotas,precoCota:preco,precoMedio:pm,ultimoDiv:div};
 if(idx>=0)appData.carteiraAtivos[idx]=obj;else appData.carteiraAtivos.push(obj);
-toast(`${ticker} (${cotas} cotas) salvo na carteira!`);
+toast(`${ticker} (${cotas} cotas | PM ${moeda(pm)}) salvo!`);
 }
-renderizarCarteiraMultiAtivos();calcularTotaisInvestimento();renderizarMetaInvestimento();gerarAnaliseInteligente();salvar();
+renderizarCarteiraMultiAtivos();calcularTotaisInvestimento();renderizarMetaInvestimento();renderizarAlocacaoERebalanceamento();gerarAnaliseInteligente();salvar();
 }
 
 function removerAtivoDaCarteira(ticker,ev){
 if(ev)ev.stopPropagation();
+guardarSnapshotUndo(`Ativo ${ticker} removido`);
 appData.carteiraAtivos=(appData.carteiraAtivos||[]).filter(x=>x.ticker!==ticker);
-renderizarCarteiraMultiAtivos();calcularTotaisInvestimento();renderizarMetaInvestimento();gerarAnaliseInteligente();salvar();
+renderizarCarteiraMultiAtivos();calcularTotaisInvestimento();renderizarMetaInvestimento();renderizarAlocacaoERebalanceamento();gerarAnaliseInteligente();salvar();
 }
 
 function carregarAtivoDaCarteira(ticker,ev){
 if(ev)ev.stopPropagation();
 const item=(appData.carteiraAtivos||[]).find(x=>x.ticker===ticker);if(!item)return;
-appData.fundosPorModalidade[item.modalidade]=Object.assign({},appData.fundosPorModalidade[item.modalidade],{ticker:item.ticker,precoCota:item.precoCota,ultimoDiv:item.ultimoDiv,cotasAtuais:item.cotas});
+appData.fundosPorModalidade[item.modalidade]=Object.assign({},appData.fundosPorModalidade[item.modalidade],{ticker:item.ticker,precoCota:item.precoCota,precoMedio:item.precoMedio||item.precoCota,ultimoDiv:item.ultimoDiv,cotasAtuais:item.cotas});
 selecionarModalidadeFundo(item.modalidade);
 }
 
@@ -403,12 +484,14 @@ const c=document.getElementById('listaCarteiraMultiAtivos');if(!c)return;
 garantirEstruturaInvestimentos();
 const lista=appData.carteiraAtivos||[];
 if(lista.length===0){
-c.innerHTML=`<div class="col-span-full text-xs text-slate-400 py-2 text-center bg-black/20 rounded-xl border border-white/5">Nenhum ativo fixado ainda. Preencha "Qtd. Cotas Atuais" abaixo e clique em "+ Salvar/Atualizar Ativo na Carteira".</div>`;
+c.innerHTML=`<div class="col-span-full text-xs text-slate-400 py-2 text-center bg-black/20 rounded-xl border border-white/5">Nenhum ativo fixado ainda. Preencha "Qtd. Cotas Atuais" e "Seu Preço Médio" abaixo e clique em "+ Salvar/Atualizar Ativo na Carteira".</div>`;
 return;
 }
 c.innerHTML=lista.map(a=>{
-const pat=a.cotas*a.precoCota,renda=a.cotas*a.ultimoDiv;
-return `<div onclick="carregarAtivoDaCarteira('${a.ticker}',event)" class="bg-[#0a0f1e] p-3 rounded-xl border border-white/10 hover:border-indigo-400/50 cursor-pointer flex justify-between items-center transition-all"><div><div class="flex items-center gap-1.5"><span class="font-extrabold text-xs text-emerald-300 valor-mono">${a.ticker}</span><span class="text-[10px] px-2 py-0.5 rounded-full bg-white/5 text-slate-300">${a.cotas} cotas</span></div><div class="text-[11px] valor-mono text-slate-300 mt-1">Total: <b class="text-cyan-300">${moeda(pat)}</b> <span class="text-emerald-400">(+${moeda(renda)}/mês)</span></div></div><button type="button" onclick="removerAtivoDaCarteira('${a.ticker}',event)" class="w-6 h-6 rounded-full bg-rose-500/15 text-rose-300 hover:bg-rose-500/30 flex items-center justify-center"><i class="fa-solid fa-xmark text-[10px]"></i></button></div>`;
+const pat=a.cotas*a.precoCota,renda=a.cotas*a.ultimoDiv,pm=Number(a.precoMedio)||a.precoCota;
+const varPct=pm>0?(((a.precoCota-pm)/pm)*100):0;
+const yocMes=pm>0?((a.ultimoDiv/pm)*100):0;
+return `<div onclick="carregarAtivoDaCarteira('${a.ticker}',event)" class="bg-[#0a0f1e] p-3 rounded-xl border border-white/10 hover:border-indigo-400/50 cursor-pointer flex justify-between items-start transition-all"><div><div class="flex items-center gap-1.5 flex-wrap"><span class="font-extrabold text-xs text-emerald-300 valor-mono">${a.ticker}</span><span class="text-[10px] px-2 py-0.5 rounded-full bg-white/5 text-slate-300">${a.cotas} cotas</span><span class="text-[10px] font-bold valor-mono ${varPct>=0?'text-emerald-400':'text-rose-400'}">${varPct>=0?'+':''}${varPct.toFixed(1)}%</span></div><div class="text-[11px] valor-mono text-slate-300 mt-1">Total: <b class="text-cyan-300">${moeda(pat)}</b> <span class="text-emerald-400">(+${moeda(renda)}/m)</span></div><div class="text-[10px] text-slate-400 valor-mono mt-0.5">PM: ${moeda(pm)} • YoC: <b class="text-indigo-300">${yocMes.toFixed(2)}% a.m.</b></div></div><button type="button" onclick="removerAtivoDaCarteira('${a.ticker}',event)" class="w-6 h-6 rounded-full bg-rose-500/15 text-rose-300 hover:bg-rose-500/30 flex items-center justify-center shrink-0"><i class="fa-solid fa-xmark text-[10px]"></i></button></div>`;
 }).join('');
 }
 
@@ -428,7 +511,7 @@ resultados.push(Object.assign({grupo:g,grupoNome:nomesModalidadesFundo[g]},a));
 }
 });
 });
-if(resultados.length===0){dd.innerHTML=`<div class="p-3 text-xs text-slate-400 text-center">Nenhum ativo encontrado para "${termo}"</div>`;return;}
+if(resultados.length===0){dd.innerHTML=`<div class="p-3 text-xs text-slate-400 text-center">Nenhum ativo encontrado</div>`;return;}
 dd.innerHTML=resultados.map(r=>`<div onclick="escolherAtivoFamoso('${r.grupo}','${r.ticker}',event)" class="px-3.5 py-2.5 hover:bg-indigo-500/20 cursor-pointer flex justify-between items-center gap-2 transition-colors"><div><span class="font-extrabold text-xs text-emerald-300 valor-mono">${r.ticker}</span> <span class="text-xs text-slate-200 font-semibold ml-1">${r.nome}</span> <span class="text-[10px] px-2 py-0.5 rounded-full bg-white/5 text-slate-400 ml-1">${r.grupoNome}</span></div><div class="text-right text-[11px] valor-mono"><span class="text-cyan-300 font-bold">Cota: ${moeda(r.preco)}</span> <span class="text-emerald-400 ml-2">Div: ${moeda(r.div)}</span></div></div>`).join('');
 }
 
@@ -439,9 +522,10 @@ const item=(CATALOGO_ATIVOS_FAMOSOS[grupo]||[]).find(x=>x.ticker===ticker);if(!i
 if(appData.fundoConfig.modalidade!==grupo)appData.fundoConfig.modalidade=grupo;
 const naCarteira=(appData.carteiraAtivos||[]).find(x=>x.ticker===item.ticker);
 const cotasExistentes=naCarteira?naCarteira.cotas:(Number(appData.fundosPorModalidade[grupo]?.cotasAtuais)||0);
+const pmExistente=naCarteira?naCarteira.precoMedio:item.preco;
 const aporteExistente=Number(appData.fundosPorModalidade[grupo]?.aporteMensal)||500;
 const dtSync=appData.fundoConfig.dataAtualizacao||dataHoraAtualFormatada();
-const novoObj={modalidade:grupo,ticker:item.ticker,precoCota:item.preco,ultimoDiv:item.div,dataAtualizacao:dtSync,aporteMensal:aporteExistente,cotasAtuais:cotasExistentes};
+const novoObj={modalidade:grupo,ticker:item.ticker,precoCota:item.preco,precoMedio:pmExistente,ultimoDiv:item.div,dataAtualizacao:dtSync,aporteMensal:aporteExistente,cotasAtuais:cotasExistentes};
 appData.fundosPorModalidade[grupo]=Object.assign({},novoObj);
 appData.fundoConfig=Object.assign({},novoObj);
 selecionarModalidadeFundo(grupo);
@@ -454,6 +538,7 @@ function preencherInputsFundo(f){
 document.getElementById('fnTickerAtivo').value=f.ticker||'';
 document.getElementById('fnPrecoCotaDados').value=f.precoCota>0?f.precoCota:'';
 document.getElementById('fnSimPrecoCota').value=f.precoCota>0?f.precoCota:'';
+const elPm=document.getElementById('fnPrecoMedioCompra');if(elPm)elPm.value=(f.precoMedio||f.precoCota)>0?(f.precoMedio||f.precoCota):'';
 document.getElementById('fnUltimoDivDados').value=f.ultimoDiv>0?f.ultimoDiv:'';
 document.getElementById('fnSimDivCota').value=f.ultimoDiv>0?f.ultimoDiv:'';
 document.getElementById('fnDataAtualizacao').value=f.dataAtualizacao||dataHoraAtualFormatada();
@@ -461,40 +546,31 @@ document.getElementById('fnSimAporteMensal').value=f.aporteMensal>0?f.aporteMens
 document.getElementById('fnSimCotasAtuais').value=f.cotasAtuais>0?f.cotasAtuais:'';
 }
 
-function carregarCamposFundo(){
-garantirEstruturaInvestimentos();const mod=appData.fundoConfig.modalidade||'fiis';
-selecionarModalidadeFundo(mod);
-}
-
+function carregarCamposFundo(){garantirEstruturaInvestimentos();selecionarModalidadeFundo(appData.fundoConfig.modalidade||'fiis');}
 function sincronizarCotaFundo(val){document.getElementById('fnPrecoCotaDados').value=val;document.getElementById('fnSimPrecoCota').value=val;agendarSalvarDadosFundo();}
 function sincronizarDivFundo(val){document.getElementById('fnUltimoDivDados').value=val;document.getElementById('fnSimDivCota').value=val;agendarSalvarDadosFundo();}
-
-function agendarSalvarDadosFundo(){
-if(timerDebounceFundo)clearTimeout(timerDebounceFundo);
-timerDebounceFundo=setTimeout(()=>salvarDadosFundo(),180);
-}
+function agendarSalvarDadosFundo(){if(timerDebounceFundo)clearTimeout(timerDebounceFundo);timerDebounceFundo=setTimeout(()=>salvarDadosFundo(),180);}
 
 function salvarDadosFundo(){
 garantirEstruturaInvestimentos();const f=appData.fundoConfig,mod=f.modalidade||'fiis';
 f.ticker=document.getElementById('fnTickerAtivo').value.trim().toUpperCase();
 f.precoCota=lerNumero(document.getElementById('fnSimPrecoCota').value);
+f.precoMedio=lerNumero(document.getElementById('fnPrecoMedioCompra')?.value)||f.precoCota;
 f.ultimoDiv=lerNumero(document.getElementById('fnSimDivCota').value);
 f.aporteMensal=lerNumero(document.getElementById('fnSimAporteMensal').value);
 f.cotasAtuais=lerNumero(document.getElementById('fnSimCotasAtuais').value);
 appData.fundosPorModalidade[mod]=Object.assign({},f);
 const itemCarteira=(appData.carteiraAtivos||[]).find(x=>x.ticker===f.ticker);
-if(itemCarteira&&f.cotasAtuais>0){itemCarteira.cotas=f.cotasAtuais;itemCarteira.precoCota=f.precoCota;itemCarteira.ultimoDiv=f.ultimoDiv;renderizarCarteiraMultiAtivos();}
+if(itemCarteira&&f.cotasAtuais>0){itemCarteira.cotas=f.cotasAtuais;itemCarteira.precoCota=f.precoCota;itemCarteira.precoMedio=f.precoMedio;itemCarteira.ultimoDiv=f.ultimoDiv;renderizarCarteiraMultiAtivos();}
 renderizarAtalhosAtivosFamosos(mod);
-calcularTotaisInvestimento();renderizarMetaInvestimento();renderizarSimulacaoFundo();gerarAnaliseInteligente();salvar();
+calcularTotaisInvestimento();renderizarMetaInvestimento();renderizarAlocacaoERebalanceamento();renderizarSimulacaoFundo();gerarAnaliseInteligente();salvar();
 }
 
 function mudarFiltroTabela360(modo){
 appData.filtroTabela360=modo;
 ['todos','anual','marcos'].forEach(k=>{
 const b=document.getElementById('btnFiltro360-'+k);
-if(b){
-b.className=k===modo?'px-2.5 py-1 rounded-full text-[10px] font-bold bg-indigo-500 text-white cursor-pointer':'px-2.5 py-1 rounded-full text-[10px] font-bold bg-white/5 text-slate-300 hover:bg-white/10 cursor-pointer';
-}
+if(b)b.className=k===modo?'px-2.5 py-1 rounded-full text-[10px] font-bold bg-indigo-500 text-white cursor-pointer':'px-2.5 py-1 rounded-full text-[10px] font-bold bg-white/5 text-slate-300 hover:bg-white/10 cursor-pointer';
 });
 renderizarSimulacaoFundo();
 }
@@ -509,44 +585,78 @@ if(elDivTotal)elDivTotal.value=moeda(divTotalAtual);
 if(elMagic)elMagic.value=cotasMagicNumber>0?`${cotasMagicNumber} cotas`:'0 cotas';
 const tbody=document.getElementById('tabela360MesesFundo');if(!tbody)return;
 const filtro=appData.filtroTabela360||'todos';
-let qtdCotas=cotasIniciais,caixaSobras=0;
-let htmlLinhas=[],patFinal=0;
+let qtdCotas=cotasIniciais,caixaSobras=0,htmlLinhas=[],patFinal=0;
 for(let m=1;m<=360;m++){
-const anoIdx=Math.ceil(m/12);
-const fatorIpca=corrigirIpca?Math.pow(1.045,anoIdx-1):1;
-const precoCota=precoCotaBase*fatorIpca;
-const divCota=divCotaBase*fatorIpca;
-const aporteMensal=aporteBase*fatorIpca;
-const rendimentoMes=qtdCotas*divCota;
-const disponivelParaCompra=aporteMensal+rendimentoMes+caixaSobras;
+const anoIdx=Math.ceil(m/12),fatorIpca=corrigirIpca?Math.pow(1.045,anoIdx-1):1;
+const precoCota=precoCotaBase*fatorIpca,divCota=divCotaBase*fatorIpca,aporteMensal=aporteBase*fatorIpca;
+const rendimentoMes=qtdCotas*divCota,disponivelParaCompra=aporteMensal+rendimentoMes+caixaSobras;
 const novasCotas=precoCota>0?Math.floor(disponivelParaCompra/precoCota):0;
-qtdCotas+=novasCotas;
-caixaSobras=precoCota>0?disponivelParaCompra-(novasCotas*precoCota):0;
-const patrimonioCotas=qtdCotas*precoCota;
-const rendimentoNovo=qtdCotas*divCota;
+qtdCotas+=novasCotas;caixaSobras=precoCota>0?disponivelParaCompra-(novasCotas*precoCota):0;
+const patrimonioCotas=qtdCotas*precoCota,rendimentoNovo=qtdCotas*divCota;
 patFinal=patrimonioCotas;
 const exibirLinha=filtro==='todos'||(filtro==='anual'&&m%12===0)||(filtro==='marcos'&&(m===12||m===60||m===120||m===240||m===360));
 if(exibirLinha){
-htmlLinhas.push(`<tr class="hover:bg-white/[0.03] ${m%12===0?'bg-indigo-500/[0.04]':''}"><td class="py-2 px-3 text-slate-400">Ano ${anoIdx}</td><td class="py-2 px-3 font-bold text-slate-200">${m}º Mês</td><td class="py-2 px-3 text-indigo-300">${moeda(aporteMensal)}</td><td class="py-2 px-3 text-amber-300 font-bold">${qtdCotas.toLocaleString('pt-BR')}</td><td class="py-2 px-3 text-cyan-300 font-bold">${moeda(patrimonioCotas)}</td><td class="py-2 px-3 text-right text-emerald-400 font-bold">+ ${moeda(rendimentoNovo)}</td></tr>`);
+htmlLinhas.push(`<tr class="hover:bg-white/[0.03] ${m%12===0?'bg-indigo-500/[0.06]':''}"><td class="py-2 px-3 text-slate-400">Ano ${anoIdx}</td><td class="py-2 px-3 font-bold text-slate-200">${m}º Mês</td><td class="py-2 px-3 text-indigo-300">${moeda(aporteMensal)}</td><td class="py-2 px-3 text-amber-300 font-bold">${qtdCotas.toLocaleString('pt-BR')}</td><td class="py-2 px-3 text-cyan-300 font-bold">${moeda(patrimonioCotas)}</td><td class="py-2 px-3 text-right text-emerald-400 font-bold">+ ${moeda(rendimentoNovo)}</td></tr>`);
 }
 }
 tbody.innerHTML=htmlLinhas.join('');
 const elPat360=document.getElementById('lblPatrimonio360Meses');if(elPat360)elPat360.textContent=moeda(patFinal);
 }
 
-function mudarTemaBancario(tema){appData.tema=tema;salvar();aplicarTemaBancario(tema);}
-function aplicarTemaBancario(tema){document.body.classList.remove('light','theme-nubank','theme-apple','theme-pink');if(tema==='light')document.body.classList.add('light');else if(tema==='nubank')document.body.classList.add('theme-nubank');else if(tema==='apple')document.body.classList.add('theme-apple');else if(tema==='pink')document.body.classList.add('theme-pink');}
+/* ADAPTAÇÃO DE CORES DOS GRÁFICOS PARA TEMAS PINK E LIGHT */
+function atualizarCoresGraficosTema(tema){
+const isLight=tema==='light',isPink=tema==='pink';
+const corTexto=isPink?'#831843':isLight?'#0f172a':'#94a3b8';
+const corGrid=isPink?'rgba(236,72,153,0.15)':isLight?'rgba(15,23,42,0.08)':'rgba(255,255,255,0.06)';
+Chart.defaults.color=corTexto;Chart.defaults.borderColor=corGrid;
+[chartPizza,chartBar,chartLinha,chartCaixinhaComparativo,chartProjecaoAportes,chartRadarSaude,chartAlocacaoCarteira].forEach(ch=>{
+if(!ch)return;
+if(ch.options?.scales){
+Object.values(ch.options.scales).forEach(sc=>{
+if(sc.ticks)sc.ticks.color=corTexto;
+if(sc.grid)sc.grid.color=corGrid;
+if(sc.pointLabels)sc.pointLabels.color=corTexto;
+if(sc.angleLines)sc.angleLines.color=corGrid;
+});
+}
+ch.update();
+});
+}
 
-function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.remove('opacity-0');t.classList.add('opacity-100');setTimeout(()=>t.classList.add('opacity-0'),2000);}
+function mudarTemaBancario(tema){appData.tema=tema;salvar();aplicarTemaBancario(tema);}
+function aplicarTemaBancario(tema){
+document.body.classList.remove('light','theme-nubank','theme-apple','theme-pink');
+if(tema==='light')document.body.classList.add('light');
+else if(tema==='nubank')document.body.classList.add('theme-nubank');
+else if(tema==='apple')document.body.classList.add('theme-apple');
+else if(tema==='pink')document.body.classList.add('theme-pink');
+atualizarCoresGraficosTema(tema);
+}
+
+function toast(m,comUndo=false){
+const t=document.getElementById('toast');if(!t)return;
+if(timerToast)clearTimeout(timerToast);
+t.innerHTML=`<span>${m}</span>${comUndo?`<button type="button" onclick="desfazerUltimaAcao()" class="px-2.5 py-1 rounded-full bg-emerald-500 text-black font-extrabold text-xs hover:bg-emerald-400 cursor-pointer">↩ Desfazer</button>`:''}`;
+t.classList.remove('opacity-0','pointer-events-none');t.classList.add('opacity-100','pointer-events-auto');
+timerToast=setTimeout(()=>{t.classList.add('opacity-0','pointer-events-none');t.classList.remove('opacity-100','pointer-events-auto');},comUndo?5500:2200);
+}
 function moeda(v){return(Number(v)||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});}
 function verificarSeFinalizado(tipo,dataFim){if(tipo!=='data'||!dataFim)return false;return appData.globalDate>dataFim;}
-function formatarPrazoLabel(tipo,dataFim,diaVenc){
+
+function formatarPrazoLabel(tipo,dataFim,diaVenc,dataInicio){
 const badgeDia=diaVenc?`<span class="text-amber-300 mr-1">Dia ${diaVenc} •</span>`:'';
 if(tipo==='unico')return `<span class="text-[10px] px-2 py-1 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 cursor-pointer">${badgeDia}Só neste mês</span>`;
 if(tipo==='fixo'||!dataFim)return `<span class="text-[10px] px-2 py-1 rounded-full bg-white/5 border border-white/10 cursor-pointer">${badgeDia}∞ Fixo</span>`;
 const fin=verificarSeFinalizado(tipo,dataFim);
 if(fin)return `<span class="text-[10px] px-2 py-1 rounded-full bg-amber-500/15 text-amber-300 border border-amber-500/30">✓ ${dataFim.split('-').reverse().join('/')}</span>`;
-let[a1,m1]=appData.globalDate.split('-').map(Number),[a2,m2]=dataFim.split('-').map(Number),diff=(a2-a1)*12+(m2-m1)+1;
+let[a1,m1]=appData.globalDate.split('-').map(Number),[a2,m2]=dataFim.split('-').map(Number);
+if(dataInicio){
+let[ai,mi]=dataInicio.split('-').map(Number);
+const totalParc=Math.max(1,(a2-ai)*12+(m2-mi)+1);
+const parcAtual=Math.max(1,Math.min(totalParc,(a1-ai)*12+(m1-mi)+1));
+return `<span class="text-[10px] px-2 py-1 rounded-full bg-indigo-500/15 text-indigo-300 border border-indigo-500/30 cursor-pointer font-mono font-bold">${badgeDia}Parc. ${String(parcAtual).padStart(2,'0')}/${String(totalParc).padStart(2,'0')}</span>`;
+}
+const diff=(a2-a1)*12+(m2-m1)+1;
 return `<span class="text-[10px] px-2 py-1 rounded-full bg-indigo-500/15 text-indigo-300 border border-indigo-500/30 cursor-pointer">${badgeDia}Restam ${diff}m</span>`;
 }
 
@@ -604,7 +714,7 @@ if(meta>0){const pct=Math.min(100,Math.round((patrimonioLiquido/meta)*100));barr
 }
 
 function agendarRenderizacao(){if(timerRenderizacao)clearTimeout(timerRenderizacao);timerRenderizacao=setTimeout(()=>renderizarTudo(true),220);}
-function renderizarTudo(apenasVisual=false){renderizarResumo();renderizarMetaInvestimento();renderizarRenda();renderizarTopicos();renderizarVencimentos();salvarHistorico(apenasVisual);atualizarGrafico();atualizarGastoDiarioRecomendado();atualizarGraficoCaixinha();renderizarSimulacaoFundo();renderizarProjecaoMeses();calcularProjecaoMeses();gerarAnaliseInteligente();}
+function renderizarTudo(apenasVisual=false){renderizarResumo();renderizarMetaInvestimento();renderizarAlocacaoERebalanceamento();renderizarRenda();renderizarTopicos();renderizarVencimentos();salvarHistorico(apenasVisual);atualizarGrafico();atualizarGastoDiarioRecomendado();atualizarGraficoCaixinha();renderizarSimulacaoFundo();renderizarProjecaoMeses();calcularProjecaoMeses();gerarAnaliseInteligente();}
 
 function renderizarResumo(){
 let totalR=0,rendaRecebida=0,totalD=0,totalPago=0,totalPendente=0,encerr=0,qtdPagos=0,qtdPendentes=0;
@@ -624,7 +734,6 @@ painelKpis.innerHTML=`
 <div class="card-dark rounded-2xl p-3.5 border-amber-500/25 bg-[#101c2c] flex items-center gap-3"><div class="w-10 h-10 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-300 shrink-0"><i class="fa-solid fa-hourglass-half"></i></div><div><span class="text-[10px] uppercase tracking-wider text-slate-400 block">Falta Pagar no Mês</span><h4 class="text-sm sm:text-base font-black valor-mono text-amber-300">${moeda(totalPendente)} <span class="text-[10px] text-slate-400">(${qtdPendentes})</span></h4></div></div>
 <div class="card-dark rounded-2xl p-3.5 border-indigo-500/25 bg-[#101c2c] flex items-center gap-3"><div class="w-10 h-10 rounded-xl bg-indigo-500/15 border border-indigo-500/30 flex items-center justify-center text-indigo-300 shrink-0"><i class="fa-solid fa-vault"></i></div><div><span class="text-[10px] uppercase tracking-wider text-slate-400 block">Patrimônio + Dividendos</span><h4 class="text-sm sm:text-base font-black valor-mono text-indigo-300">${moeda(patrimonioLiquido)} <span class="text-[10px] text-emerald-400">(+${moeda(lucroCalculado)})</span></h4></div></div>`;
 }
-
 const meta=appData.metaEconomia||0,lbl=document.getElementById('lblMetaStatus'),lbl2=document.getElementById('lblMetaStatus2');
 if(meta>0){if(saldo>=meta){lbl.textContent=`✅ Meta batida!`;lbl.className="text-[11px] mt-2 text-emerald-400 font-bold";if(lbl2)lbl2.textContent=`Sobrou ${moeda(saldo-meta)} acima da meta`;}else{lbl.textContent=`⚠️ Faltam ${moeda(meta-saldo)}`;lbl.className="text-[11px] mt-2 text-amber-400 font-bold";if(lbl2)lbl2.textContent=`Faltam ${moeda(meta-saldo)} para a meta`;}}else{lbl.textContent="Defina sua meta";if(lbl2)lbl2.textContent="";}
 document.getElementById('lblContasEncerradas').textContent=encerr+' encerradas';
@@ -669,7 +778,7 @@ appData.caixinhaAtiva=banco;
 if(lancarDesp){
 if(!Array.isArray(appData.topicos))appData.topicos=[];
 let topInv=appData.topicos.find(t=>(t.titulo||'').toLowerCase().includes('invest'));
-if(!topInv){topInv={id:'top_'+Date.now(),titulo:'Investimentos',descricao:'Aportes mensais',cor:'emerald',colapsado:false,itens:[]};appData.topicos.push(topInv);}
+if(!topInv){topInv={id:'top_'+Date.now(),titulo:'Investimentos',descricao:'Aportes mensais',teto:0,cor:'emerald',colapsado:false,itens:[]};appData.topicos.push(topInv);}
 const novoItem={id:'ap_'+Date.now(),nome:`Aporte Caixinha ${nomesBancos[banco]}`,valor,valoresPorMes:{[appData.globalDate]:valor},tipoPrazo:'unico',mesUnico:appData.globalDate,dataFim:appData.globalDate,pago:true,pagosPorMes:{[appData.globalDate]:true}};
 topInv.itens.push(novoItem);
 }
@@ -678,11 +787,11 @@ toast(`${moeda(valor)} aplicados no ${nomesBancos[banco]}!`);
 }
 
 function renderizarVencimentos(){
-const div=document.getElementById('listaVencimentos');div.innerHTML='';let alertas=[];
+const div=document.getElementById('listaVencimentos'),lblPassivo=document.getElementById('lblPassivoParcelasTotal');div.innerHTML='';let alertas=[],passivoFuturoTotal=0;
 const diaHoje=new Date().getDate();
 (appData.topicos||[]).forEach(t=>(t.itens||[]).forEach(i=>{
 if(!itemVisivelNoMes(i)||verificarSeFinalizado(i.tipoPrazo,i.dataFim))return;
-const pagoMes=isPagoNoMes(i);
+const pagoMes=isPagoNoMes(i),valMes=obterValorNoMes(i);
 if(!pagoMes&&i.diaVencimento){
 const diffDias=Number(i.diaVencimento)-diaHoje;
 if(diffDias>=-10&&diffDias<=7){
@@ -691,9 +800,12 @@ alertas.push({nome:i.nome,topico:t.titulo,badge:diffDias<0?`Atrasado (Dia ${i.di
 }
 if(i.tipoPrazo==='data'&&i.dataFim){
 let[a1,m1]=appData.globalDate.split('-').map(Number),[a2,m2]=i.dataFim.split('-').map(Number),diffMes=(a2-a1)*12+(m2-m1);
+const mesesRest=Math.max(0,diffMes+(pagoMes?0:1));
+passivoFuturoTotal+=mesesRest*valMes;
 if(diffMes<=2)alertas.push({nome:i.nome,topico:t.titulo,badge:`Fim: ${i.dataFim.split('-').reverse().join('/')}`,cor:'bg-indigo-500/15 text-indigo-300 border-indigo-500/30',ordem:10+diffMes});
 }
 }));
+if(lblPassivo)lblPassivo.textContent=`Passivo Parc.: ${moeda(passivoFuturoTotal)}`;
 if(!alertas.length){div.innerHTML='<p class="text-slate-500 text-center py-2 text-[11px]">Nenhum vencimento pendente próximo</p>';return;}
 alertas.sort((a,b)=>a.ordem-b.ordem).slice(0,6).forEach(p=>{div.innerHTML+=`<div class="flex justify-between items-center bg-[#0a0f1e] border border-white/5 rounded-full px-3 py-2"><span class="truncate pr-2">${p.nome} <span class="text-slate-500">(${p.topico})</span></span><span class="px-2 py-0.5 rounded-full text-[10px] border shrink-0 ${p.cor}">${p.badge}</span></div>`;});
 }
@@ -704,13 +816,13 @@ const lista=(appData.rendas||[]).filter(r=>itemVisivelNoMes(r)&&(!busca||(r.nome
 if(lista.length===0){c.innerHTML=`<p class="text-xs text-slate-400 text-center py-4 bg-black/20 rounded-xl border border-white/5">Nenhuma renda cadastrada neste mês.</p>`;return;}
 lista.forEach(r=>{
 const fin=verificarSeFinalizado(r.tipoPrazo,r.dataFim),rec=isRecebidoNoMes(r),valMes=obterValorNoMes(r),div=document.createElement('div');div.className=`card-dark group bg-[#0a0f1e] border ${fin?'border-amber-500/25 opacity-60':rec?'border-emerald-500/30':'border-white/[0.08]'} rounded-[14px] p-3 card-anim`;
-div.innerHTML=`<div class="flex justify-between items-center"><div class="flex items-center gap-2 flex-1"><input type="checkbox" ${rec?'checked':''} onchange="toggleRecebidoRenda(${r.id})" class="w-4 h-4 rounded cursor-pointer accent-emerald-500"><input value="${(r.nome||'').replace(/"/g,'&quot;')}" oninput="editarNomeRenda(${r.id},this.value)" class="input-dark bg-transparent text-[13px] font-semibold w-full outline-none border border-transparent hover:border-white/10 rounded-full px-2 py-1"></div><button type="button" onclick="removerRenda(${r.id});criarRipple(event)" class="w-6 h-6 rounded-full bg-white/5 hover:bg-rose-500/20 hover:text-rose-300 flex items-center justify-center"><i class="fa-solid fa-trash text-[10px]"></i></button></div><div class="flex gap-2 mt-2"><div class="relative flex-1"><span class="absolute left-2.5 top-2 text-[10px] text-emerald-400 font-bold">R$</span><input type="text" inputmode="decimal" value="${valMes||''}" oninput="editarValorRenda(${r.id},this.value)" class="input-dark valor-mono w-full bg-white/[0.03] border border-white/10 rounded-full pl-7 pr-2 py-2 text-xs font-bold text-emerald-300"></div><button type="button" onclick="abrirModalPrazo('renda',null,${r.id});criarRipple(event)">${formatarPrazoLabel(r.tipoPrazo,r.dataFim,r.diaVencimento)}</button></div>`;
+div.innerHTML=`<div class="flex justify-between items-center"><div class="flex items-center gap-2 flex-1"><input type="checkbox" ${rec?'checked':''} onchange="toggleRecebidoRenda(${r.id})" class="w-4 h-4 rounded cursor-pointer accent-emerald-500"><input value="${(r.nome||'').replace(/"/g,'&quot;')}" oninput="editarNomeRenda(${r.id},this.value)" class="input-dark bg-transparent text-[13px] font-semibold w-full outline-none border border-transparent hover:border-white/10 rounded-full px-2 py-1"></div><button type="button" onclick="removerRenda(${r.id});criarRipple(event)" class="w-6 h-6 rounded-full bg-white/5 hover:bg-rose-500/20 hover:text-rose-300 flex items-center justify-center"><i class="fa-solid fa-trash text-[10px]"></i></button></div><div class="flex gap-2 mt-2"><div class="relative flex-1"><span class="absolute left-2.5 top-2 text-[10px] text-emerald-400 font-bold">R$</span><input type="text" inputmode="decimal" value="${valMes||''}" oninput="editarValorRenda(${r.id},this.value)" class="input-dark valor-mono w-full bg-white/[0.03] border border-white/10 rounded-full pl-7 pr-2 py-2 text-xs font-bold text-emerald-300"></div><button type="button" onclick="abrirModalPrazo('renda',null,${r.id});criarRipple(event)">${formatarPrazoLabel(r.tipoPrazo,r.dataFim,r.diaVencimento,r.dataInicio)}</button></div>`;
 c.appendChild(div);
 });
 }
 
 function adicionarRenda(){if(!Array.isArray(appData.rendas))appData.rendas=[];appData.rendas.push({id:Date.now(),nome:"Nova Renda",valor:0,valoresPorMes:{[appData.globalDate]:0},tipoPrazo:"fixo",dataFim:"",recebido:true,recebidosPorMes:{[appData.globalDate]:true}});salvar();renderizarTudo();}
-function removerRenda(id){if(confirm('Excluir renda?')){appData.rendas=appData.rendas.filter(r=>r.id!==id);salvar();renderizarTudo();}}
+function removerRenda(id){guardarSnapshotUndo('Renda excluída');appData.rendas=appData.rendas.filter(r=>r.id!==id);salvar();renderizarTudo();}
 function editarNomeRenda(id,v){const r=appData.rendas.find(x=>x.id===id);if(r){r.nome=v;salvar();}}
 function editarValorRenda(id,v){const r=appData.rendas.find(x=>x.id===id);if(r){definirValorNoMes(r,Math.max(0,lerNumero(v)));salvarHistorico(false);renderizarResumo();atualizarGrafico();atualizarGastoDiarioRecomendado();gerarAnaliseInteligente();}}
 function toggleRecebidoRenda(id){const r=appData.rendas.find(x=>x.id===id);if(r){setRecebidoNoMes(r,!isRecebidoNoMes(r));salvar();renderizarResumo();atualizarGastoDiarioRecomendado();renderizarRenda();}}
@@ -721,10 +833,13 @@ const idx=appData.topicos.findIndex(x=>String(x.id)===String(id));
 if(idx<0)return;
 const novoIdx=idx+direcao;
 if(novoIdx<0||novoIdx>=appData.topicos.length)return;
-const temp=appData.topicos[idx];
-appData.topicos[idx]=appData.topicos[novoIdx];
-appData.topicos[novoIdx]=temp;
+const temp=appData.topicos[idx];appData.topicos[idx]=appData.topicos[novoIdx];appData.topicos[novoIdx]=temp;
 salvar();renderizarTopicos();
+}
+
+function editarTetoTopico(id,val){
+const t=appData.topicos.find(x=>String(x.id)===String(id));
+if(t){t.teto=Math.max(0,lerNumero(val));salvar();atualizarCabecalhoTopicoDOM(t);}
 }
 
 function renderizarTopicos(){
@@ -742,9 +857,10 @@ if(!pago&&i.diaVencimento&&Number(i.diaVencimento)<diaHoje)temAtrasado=true;
 const itensFiltrados=top.itens.filter(i=>{if(!itemVisivelNoMes(i))return false;const pago=isPagoNoMes(i),matchBusca=!busca||(i.nome||'').toLowerCase().includes(busca)||(top.titulo||'').toLowerCase().includes(busca),matchPago=filtro==='todos'||(filtro==='pago'&&pago)||(filtro==='naopago'&&!pago);return matchBusca&&matchPago;});
 if(busca&&itensFiltrados.length===0&&!(top.titulo||'').toLowerCase().includes(busca))return;
 let tr=0;(appData.rendas||[]).forEach(r=>{if(itemVisivelNoMes(r)&&!verificarSeFinalizado(r.tipoPrazo,r.dataFim))tr+=obterValorNoMes(r);});
-const pctRenda=tr>0?Math.round((soma/tr)*100):0,pctPagoTop=soma>0?Math.round((somaPago/soma)*100):0,corPulse=temAtrasado?'bg-rose-500':pctRenda>40?'bg-rose-500':pctRenda>20?'bg-amber-500':'bg-emerald-500';
-const div=document.createElement('div');div.className=`card-dark rounded-[22px] p-5 flex flex-col card-anim shadow-xl relative overflow-hidden ${temAtrasado?'border-rose-500/40':''}`;
-div.innerHTML=`<div class="absolute top-4 right-4 flex items-center gap-1.5">${temAtrasado?'<span class="text-[9px] px-1.5 py-0.5 rounded bg-rose-500/20 text-rose-300 font-bold">⚠️ Vencido</span>':''}<span class="w-2 h-2 rounded-full ${corPulse} status-pulse"></span><span class="text-[9px] uppercase tracking-wider text-slate-400 font-bold" id="pctRendaTop-${top.id}">${pctRenda}% renda</span></div><div class="flex justify-between items-start mb-3 pr-24"><div class="flex-1"><input value="${(top.titulo||'').replace(/"/g,'&quot;')}" oninput="atualizarTituloTopico('${top.id}',this.value)" class="font-bold text-[14px] bg-transparent border border-transparent hover:border-white/10 rounded-full px-2 py-1 outline-none w-full" placeholder="Título"><input value="${(top.descricao||'').replace(/"/g,'&quot;')}" oninput="atualizarDescTopico('${top.id}',this.value)" class="text-[11px] text-slate-400 bg-transparent border border-transparent hover:border-white/10 rounded-full px-2 py-1 outline-none w-full mt-1" placeholder="Descrição..."></div></div><div class="bg-black/25 rounded-2xl px-4 py-2.5 mb-3 border border-white/5"><div class="flex justify-between items-center"><span class="text-[11px] text-slate-400" id="lblPagoTop-${top.id}">Total (${pctPagoTop}% pago)</span><span class="text-sm font-black valor-mono" id="lblSomaTop-${top.id}">${moeda(soma)}</span></div><div class="h-1.5 bg-white/5 rounded-full overflow-hidden mt-1.5"><div id="barraPagoTop-${top.id}" class="h-full bg-emerald-400 rounded-full transition-all" style="width:${pctPagoTop}%"></div></div></div><div class="flex gap-1 mb-2 justify-between items-center flex-wrap"><div class="flex gap-1"><button type="button" onclick="moverTopicoOrdem('${top.id}',-1)" class="w-6 h-6 rounded-full bg-white/5 hover:bg-white/10 text-[10px] flex items-center justify-center" title="Mover p/ Esquerda">◀</button><button type="button" onclick="moverTopicoOrdem('${top.id}',1)" class="w-6 h-6 rounded-full bg-white/5 hover:bg-white/10 text-[10px] flex items-center justify-center" title="Mover p/ Direita">▶</button></div><div class="flex gap-1 flex-wrap"><button type="button" onclick="quitarTodosTopico('${top.id}');criarRipple(event)" class="text-[10px] px-2.5 py-1 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 hover:bg-emerald-500/25 font-bold cursor-pointer">✓ Quitar Mês</button><button type="button" onclick="toggleColapso('${top.id}');criarRipple(event)" class="text-[10px] px-2 py-1 rounded-full bg-white/5 hover:bg-white/10 cursor-pointer">${top.colapsado?'Expandir':'Colapsar'}</button><button type="button" onclick="removerTopico('${top.id}');criarRipple(event)" class="text-[10px] px-2 py-1 rounded-full bg-rose-500/20 text-rose-300 cursor-pointer">✕</button></div></div><div class="${top.colapsado?'hidden':''} space-y-2 mb-3">${itensFiltrados.map(item=>{const fin=verificarSeFinalizado(item.tipoPrazo,item.dataFim),pago=isPagoNoMes(item),valItem=obterValorNoMes(item);return `<div class="card-dark bg-[#0a0f1e] border ${fin?'border-amber-500/25 opacity-60':pago?'border-emerald-500/25':'border-white/[0.05]'} rounded-[14px] p-3"><div class="flex justify-between items-center gap-2"><div class="flex items-center gap-2 flex-1"><input type="checkbox" ${pago?'checked':''} onchange="togglePagoItem('${top.id}','${item.id}')" class="w-4 h-4 rounded cursor-pointer accent-emerald-500"><input value="${(item.nome||'').replace(/"/g,'&quot;')}" oninput="editarNomeItem('${top.id}','${item.id}',this.value)" class="bg-transparent text-[12px] font-medium w-full outline-none border border-transparent hover:border-white/10 rounded-full px-2 py-1 ${pago?'line-through text-slate-500':''}"></div><button type="button" onclick="removerItem('${top.id}','${item.id}');criarRipple(event)" class="text-slate-500 hover:text-rose-400 w-6 h-6 rounded-full flex items-center justify-center"><i class="fa-solid fa-xmark text-[11px]"></i></button></div><div class="flex gap-2 mt-2"><div class="relative flex-1"><span class="absolute left-2.5 top-2 text-[10px] text-slate-500 font-bold">R$</span><input type="text" inputmode="decimal" value="${valItem||''}" oninput="editarValorItem('${top.id}','${item.id}',this.value)" class="input-dark valor-mono w-full bg-white/[0.03] border border-white/10 rounded-full pl-7 pr-2 py-2 text-xs font-bold"></div><button type="button" onclick="abrirModalPrazo('despesa','${top.id}','${item.id}');criarRipple(event)">${formatarPrazoLabel(item.tipoPrazo,item.dataFim,item.diaVencimento)}</button></div></div>`;}).join('')||'<p class="text-xs text-slate-500 text-center py-2">Nenhum gasto neste mês</p>'}</div><button type="button" onclick="adicionarItem('${top.id}');criarRipple(event)" class="${top.colapsado?'hidden':''} mt-auto w-full py-2.5 btn-press rounded-full bg-white/5 border border-white/10 text-xs hover:bg-emerald-500 hover:text-black font-bold cursor-pointer">+ Adicionar Gasto</button>`;
+const teto=Number(top.teto)||0,estourouTeto=teto>0&&soma>teto,pctTeto=teto>0?Math.min(100,Math.round((soma/teto)*100)):0;
+const pctRenda=tr>0?Math.round((soma/tr)*100):0,pctPagoTop=soma>0?Math.round((somaPago/soma)*100):0,corPulse=temAtrasado||estourouTeto?'bg-rose-500':pctRenda>40?'bg-rose-500':pctRenda>20?'bg-amber-500':'bg-emerald-500';
+const div=document.createElement('div');div.className=`card-dark rounded-[22px] p-5 flex flex-col card-anim shadow-xl relative overflow-hidden ${temAtrasado||estourouTeto?'border-rose-500/40':''}`;
+div.innerHTML=`<div class="absolute top-4 right-4 flex items-center gap-1.5">${temAtrasado?'<span class="text-[9px] px-1.5 py-0.5 rounded bg-rose-500/20 text-rose-300 font-bold">⚠️ Vencido</span>':''}<span class="w-2 h-2 rounded-full ${corPulse} status-pulse"></span><span class="text-[9px] uppercase tracking-wider text-slate-400 font-bold" id="pctRendaTop-${top.id}">${pctRenda}% renda</span></div><div class="flex justify-between items-start mb-2.5 pr-24"><div class="flex-1"><input value="${(top.titulo||'').replace(/"/g,'&quot;')}" oninput="atualizarTituloTopico('${top.id}',this.value)" class="font-bold text-[14px] bg-transparent border border-transparent hover:border-white/10 rounded-full px-2 py-1 outline-none w-full" placeholder="Título"><input value="${(top.descricao||'').replace(/"/g,'&quot;')}" oninput="atualizarDescTopico('${top.id}',this.value)" class="text-[11px] text-slate-400 bg-transparent border border-transparent hover:border-white/10 rounded-full px-2 py-1 outline-none w-full mt-0.5" placeholder="Descrição..."></div></div><div class="bg-black/25 rounded-2xl px-4 py-2.5 mb-3 border border-white/5 space-y-1.5"><div class="flex justify-between items-center"><span class="text-[11px] text-slate-400" id="lblPagoTop-${top.id}">Total (${pctPagoTop}% pago)</span><span class="text-sm font-black valor-mono" id="lblSomaTop-${top.id}">${moeda(soma)}</span></div><div class="h-1.5 bg-white/5 rounded-full overflow-hidden"><div id="barraPagoTop-${top.id}" class="h-full bg-emerald-400 rounded-full transition-all" style="width:${pctPagoTop}%"></div></div><div class="flex justify-between items-center pt-1 border-t border-white/5 text-[10px]"><span class="text-slate-400">Teto Mensal (Cap):</span><div class="flex items-center gap-1"><span class="text-slate-400">R$</span><input type="number" value="${teto>0?teto:''}" placeholder="Sem limite" oninput="editarTetoTopico('${top.id}',this.value)" class="bg-transparent border-b border-white/15 w-20 text-right valor-mono font-bold outline-none text-indigo-300"></div></div><div id="wrapTetoBarra-${top.id}" class="${teto>0?'':'hidden'}"><div class="flex justify-between text-[9px] mb-0.5"><span id="lblStatusTeto-${top.id}" class="${estourouTeto?'text-rose-400 font-bold':'text-slate-400'}">${estourouTeto?'⚠️ Teto Excedido!':`Uso do Teto: ${pctTeto}%`}</span><span class="valor-mono text-slate-400">${moeda(soma)} / ${moeda(teto)}</span></div><div class="h-1 bg-white/5 rounded-full overflow-hidden"><div id="barraTetoTop-${top.id}" class="h-full ${estourouTeto?'bg-rose-500':pctTeto>=80?'bg-amber-400':'bg-indigo-400'}" style="width:${pctTeto}%"></div></div></div></div><div class="flex gap-1 mb-2 justify-between items-center flex-wrap no-print"><div class="flex gap-1"><button type="button" onclick="moverTopicoOrdem('${top.id}',-1)" class="w-6 h-6 rounded-full bg-white/5 hover:bg-white/10 text-[10px] flex items-center justify-center">◀</button><button type="button" onclick="moverTopicoOrdem('${top.id}',1)" class="w-6 h-6 rounded-full bg-white/5 hover:bg-white/10 text-[10px] flex items-center justify-center">▶</button></div><div class="flex gap-1 flex-wrap"><button type="button" onclick="quitarTodosTopico('${top.id}');criarRipple(event)" class="text-[10px] px-2.5 py-1 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 hover:bg-emerald-500/25 font-bold cursor-pointer">✓ Quitar Mês</button><button type="button" onclick="toggleColapso('${top.id}');criarRipple(event)" class="text-[10px] px-2 py-1 rounded-full bg-white/5 hover:bg-white/10 cursor-pointer">${top.colapsado?'Expandir':'Colapsar'}</button><button type="button" onclick="removerTopico('${top.id}');criarRipple(event)" class="text-[10px] px-2 py-1 rounded-full bg-rose-500/20 text-rose-300 cursor-pointer">✕</button></div></div><div class="${top.colapsado?'hidden':''} space-y-2 mb-3">${itensFiltrados.map(item=>{const fin=verificarSeFinalizado(item.tipoPrazo,item.dataFim),pago=isPagoNoMes(item),valItem=obterValorNoMes(item);return `<div class="card-dark bg-[#0a0f1e] border ${fin?'border-amber-500/25 opacity-60':pago?'border-emerald-500/25':'border-white/[0.05]'} rounded-[14px] p-3"><div class="flex justify-between items-center gap-2"><div class="flex items-center gap-2 flex-1"><input type="checkbox" ${pago?'checked':''} onchange="togglePagoItem('${top.id}','${item.id}')" class="w-4 h-4 rounded cursor-pointer accent-emerald-500"><input value="${(item.nome||'').replace(/"/g,'&quot;')}" oninput="editarNomeItem('${top.id}','${item.id}',this.value)" class="bg-transparent text-[12px] font-medium w-full outline-none border border-transparent hover:border-white/10 rounded-full px-2 py-1 ${pago?'line-through text-slate-500':''}"></div><button type="button" onclick="removerItem('${top.id}','${item.id}');criarRipple(event)" class="text-slate-500 hover:text-rose-400 w-6 h-6 rounded-full flex items-center justify-center no-print"><i class="fa-solid fa-xmark text-[11px]"></i></button></div><div class="flex gap-2 mt-2"><div class="relative flex-1"><span class="absolute left-2.5 top-2 text-[10px] text-slate-500 font-bold">R$</span><input type="text" inputmode="decimal" value="${valItem||''}" oninput="editarValorItem('${top.id}','${item.id}',this.value)" class="input-dark valor-mono w-full bg-white/[0.03] border border-white/10 rounded-full pl-7 pr-2 py-2 text-xs font-bold"></div><button type="button" onclick="abrirModalPrazo('despesa','${top.id}','${item.id}');criarRipple(event)">${formatarPrazoLabel(item.tipoPrazo,item.dataFim,item.diaVencimento,item.dataInicio)}</button></div></div>`;}).join('')||'<p class="text-xs text-slate-500 text-center py-2">Nenhum gasto neste mês</p>'}</div><button type="button" onclick="adicionarItem('${top.id}');criarRipple(event)" class="${top.colapsado?'hidden':''} no-print mt-auto w-full py-2.5 btn-press rounded-full bg-white/5 border border-white/10 text-xs hover:bg-emerald-500 hover:text-black font-bold cursor-pointer">+ Adicionar Gasto</button>`;
 c.appendChild(div);
 });
 }
@@ -759,6 +875,16 @@ if(elSoma)elSoma.textContent=moeda(soma);
 if(elPago)elPago.textContent=`Total (${pctPagoTop}% pago)`;
 if(elBarra)elBarra.style.width=`${pctPagoTop}%`;
 if(elPct)elPct.textContent=`${pctRenda}% renda`;
+const teto=Number(top.teto)||0,wrapTeto=document.getElementById(`wrapTetoBarra-${top.id}`);
+if(wrapTeto){
+wrapTeto.classList.toggle('hidden',teto<=0);
+if(teto>0){
+const pctTeto=Math.min(100,Math.round((soma/teto)*100)),estourou=soma>teto;
+const bTeto=document.getElementById(`barraTetoTop-${top.id}`),lTeto=document.getElementById(`lblStatusTeto-${top.id}`);
+if(bTeto){bTeto.style.width=`${pctTeto}%`;bTeto.className=`h-full ${estourou?'bg-rose-500':pctTeto>=80?'bg-amber-400':'bg-indigo-400'}`;}
+if(lTeto){lTeto.textContent=estourou?'⚠️ Teto Excedido!':`Uso do Teto: ${pctTeto}%`;lTeto.className=estourou?'text-rose-400 font-bold':'text-slate-400';}
+}
+}
 }
 
 function quitarTodosTopico(id){
@@ -768,30 +894,23 @@ const todosPagos=visiveis.every(i=>isPagoNoMes(i));
 visiveis.forEach(i=>setPagoNoMes(i,!todosPagos));
 salvar();renderizarResumo();atualizarGastoDiarioRecomendado();renderizarVencimentos();renderizarTopicos();
 }
-
-function alternarTodosTopicos(){
-if(!appData.topicos||!appData.topicos.length)return;
-const algumAberto=appData.topicos.some(t=>!t.colapsado);
-appData.topicos.forEach(t=>{t.colapsado=algumAberto;});
-salvar();renderizarTopicos();
-}
-
+function alternarTodosTopicos(){if(!appData.topicos||!appData.topicos.length)return;const algumAberto=appData.topicos.some(t=>!t.colapsado);appData.topicos.forEach(t=>{t.colapsado=algumAberto;});salvar();renderizarTopicos();}
 function toggleColapso(id){const t=appData.topicos.find(x=>String(x.id)===String(id));if(t){t.colapsado=!t.colapsado;salvar();renderizarTopicos();}}
-function abrirModalTopico(){document.getElementById('modalTopico').classList.remove('hidden');setTimeout(()=>document.getElementById('inputNovoTopico').focus(),100);}
+function abrirModalTopico(){document.getElementById('inputNovoTopico').value='';document.getElementById('inputTetoNovoTopico').value='';document.getElementById('modalTopico').classList.remove('hidden');setTimeout(()=>document.getElementById('inputNovoTopico').focus(),100);}
 function fecharModalTopico(){document.getElementById('modalTopico').classList.add('hidden');}
-function confirmarNovoTopico(){const nome=document.getElementById('inputNovoTopico').value.trim();if(!nome)return;if(!Array.isArray(appData.topicos))appData.topicos=[];appData.topicos.push({id:'top_'+Date.now(),titulo:nome,descricao:"",cor:"emerald",colapsado:false,itens:[]});document.getElementById('inputNovoTopico').value='';fecharModalTopico();salvar();renderizarTudo();}
-function removerTopico(id){if(confirm("Excluir tópico inteiro?")){appData.topicos=appData.topicos.filter(t=>String(t.id)!==String(id));salvar();renderizarTudo();}}
+function confirmarNovoTopico(){const nome=document.getElementById('inputNovoTopico').value.trim(),teto=lerNumero(document.getElementById('inputTetoNovoTopico').value);if(!nome)return;if(!Array.isArray(appData.topicos))appData.topicos=[];appData.topicos.push({id:'top_'+Date.now(),titulo:nome,descricao:"",teto:teto>0?teto:0,cor:"emerald",colapsado:false,itens:[]});fecharModalTopico();salvar();renderizarTudo();}
+function removerTopico(id){guardarSnapshotUndo('Tópico excluído');appData.topicos=appData.topicos.filter(t=>String(t.id)!==String(id));salvar();renderizarTudo();}
 function atualizarTituloTopico(id,v){const t=appData.topicos.find(x=>String(x.id)===String(id));if(t){t.titulo=v;salvar();atualizarGrafico();}}
 function atualizarDescTopico(id,v){const t=appData.topicos.find(x=>String(x.id)===String(id));if(t){t.descricao=v;salvar();}}
-function adicionarItem(tid){const t=appData.topicos.find(x=>String(x.id)===String(tid));if(t){if(!Array.isArray(t.itens))t.itens=[];t.itens.push({id:'item_'+Date.now(),nome:"Novo Gasto",valor:0,valoresPorMes:{[appData.globalDate]:0},tipoPrazo:"fixo",dataFim:"",diaVencimento:"",pago:false,pagosPorMes:{}});salvar();renderizarTudo();}}
-function removerItem(tid,iid){const t=appData.topicos.find(x=>String(x.id)===String(tid));if(t){t.itens=t.itens.filter(i=>String(i.id)!==String(iid));salvar();renderizarTudo();}}
+function adicionarItem(tid){const t=appData.topicos.find(x=>String(x.id)===String(tid));if(t){if(!Array.isArray(t.itens))t.itens=[];t.itens.push({id:'item_'+Date.now(),nome:"Novo Gasto",valor:0,valoresPorMes:{[appData.globalDate]:0},tipoPrazo:"fixo",dataInicio:appData.globalDate,dataFim:"",diaVencimento:"",pago:false,pagosPorMes:{}});salvar();renderizarTudo();}}
+function removerItem(tid,iid){const t=appData.topicos.find(x=>String(x.id)===String(tid));if(t){guardarSnapshotUndo('Gasto removido');t.itens=t.itens.filter(i=>String(i.id)!==String(iid));salvar();renderizarTudo();}}
 function editarNomeItem(tid,iid,v){const t=appData.topicos.find(x=>String(x.id)===String(tid)),i=t?.itens.find(x=>String(x.id)===String(iid));if(i){i.nome=v;salvar();}}
-function editarValorItem(tid,iid,v){const t=appData.topicos.find(x=>String(x.id)===String(tid)),i=t?.itens.find(x=>String(x.id)===String(iid));if(i){definirValorNoMes(i,Math.max(0,lerNumero(v)));atualizarCabecalhoTopicoDOM(t);salvarHistorico(false);renderizarResumo();atualizarGrafico();atualizarGastoDiarioRecomendado();gerarAnaliseInteligente();}}
+function editarValorItem(tid,iid,v){const t=appData.topicos.find(x=>String(x.id)===String(tid)),i=t?.itens.find(x=>String(x.id)===String(iid));if(i){definirValorNoMes(i,Math.max(0,lerNumero(v)));atualizarCabecalhoTopicoDOM(t);salvarHistorico(false);renderizarResumo();renderizarVencimentos();atualizarGrafico();atualizarGastoDiarioRecomendado();gerarAnaliseInteligente();}}
 function togglePagoItem(tid,iid){const t=appData.topicos.find(x=>String(x.id)===String(tid)),i=t?.itens.find(x=>String(x.id)===String(iid));if(i){setPagoNoMes(i,!isPagoNoMes(i));salvar();renderizarResumo();atualizarGastoDiarioRecomendado();renderizarVencimentos();renderizarTopicos();}}
 
 function abrirModalQuickExpense(){const select=document.getElementById('qeTopico');select.innerHTML='';if(!appData.topicos||appData.topicos.length===0){toast('Crie um tópico primeiro');return;}appData.topicos.forEach(t=>select.innerHTML+=`<option value="${t.id}">${t.titulo}</option>`);document.getElementById('qeNome').value='';document.getElementById('qeValor').value='';document.getElementById('qeTipoPrazo').value='unico';document.getElementById('modalQuickExpense').classList.remove('hidden');}
 function fecharModalQuickExpense(){document.getElementById('modalQuickExpense').classList.add('hidden');}
-function salvarQuickExpense(){const nome=document.getElementById('qeNome').value.trim()||'Gasto',valor=Math.max(0,lerNumero(document.getElementById('qeValor').value)),tid=document.getElementById('qeTopico').value,tipoP=document.getElementById('qeTipoPrazo').value||'unico';if(valor<=0){toast('Valor inválido');return;}const t=appData.topicos.find(x=>String(x.id)===String(tid));if(t){if(!Array.isArray(t.itens))t.itens=[];t.itens.push({id:'qe_'+Date.now(),nome,valor,valoresPorMes:{[appData.globalDate]:valor},tipoPrazo:tipoP,mesUnico:tipoP==='unico'?appData.globalDate:'',dataFim:'',diaVencimento:'',pago:false,pagosPorMes:{}});salvar();fecharModalQuickExpense();renderizarTudo();toast('Adicionado!');}}
+function salvarQuickExpense(){const nome=document.getElementById('qeNome').value.trim()||'Gasto',valor=Math.max(0,lerNumero(document.getElementById('qeValor').value)),tid=document.getElementById('qeTopico').value,tipoP=document.getElementById('qeTipoPrazo').value||'unico';if(valor<=0){toast('Valor inválido');return;}const t=appData.topicos.find(x=>String(x.id)===String(tid));if(t){if(!Array.isArray(t.itens))t.itens=[];t.itens.push({id:'qe_'+Date.now(),nome,valor,valoresPorMes:{[appData.globalDate]:valor},tipoPrazo:tipoP,mesUnico:tipoP==='unico'?appData.globalDate:'',dataInicio:appData.globalDate,dataFim:'',diaVencimento:'',pago:false,pagosPorMes:{}});salvar();fecharModalQuickExpense();renderizarTudo();toast('Adicionado!');}}
 
 function abrirModalPrazo(tipo,topicoId,itemId){
 itemEditandoPrazo={tipo,topicoId,itemId};let obj=null;
@@ -809,6 +928,7 @@ selMover.innerHTML=(appData.topicos||[]).map(tp=>`<option value="${tp.id}" ${Str
 }
 if(obj){
 document.getElementById('modalTipoPrazo').value=obj.tipoPrazo||'fixo';
+document.getElementById('modalDataInicio').value=obj.dataInicio||appData.globalDate;
 document.getElementById('modalDataFim').value=obj.dataFim||appData.globalDate;
 document.getElementById('modalDiaVencimento').value=obj.diaVencimento||'';
 alternarTipoPrazoModal();
@@ -819,32 +939,69 @@ function fecharModalPrazo(){document.getElementById('modalPrazo').classList.add(
 function alternarTipoPrazoModal(){document.getElementById('divDataFimModal').classList.toggle('hidden',document.getElementById('modalTipoPrazo').value!=='data');}
 function salvarPrazoModal(){
 if(!itemEditandoPrazo)return;
-const tipo=document.getElementById('modalTipoPrazo').value,data=document.getElementById('modalDataFim').value,diaRaw=parseInt(document.getElementById('modalDiaVencimento').value,10),diaVenc=(!isNaN(diaRaw)&&diaRaw>=1&&diaRaw<=31)?diaRaw:'';
+const tipo=document.getElementById('modalTipoPrazo').value,dtIni=document.getElementById('modalDataInicio').value||appData.globalDate,data=document.getElementById('modalDataFim').value,diaRaw=parseInt(document.getElementById('modalDiaVencimento').value,10),diaVenc=(!isNaN(diaRaw)&&diaRaw>=1&&diaRaw<=31)?diaRaw:'';
 if(itemEditandoPrazo.tipo==='renda'){
 const r=appData.rendas.find(x=>String(x.id)===String(itemEditandoPrazo.itemId));
-if(r){r.tipoPrazo=tipo;r.mesUnico=tipo==='unico'?appData.globalDate:'';r.dataFim=tipo==='data'?data:'';r.diaVencimento=diaVenc;}
+if(r){r.tipoPrazo=tipo;r.mesUnico=tipo==='unico'?appData.globalDate:'';r.dataInicio=tipo==='data'?dtIni:'';r.dataFim=tipo==='data'?data:'';r.diaVencimento=diaVenc;}
 }else{
 const tOrig=appData.topicos.find(x=>String(x.id)===String(itemEditandoPrazo.topicoId));
 const i=tOrig?.itens.find(x=>String(x.id)===String(itemEditandoPrazo.itemId));
 if(i){
-i.tipoPrazo=tipo;i.mesUnico=tipo==='unico'?appData.globalDate:'';i.dataFim=tipo==='data'?data:'';i.diaVencimento=diaVenc;
+i.tipoPrazo=tipo;i.mesUnico=tipo==='unico'?appData.globalDate:'';i.dataInicio=tipo==='data'?dtIni:'';i.dataFim=tipo==='data'?data:'';i.diaVencimento=diaVenc;
 const novoTopId=document.getElementById('modalMoverTopico')?.value;
 if(novoTopId&&String(novoTopId)!==String(itemEditandoPrazo.topicoId)){
 const tDest=appData.topicos.find(x=>String(x.id)===String(novoTopId));
-if(tDest){
-tOrig.itens=tOrig.itens.filter(x=>String(x.id)!==String(i.id));
-tDest.itens.push(i);
-}
+if(tDest){tOrig.itens=tOrig.itens.filter(x=>String(x.id)!==String(i.id));tDest.itens.push(i);}
 }
 }
 }
 salvar();fecharModalPrazo();renderizarTudo();
 }
 
+/* COMMAND PALETTE (CTRL + K) & RELATÓRIO PDF */
+function abrirCommandPalette(){
+const m=document.getElementById('modalCommandPalette'),inp=document.getElementById('inputCommandPalette');
+if(!m||!inp)return;
+m.classList.remove('hidden');inp.value='';filtrarCommandPalette('');setTimeout(()=>inp.focus(),50);
+}
+function fecharCommandPalette(){const m=document.getElementById('modalCommandPalette');if(m)m.classList.add('hidden');}
+function filtrarCommandPalette(q){
+const listaEl=document.getElementById('listaCommandPalette');if(!listaEl)return;
+const termo=(q||'').trim();
+const acoesBase=[
+{icone:'fa-bolt text-emerald-400',titulo:'Lançar Gasto Rápido',sub:'Abrir modal de despesa rápida',fn:()=>{fecharCommandPalette();abrirModalQuickExpense();}},
+{icone:'fa-paper-plane text-cyan-400',titulo:'Investir Saldo Livre na Caixinha',sub:'Transferir sobra do mês para CDI',fn:()=>{fecharCommandPalette();abrirModalInvestirSaldo();}},
+{icone:'fa-file-pdf text-rose-400',titulo:'Gerar Relatório Executivo (PDF / Impressão)',sub:'Formatar visão limpa para salvar em PDF',fn:()=>{fecharCommandPalette();gerarRelatorioExecutivo();}},
+{icone:'fa-chart-line text-indigo-400',titulo:'Ir para Aba Investimentos & Alocação',sub:'Ver Caixinhas, FIIs, Ações e Rebalanceamento',fn:()=>{fecharCommandPalette();mudarAba('investimentos');}},
+{icone:'fa-brain text-amber-400',titulo:'Ir para Aba Análise 360º',sub:'Ver Radar 5 Pilares e Liberdade Financeira',fn:()=>{fecharCommandPalette();mudarAba('analise');}},
+{icone:'fa-eye-slash text-purple-400',titulo:'Alternar Modo Privacidade (Ocultar Valores)',sub:'Ativar/Desativar blur nos valores',fn:()=>{fecharCommandPalette();toggleModoPrivacidade();}},
+{icone:'fa-palette text-pink-400',titulo:'Ativar Tema Pink Feminino',sub:'Alto contraste rosa vibrante',fn:()=>{fecharCommandPalette();document.getElementById('seletorTema').value='pink';mudarTemaBancario('pink');}},
+{icone:'fa-sun text-amber-300',titulo:'Ativar Tema Light Clean',sub:'Alto contraste claro executivo',fn:()=>{fecharCommandPalette();document.getElementById('seletorTema').value='light';mudarTemaBancario('light');}},
+{icone:'fa-moon text-slate-300',titulo:'Ativar Tema Dark Hacker',sub:'Visual escuro original',fn:()=>{fecharCommandPalette();document.getElementById('seletorTema').value='dark';mudarTemaBancario('dark');}}
+];
+const matchValor=termo.match(/^(.+?)\s+([0-9]+[.,]?[0-9]*)$/);
+comandosFiltradosPalette=[];
+if(matchValor){
+const nomeG=matchValor[1].trim(),valG=lerNumero(matchValor[2]);
+if(valG>0){
+comandosFiltradosPalette.push({icone:'fa-plus-circle text-emerald-400',titulo:`Lançar agora: "${nomeG}" — ${moeda(valG)}`,sub:'Adiciona imediatamente no 1º tópico deste mês',fn:()=>{
+if(!Array.isArray(appData.topicos)||appData.topicos.length===0)appData.topicos=[{id:'top_'+Date.now(),titulo:'Geral',descricao:'',teto:0,cor:'emerald',colapsado:false,itens:[]}];
+appData.topicos[0].itens.push({id:'cmd_'+Date.now(),nome:nomeG,valor:valG,valoresPorMes:{[appData.globalDate]:valG},tipoPrazo:'unico',mesUnico:appData.globalDate,dataInicio:appData.globalDate,dataFim:'',diaVencimento:'',pago:false,pagosPorMes:{}});
+fecharCommandPalette();salvar();renderizarTudo();toast(`${nomeG} (${moeda(valG)}) lançado!`);
+}});
+}
+}
+acoesBase.forEach(a=>{if(!termo||a.titulo.toLowerCase().includes(termo.toLowerCase())||a.sub.toLowerCase().includes(termo.toLowerCase()))comandosFiltradosPalette.push(a);});
+listaEl.innerHTML=comandosFiltradosPalette.map((c,idx)=>`<div onclick="executarItemCommandPalette(${idx})" class="px-3.5 py-2.5 rounded-xl hover:bg-emerald-500/15 cursor-pointer flex items-center justify-between gap-3 transition-colors"><div class="flex items-center gap-3"><i class="fa-solid ${c.icone} w-5 text-center"></i><div><p class="text-xs font-bold">${c.titulo}</p><p class="text-[10px] text-slate-400">${c.sub}</p></div></div><span class="text-[10px] text-slate-400 font-mono">↵</span></div>`).join('');
+}
+function executarItemCommandPalette(idx){if(comandosFiltradosPalette[idx])comandosFiltradosPalette[idx].fn();}
+function navegarCommandPalette(e){if(e.key==='Enter'&&comandosFiltradosPalette.length>0){e.preventDefault();comandosFiltradosPalette[0].fn();}}
+function gerarRelatorioExecutivo(){toast('Preparando Relatório Executivo...');setTimeout(()=>window.print(),350);}
+
 function abrirModalConquista(){document.getElementById('inputTextoConquista').value='';document.getElementById('modalConquista').classList.remove('hidden');}
 function fecharModalConquista(){document.getElementById('modalConquista').classList.add('hidden');}
 function salvarConquistaModal(){const txt=document.getElementById('inputTextoConquista').value.trim();if(!txt){toast('Escreva sua conquista');return;}if(!Array.isArray(appData.conquistasManuais))appData.conquistasManuais=[];appData.conquistasManuais.push(txt);salvar();fecharModalConquista();gerarAnaliseInteligente();toast('Conquista salva!');}
-function removerConquistaManual(idx){if(!Array.isArray(appData.conquistasManuais))return;appData.conquistasManuais.splice(idx,1);salvar();gerarAnaliseInteligente();}
+function removerConquistaManual(idx){if(!Array.isArray(appData.conquistasManuais))return;guardarSnapshotUndo('Conquista removida');appData.conquistasManuais.splice(idx,1);salvar();gerarAnaliseInteligente();}
 
 function obterConquistasAutomaticasReativas(patrimonioLiquido,rendaPassivaMensal){
 const lista=[];
@@ -863,7 +1020,7 @@ barraProx.innerHTML=`<div class="bg-black/40 p-3 rounded-xl border border-white/
 }
 const manual=appData.conquistasManuais||[],automaticas=obterConquistasAutomaticasReativas(patrimonioLiquido,rendaPassivaMensal);
 if(manual.length===0&&automaticas.length===0){container.innerHTML=`<p class="col-span-full text-xs text-slate-500 text-center py-4">Nenhuma conquista desbloqueada ainda.</p>`;return;}
-const htmlAuto=automaticas.map(c=>`<div class="bg-emerald-500/10 p-3 rounded-xl border border-emerald-500/25 flex items-center gap-2.5"><i class="fa-solid fa-medal text-emerald-400 text-sm shrink-0"></i><span class="text-xs font-semibold text-emerald-100">${c}</span></div>`);
+const htmlAuto=automaticas.map(c=>`<div class="bg-emerald-500/10 p-3 rounded-xl border border-emerald-500/25 flex items-center gap-2.5"><i class="fa-solid fa-medal text-emerald-400 text-sm shrink-0"></i><span class="text-xs font-semibold text-emerald-200">${c}</span></div>`);
 const htmlMan=manual.map((c,idx)=>`<div class="bg-black/30 p-3 rounded-xl border border-white/10 flex justify-between items-center gap-2"><div class="flex items-center gap-2"><i class="fa-solid fa-trophy text-amber-400 shrink-0"></i><span class="text-xs text-slate-200">${c}</span></div><button type="button" onclick="removerConquistaManual(${idx})" class="text-slate-500 hover:text-rose-400 w-5 h-5 flex items-center justify-center"><i class="fa-solid fa-xmark text-[10px]"></i></button></div>`);
 container.innerHTML=[...htmlAuto,...htmlMan].join('');
 }
@@ -894,18 +1051,11 @@ atualizarGraficoProjecaoAportes(dadosAportesGrafico);
 
 function atualizarGraficoProjecaoAportes(dados){
 const canvas=document.getElementById('chartProjecaoAportes');if(!canvas)return;
-if(!chartProjecaoAportes){chartProjecaoAportes=new Chart(canvas,{type:'bar',plugins:[pluginLucroVerdeSimulador],data:{labels:['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'],datasets:[{label:'Aporte Planejado',data:dados,backgroundColor:'#6366f1',borderRadius:6}]},options:{responsive:true,maintainAspectRatio:false,layout:{padding:{top:24}},plugins:{legend:{display:false},tooltip:{callbacks:{afterLabel:function(context){return'Lucro Passivo: + '+moeda(lucrosPassivosSimulador[context.dataIndex]||0);}}}},scales:{y:{beginAtZero:true,grid:{color:'rgba(255,255,255,0.05)'}},x:{grid:{display:false}}}}});}else{chartProjecaoAportes.data.datasets[0].data=dados;chartProjecaoAportes.update();}
+if(!chartProjecaoAportes){chartProjecaoAportes=new Chart(canvas,{type:'bar',plugins:[pluginLucroVerdeSimulador],data:{labels:['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'],datasets:[{label:'Aporte Planejado',data:dados,backgroundColor:'#6366f1',borderRadius:6}]},options:{responsive:true,maintainAspectRatio:false,layout:{padding:{top:24}},plugins:{legend:{display:false},tooltip:{callbacks:{afterLabel:function(context){return'Lucro Passivo: + '+moeda(lucrosPassivosSimulador[context.dataIndex]||0);}}}},scales:{y:{beginAtZero:true,grid:{color:'rgba(148,163,184,0.12)'}},x:{grid:{display:false}}}}});}else{chartProjecaoAportes.data.datasets[0].data=dados;chartProjecaoAportes.update();}
 }
 
-function atualizarSliderCorteAnalise(topId,pct){
-if(!appData.cortesSimuladosAnalise)appData.cortesSimuladosAnalise={};
-appData.cortesSimuladosAnalise[topId]=Number(pct)||0;
-gerarAnaliseInteligente();
-}
-function resetarSlidersCorte(){
-appData.cortesSimuladosAnalise={};
-gerarAnaliseInteligente();
-}
+function atualizarSliderCorteAnalise(topId,pct){if(!appData.cortesSimuladosAnalise)appData.cortesSimuladosAnalise={};appData.cortesSimuladosAnalise[topId]=Number(pct)||0;gerarAnaliseInteligente();}
+function resetarSlidersCorte(){appData.cortesSimuladosAnalise={};gerarAnaliseInteligente();}
 
 function geraranaliseInteligente(){
 const elConteudo=document.getElementById('conteudoAnalise');if(!elConteudo)return;
@@ -924,45 +1074,37 @@ if(somaTop>0)resumoTopicos.push({id:t.id,titulo:t.titulo,valor:somaTop,pct:total
 totalD+=somaTop;
 });
 const saldo=totalR-totalD,pctComprometido=totalR>0?Math.round((totalD/totalR)*100):0;
-const{somaInvestido,lucroCalculado,patrimonioLiquido,totalCaixinhasLiquido,totalFundosLiquido}=calcularTotaisInvestimento();
+const{lucroCalculado,patrimonioLiquido,totalCaixinhasLiquido,totalFundosLiquido}=calcularTotaisInvestimento();
 const aliqIr=(Number(appData.aliquotaIrCaixinha)||0)/100;
 const taxaEfetiva=(((appData.taxaCdi||0)*((appData.pctCdi||100)/100))/100)*(1-aliqIr);
 const taxaMensalCdi=taxaEfetiva>0?Math.pow(1+taxaEfetiva,1/12)-1:0.009;
 const rendaPassivaMensalEstimada=lucroCalculado>0?lucroCalculado:patrimonioLiquido*taxaMensalCdi;
 renderizarConquistasAnalise(patrimonioLiquido,rendaPassivaMensalEstimada);
 
-/* CÁLCULO DOS 5 PILARES DO RADAR (0 a 100) */
 const taxaPoupanca=totalR>0?Math.max(0,(saldo/totalR)*100):0;
 const pilarPoupanca=Math.min(100,Math.round((taxaPoupanca/30)*100));
 const pilarCustos=totalR>0?Math.max(0,Math.min(100,Math.round((1-(totalD/totalR))*125))):50;
 const pilarPontualidade=qtdItens>0?Math.round((qtdPagos/qtdItens)*100):100;
 const mesesReserva=totalD>0?(totalCaixinhasLiquido/totalD):(totalCaixinhasLiquido>0?6:0);
 const pilarReserva=Math.min(100,Math.round((mesesReserva/6)*100));
-const temCaixinha=totalCaixinhasLiquido>0?50:0,temFundos=totalFundosLiquido>0?50:0;
-const pilarDiversificacao=temCaixinha+temFundos;
+const pilarDiversificacao=(totalCaixinhasLiquido>0?50:0)+(totalFundosLiquido>0?50:0);
 
 const score=(totalR===0&&totalD===0&&patrimonioLiquido===0)?0:Math.round((pilarPoupanca*0.25)+(pilarCustos*0.25)+(pilarPontualidade*0.15)+(pilarReserva*0.20)+(pilarDiversificacao*0.15));
 const lblScore=document.getElementById('lblScoreNota');if(lblScore){lblScore.textContent=`${score} / 100`;lblScore.className=`font-black valor-mono text-base ${score>=75?'text-emerald-400':score>=50?'text-amber-300':'text-rose-400'}`;}
 
-/* COMPARATIVO COM MÉDIA HISTÓRICA */
-const hist=appData.historicoSaldo||[];
-const lblComp=document.getElementById('lblComparativoHistorico');
+const hist=appData.historicoSaldo||[],lblComp=document.getElementById('lblComparativoHistorico');
 if(lblComp&&hist.length>1){
-const mediaSaldo=hist.reduce((acc,h)=>acc+(Number(h.saldo)||0),0)/hist.length;
-const diffHist=saldo-mediaSaldo;
+const mediaSaldo=hist.reduce((acc,h)=>acc+(Number(h.saldo)||0),0)/hist.length,diffHist=saldo-mediaSaldo;
 lblComp.textContent=diffHist>=0?`+${moeda(diffHist)} vs média`:`${moeda(diffHist)} vs média`;
 lblComp.className=`font-bold valor-mono text-xs ${diffHist>=0?'text-emerald-400':'text-amber-300'}`;
 }
 
-/* RENDERIZAR GRÁFICO RADAR */
-const canvasRadar=document.getElementById('chartRadarSaude');
-const dadosPilares=[pilarPoupanca,pilarCustos,pilarPontualidade,pilarReserva,pilarDiversificacao];
+const canvasRadar=document.getElementById('chartRadarSaude'),dadosPilares=[pilarPoupanca,pilarCustos,pilarPontualidade,pilarReserva,pilarDiversificacao];
 if(canvasRadar){
 if(!chartRadarSaude){
-chartRadarSaude=new Chart(canvasRadar,{type:'radar',data:{labels:['Poupança','Controle Gastos','Pontualidade','Reserva (6m)','Diversificação'],datasets:[{label:'Sua Saúde Financeira',data:dadosPilares,backgroundColor:'rgba(16,185,129,0.22)',borderColor:'#10b981',pointBackgroundColor:'#22d3ee',borderWidth:2.5}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{r:{min:0,max:100,ticks:{display:false,stepSize:25},grid:{color:'rgba(255,255,255,0.08)'},angleLines:{color:'rgba(255,255,255,0.08)'},pointLabels:{color:'#cbd5e1',font:{size:10,weight:'bold'}}}}}});
+chartRadarSaude=new Chart(canvasRadar,{type:'radar',data:{labels:['Poupança','Controle Gastos','Pontualidade','Reserva (6m)','Diversificação'],datasets:[{label:'Saúde Financeira',data:dadosPilares,backgroundColor:'rgba(16,185,129,0.22)',borderColor:'#10b981',pointBackgroundColor:'#22d3ee',borderWidth:2.5}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{r:{min:0,max:100,ticks:{display:false,stepSize:25},grid:{color:'rgba(148,163,184,0.15)'},angleLines:{color:'rgba(148,163,184,0.15)'},pointLabels:{font:{size:10,weight:'bold'}}}}}});
 }else{
-chartRadarSaude.data.datasets[0].data=dadosPilares;
-chartRadarSaude.update();
+chartRadarSaude.data.datasets[0].data=dadosPilares;chartRadarSaude.update();
 }
 }
 const legPilares=document.getElementById('legendaPilaresRadar');
@@ -971,7 +1113,6 @@ const nomesP=['Poupança','Custos','Pagos','Reserva','Carteira'];
 legPilares.innerHTML=dadosPilares.map((nota,ix)=>`<div class="bg-black/40 p-1.5 rounded-xl border border-white/5"><span class="text-[9px] text-slate-400 block truncate">${nomesP[ix]}</span><span class="font-black valor-mono text-xs ${nota>=70?'text-emerald-400':nota>=40?'text-amber-300':'text-rose-400'}">${nota}%</span></div>`).join('');
 }
 
-/* RUNWAY (SOBREVIVÊNCIA) E CROSSOVER POINT (LIBERDADE FINANCEIRA) */
 const painelRunway=document.getElementById('painelRunwayLiberdade');
 if(painelRunway){
 const mesesInteiros=Math.floor(mesesReserva),diasExtras=Math.round((mesesReserva-mesesInteiros)*30);
@@ -980,51 +1121,38 @@ todasDespesasIndividuais.sort((a,b)=>a.valor-b.valor);
 let acumPassivo=rendaPassivaMensalEstimada,contasPagasPassivo=[];
 todasDespesasIndividuais.forEach(d=>{if(acumPassivo>=d.valor){acumPassivo-=d.valor;contasPagasPassivo.push(d.nome);}});
 const txtContasGratis=contasPagasPassivo.length>0?`Seus dividendos já pagam sozinhos: <b class="text-emerald-300">${contasPagasPassivo.slice(0,3).join(', ')}</b>.`:`Aumente seus aportes para que os dividendos comecem a pagar suas contas mensais automaticamente.`;
-
 painelRunway.innerHTML=`
-<div class="bg-black/40 p-3.5 rounded-2xl border border-white/5">
-<div class="flex justify-between items-center mb-1"><span class="text-[10px] uppercase tracking-wider text-amber-300 font-bold"><i class="fa-solid fa-life-ring mr-1"></i> Autonomia da Reserva (Runway)</span><span class="valor-mono font-black text-amber-300 text-xs">${totalD>0?`${mesesInteiros} meses e ${diasExtras} dias`:'Configure suas despesas'}</span></div>
-<div class="h-2 bg-white/5 rounded-full overflow-hidden mb-1.5"><div class="h-full bg-gradient-to-r from-amber-400 to-emerald-400 rounded-full" style="width:${pilarReserva}%"></div></div>
-<p class="text-[11px] text-slate-400">Com seu custo mensal de <b class="text-slate-200 valor-mono">${moeda(totalD)}</b>, seu saldo em Caixinhas (<b class="text-amber-300 valor-mono">${moeda(totalCaixinhasLiquido)}</b>) garante ${pilarReserva}% da reserva ideal de 6 meses.</p>
-</div>
-<div class="bg-black/40 p-3.5 rounded-2xl border border-white/5">
-<div class="flex justify-between items-center mb-1"><span class="text-[10px] uppercase tracking-wider text-emerald-300 font-bold"><i class="fa-solid fa-infinity mr-1"></i> Índice de Liberdade Financeira (Crossover)</span><span class="valor-mono font-black text-emerald-400 text-xs">${pctLiberdade.toFixed(1)}% do custo de vida</span></div>
-<div class="h-2 bg-white/5 rounded-full overflow-hidden mb-1.5"><div class="h-full bg-gradient-to-r from-emerald-400 to-cyan-400 rounded-full" style="width:${pctLiberdade}%"></div></div>
-<p class="text-[11px] text-slate-400">Sua renda passiva (<b class="text-emerald-300 valor-mono">+${moeda(rendaPassivaMensalEstimada)}/mês</b>) cobre <b>${pctLiberdade.toFixed(1)}%</b> dos seus gastos. ${txtContasGratis}</p>
-</div>`;
+<div class="bg-black/40 p-3.5 rounded-2xl border border-white/5"><div class="flex justify-between items-center mb-1"><span class="text-[10px] uppercase tracking-wider text-amber-300 font-bold"><i class="fa-solid fa-life-ring mr-1"></i> Autonomia da Reserva (Runway)</span><span class="valor-mono font-black text-amber-300 text-xs">${totalD>0?`${mesesInteiros} meses e ${diasExtras} dias`:'Configure suas despesas'}</span></div><div class="h-2 bg-white/5 rounded-full overflow-hidden mb-1.5"><div class="h-full bg-gradient-to-r from-amber-400 to-emerald-400 rounded-full" style="width:${pilarReserva}%"></div></div><p class="text-[11px] text-slate-400">Com seu custo mensal de <b class="text-slate-200 valor-mono">${moeda(totalD)}</b>, seu saldo em Caixinhas (<b class="text-amber-300 valor-mono">${moeda(totalCaixinhasLiquido)}</b>) garante ${pilarReserva}% da reserva ideal de 6 meses.</p></div>
+<div class="bg-black/40 p-3.5 rounded-2xl border border-white/5"><div class="flex justify-between items-center mb-1"><span class="text-[10px] uppercase tracking-wider text-emerald-300 font-bold"><i class="fa-solid fa-infinity mr-1"></i> Índice de Liberdade Financeira (Crossover)</span><span class="valor-mono font-black text-emerald-400 text-xs">${pctLiberdade.toFixed(1)}% do custo de vida</span></div><div class="h-2 bg-white/5 rounded-full overflow-hidden mb-1.5"><div class="h-full bg-gradient-to-r from-emerald-400 to-cyan-400 rounded-full" style="width:${pctLiberdade}%"></div></div><p class="text-[11px] text-slate-400">Sua renda passiva (<b class="text-emerald-300 valor-mono">+${moeda(rendaPassivaMensalEstimada)}/mês</b>) cobre <b>${pctLiberdade.toFixed(1)}%</b> dos seus gastos. ${txtContasGratis}</p></div>`;
 }
 
-let statusBanner='';if(totalR===0&&totalD===0){statusBanner=`<div class="p-4 rounded-2xl bg-white/5 border border-white/10 text-slate-300"><b>📊 Sem dados lançados neste mês</b></div>`;}else if(pctComprometido<=55){statusBanner=`<div class="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-200"><b>🟢 Orçamento Saudável (${pctComprometido}% comprometido)</b> — Excelente margem de segurança para acelerar investimentos.</div>`;}else if(pctComprometido<=79){statusBanner=`<div class="p-4 rounded-2xl bg-indigo-500/10 border border-indigo-500/30 text-indigo-200"><b>🔵 Equilibrado (${pctComprometido}% comprometido)</b> — Mantenha atenção aos gastos variáveis e proteja sua meta mensal.</div>`;}else{statusBanner=`<div class="p-4 rounded-2xl bg-rose-500/15 border border-rose-500/40 text-rose-200"><b>🔴 Alerta de Risco (${pctComprometido}% comprometido)</b> — Use o simulador de cortes abaixo para aliviar seu fluxo de caixa.</div>`;}
+let statusBanner='';if(totalR===0&&totalD===0){statusBanner=`<div class="p-4 rounded-2xl bg-white/5 border border-white/10 text-slate-300"><b>📊 Sem dados lançados neste mês</b></div>`;}else if(pctComprometido<=55){statusBanner=`<div class="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-200"><b>🟢 Orçamento Saudável (${pctComprometido}% comprometido)</b> — Excelente margem para acelerar investimentos.</div>`;}else if(pctComprometido<=79){statusBanner=`<div class="p-4 rounded-2xl bg-indigo-500/10 border border-indigo-500/30 text-indigo-200"><b>🔵 Equilibrado (${pctComprometido}% comprometido)</b> — Mantenha atenção aos gastos variáveis.</div>`;}else{statusBanner=`<div class="p-4 rounded-2xl bg-rose-500/15 border border-rose-500/40 text-rose-200"><b>🔴 Alerta de Risco (${pctComprometido}% comprometido)</b> — Use o simulador de cortes abaixo para aliviar o caixa.</div>`;}
 elConteudo.innerHTML=`<div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-center"><div class="bg-black/30 p-3.5 rounded-2xl border border-white/5"><span class="text-[10px] uppercase text-slate-400 block">Renda Mensal</span><h4 class="text-sm font-black valor-mono text-emerald-400">${moeda(totalR)}</h4></div><div class="bg-black/30 p-3.5 rounded-2xl border border-white/5"><span class="text-[10px] uppercase text-slate-400 block">Custo de Vida</span><h4 class="text-sm font-black valor-mono text-rose-400">${moeda(totalD)}</h4></div><div class="bg-black/30 p-3.5 rounded-2xl border border-white/5"><span class="text-[10px] uppercase text-slate-400 block">Margem Livre</span><h4 class="text-sm font-black valor-mono ${saldo>=0?'text-indigo-300':'text-rose-400'}">${moeda(saldo)}</h4></div><div class="bg-black/30 p-3.5 rounded-2xl border border-white/5"><span class="text-[10px] uppercase text-slate-400 block">Renda Passiva/Mês</span><h4 class="text-sm font-black valor-mono text-cyan-300">+${moeda(rendaPassivaMensalEstimada)}</h4></div></div>${statusBanner}`;
 
-let diagInv=[];
-diagInv.push(`<b>Eficiência CDI Líquida:</b> ${(taxaEfetiva*100).toFixed(2)}% a.a. • Patrimônio Total: <b class="valor-mono">${moeda(patrimonioLiquido)}</b> (Caixinhas: ${moeda(totalCaixinhasLiquido)} | Carteira: ${moeda(totalFundosLiquido)}).`);
-document.getElementById('analiseInvestimentosDetalhada').innerHTML=diagInv.map(d=>`<div class="flex items-start gap-2 bg-black/20 p-2.5 rounded-xl border border-white/5"><i class="fa-solid fa-chart-line text-cyan-400 mt-0.5"></i><span>${d}</span></div>`).join('');
+const ganhoRealAnual=Math.max(0,((1+taxaEfetiva)/(1+0.045)-1)*100);
+document.getElementById('analiseInvestimentosDetalhada').innerHTML=`<div class="flex items-start gap-2 bg-black/20 p-2.5 rounded-xl border border-white/5"><i class="fa-solid fa-chart-line text-cyan-400 mt-0.5"></i><span><b>CDI Líquido:</b> ${(taxaEfetiva*100).toFixed(2)}% a.a. (Ganho Real acima do IPCA ~<b>+${ganhoRealAnual.toFixed(2)}% a.a.</b>) • Patrimônio: <b class="valor-mono">${moeda(patrimonioLiquido)}</b>.</span></div>`;
 
-/* SIMULADOR INTERATIVO DE CORTES "E SE?" */
 resumoTopicos.sort((a,b)=>b.valor-a.valor);
 const contSliders=document.getElementById('containerSlidersCorteAnalise'),resCorte=document.getElementById('resultadoSimuladorCorteAnalise');
 if(contSliders&&resCorte){
 if(resumoTopicos.length===0){
-contSliders.innerHTML=`<p class="text-slate-500 py-4 text-center">Adicione gastos na Aba Geral para simular cortes inteligentes.</p>`;
+contSliders.innerHTML=`<p class="text-slate-500 py-4 text-center">Adicione gastos na Aba Geral para simular cortes.</p>`;
 resCorte.innerHTML=`<span class="text-slate-400">Sem despesas para simular</span>`;
 }else{
 let economiaMensalSimulada=0;
 contSliders.innerHTML=resumoTopicos.slice(0,4).map(t=>{
-const pctCorte=Number(appData.cortesSimuladosAnalise?.[t.id])||0;
-const valorEconomizado=t.valor*(pctCorte/100);
+const pctCorte=Number(appData.cortesSimuladosAnalise?.[t.id])||0,valorEconomizado=t.valor*(pctCorte/100);
 economiaMensalSimulada+=valorEconomizado;
 return `<div class="bg-black/40 p-3 rounded-xl border border-white/5"><div class="flex justify-between items-center text-xs mb-1.5"><span class="font-bold text-slate-200">${t.titulo} <span class="text-slate-400 font-normal">(${moeda(t.valor)})</span></span><span class="valor-mono font-bold text-emerald-400">Cortar ${pctCorte}% → Poupa ${moeda(valorEconomizado)}/mês</span></div><input type="range" min="0" max="50" step="5" value="${pctCorte}" oninput="atualizarSliderCorteAnalise('${t.id}',this.value)" class="w-full h-1.5 bg-white/10 rounded-lg"></div>`;
 }).join('');
-let montante1AnoCdi=0;
-for(let m=1;m<=12;m++){montante1AnoCdi=(montante1AnoCdi+economiaMensalSimulada)*(1+taxaMensalCdi);}
+let montante1AnoCdi=0;for(let m=1;m<=12;m++){montante1AnoCdi=(montante1AnoCdi+economiaMensalSimulada)*(1+taxaMensalCdi);}
 resCorte.innerHTML=`<div><span class="text-[10px] uppercase tracking-wider text-indigo-300 font-bold block">Economia Mensal Liberada</span><span class="text-base font-black valor-mono text-emerald-400">+ ${moeda(economiaMensalSimulada)} / mês</span></div><div class="text-right"><span class="text-[10px] uppercase tracking-wider text-cyan-300 font-bold block">Aplicado no CDI em 12 Meses</span><span class="text-base font-black valor-mono text-cyan-300">+ ${moeda(montante1AnoCdi)}</span></div>`;
 }
 }
 
 let dicas=[];
 if(saldo>0)dicas.push(`<b>Potencial de Aporte:</b> Você tem <b class="valor-mono text-emerald-300">${moeda(saldo)}</b> livres neste mês.`);
-else if(saldo<0)dicas.push(`<b>Atenção ao Déficit:</b> Suas despesas superaram a renda em <b class="valor-mono text-rose-300">${moeda(Math.abs(saldo))}</b>.`);
+else if(saldo<0)dicas.push(`<b>Atenção ao Déficit:</b> Despesas superaram a renda em <b class="valor-mono text-rose-300">${moeda(Math.abs(saldo))}</b>.`);
 document.getElementById('dicasEconomia').innerHTML=dicas.map(d=>`<div class="flex items-start gap-2 bg-black/20 p-2.5 rounded-xl border border-white/5"><i class="fa-solid fa-lightbulb text-amber-400 mt-0.5"></i><span>${d}</span></div>`).join('');
 
 const elRanking=document.getElementById('rankingTopicosAnalise');if(resumoTopicos.length===0){elRanking.innerHTML=`<p class="text-slate-500 py-2">Sem gastos.</p>`;}else{elRanking.innerHTML=resumoTopicos.map(t=>`<div class="bg-black/20 p-2.5 rounded-xl border border-white/5"><div class="flex justify-between items-center mb-1"><span class="font-bold text-slate-200">${t.titulo}</span><span class="valor-mono font-bold text-amber-300">${moeda(t.valor)} (${t.pct}%)</span></div><div class="h-1.5 bg-white/5 rounded-full overflow-hidden"><div class="h-full ${t.pct>35?'bg-rose-500':t.pct>20?'bg-amber-400':'bg-emerald-400'}" style="width:${Math.min(100,t.pct)}%"></div></div></div>`).join('');}
@@ -1035,7 +1163,7 @@ function initCharts(){
 if(chartPizza)return;Chart.defaults.color='#94a3b8';Chart.defaults.borderColor='rgba(255,255,255,0.06)';
 chartPizza=new Chart(document.getElementById('chartPizza'),{type:'doughnut',data:{labels:[],datasets:[{data:[],backgroundColor:['#10b981','#6366f1','#f59e0b','#f43f5e','#06b6d4','#8b5cf6'],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,cutout:'68%',plugins:{legend:{display:false}}}});
 chartBar=new Chart(document.getElementById('chartBar'),{type:'bar',data:{labels:['Renda','Despesas','Lucro','Saldo'],datasets:[{data:[0,0,0,0],backgroundColor:['#10b981','#f43f5e','#06b6d4','#6366f1'],borderRadius:10}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}});
-chartLinha=new Chart(document.getElementById('chartLinha').getContext('2d'),{type:'line',data:{labels:[],datasets:[{label:'Saldo',data:[],borderColor:'#10b981',backgroundColor:'rgba(16,185,129,0.1)',fill:true,tension:0.3,borderWidth:2.5}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{grid:{color:'rgba(255,255,255,0.05)'}},x:{grid:{display:false}}}}});
+chartLinha=new Chart(document.getElementById('chartLinha').getContext('2d'),{type:'line',data:{labels:[],datasets:[{label:'Saldo',data:[],borderColor:'#10b981',backgroundColor:'rgba(16,185,129,0.1)',fill:true,tension:0.3,borderWidth:2.5}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{grid:{color:'rgba(148,163,184,0.12)'}},x:{grid:{display:false}}}}});
 }
 
 function atualizarGrafico(){
@@ -1065,9 +1193,9 @@ function importarBackup(e){const file=e.target.files[0];if(!file)return;const r=
 function importarExtrato(){
 const txt=document.getElementById('extratoInput').value.trim();if(!txt)return;let linhas=txt.split('\n'),criados=0;
 const pontual=document.getElementById('chkExtratoPontual')?.checked||false;
-if(!Array.isArray(appData.topicos))appData.topicos=[];let topDestino=appData.topicos[0]||{id:'top_'+Date.now(),titulo:"Geral",descricao:"",cor:"emerald",colapsado:false,itens:[]};
+if(!Array.isArray(appData.topicos))appData.topicos=[];let topDestino=appData.topicos[0]||{id:'top_'+Date.now(),titulo:"Geral",descricao:"",teto:0,cor:"emerald",colapsado:false,itens:[]};
 if(!appData.topicos.includes(topDestino))appData.topicos.push(topDestino);
-linhas.forEach(l=>{const match=l.match(/([0-9]+[.,][0-9]{2})/);if(match){const valor=lerNumero(match[1]),nome=l.replace(match[1],'').trim()||'Gasto';if(valor>0){topDestino.itens.push({id:'imp_'+Date.now()+criados,nome:nome.slice(0,30),valor,valoresPorMes:{[appData.globalDate]:valor},tipoPrazo:pontual?'unico':'fixo',mesUnico:pontual?appData.globalDate:'',dataFim:'',diaVencimento:'',pago:false,pagosPorMes:{}});criados++;}}});
+linhas.forEach(l=>{const match=l.match(/([0-9]+[.,][0-9]{2})/);if(match){const valor=lerNumero(match[1]),nome=l.replace(match[1],'').replace(/[;,]/g,' ').trim()||'Gasto';if(valor>0){topDestino.itens.push({id:'imp_'+Date.now()+criados,nome:nome.slice(0,30),valor,valoresPorMes:{[appData.globalDate]:valor},tipoPrazo:pontual?'unico':'fixo',mesUnico:pontual?appData.globalDate:'',dataInicio:appData.globalDate,dataFim:'',diaVencimento:'',pago:false,pagosPorMes:{}});criados++;}}});
 document.getElementById('extratoInput').value='';salvar();renderizarTudo();toast(`${criados} gastos adicionados!`);
 }
 function pedirNotificacao(){if('Notification' in window)Notification.requestPermission().then(p=>toast(p==='granted'?'Alertas ativados!':'Permissão negada'));}
